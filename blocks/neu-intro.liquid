@@ -1,0 +1,84 @@
+{%- assign p = closest.product | default: product -%}
+
+<div class="neu-intro" {{ block.shopify_attributes }}>
+  <h1 class="neu-intro__title">{{ block.settings.title | default: p.title | escape }}</h1>
+
+  {%- if block.settings.subtitle != blank -%}
+    <p class="neu-intro__subtitle">{{ block.settings.subtitle }}</p>
+  {%- endif -%}
+
+  {%- if block.settings.pill_1 != blank or block.settings.pill_2 != blank -%}
+    <div class="neu-intro__pills">
+      {%- if block.settings.pill_1 != blank -%}
+        <span class="neu-pill neu-pill--accent">{{ block.settings.pill_1 }}</span>
+      {%- endif -%}
+      {%- if block.settings.pill_2 != blank -%}
+        <span class="neu-pill">{{ block.settings.pill_2 }}</span>
+      {%- endif -%}
+    </div>
+  {%- endif -%}
+
+  {%- if block.settings.text != blank -%}
+    <div class="neu-intro__text">{{ block.settings.text }}</div>
+  {%- endif -%}
+
+  {%- if block.settings.link_label != blank -%}
+    <a class="neu-link neu-intro__link" href="{{ block.settings.link_url | default: '#' }}">
+      {{- block.settings.link_label | escape }}
+      {% render 'neu-icon', icon: 'arrow-right' -%}
+    </a>
+  {%- endif -%}
+</div>
+
+{% schema %}
+{
+  "name": "NEU+ product intro",
+  "tag": null,
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Title",
+      "info": "Leave blank to use the product title"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "subtitle",
+      "label": "Subtitle",
+      "default": "NAD+ liquid shot · Energy, focus & healthy ageing"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "pill_1",
+      "label": "Highlighted pill",
+      "default": "From <strong>£3.00/day</strong> per shot"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "pill_2",
+      "label": "Second pill",
+      "default": "28 shots"
+    },
+    {
+      "type": "richtext",
+      "id": "text",
+      "label": "Short description",
+      "default": "<p><strong>Cleaner energy. Sharper focus. Zero crash.</strong> Each 60ml shot delivers 300mg of Nicotinamide Riboside plus a full stack of cellular cofactors. No caffeine, no sugar, no shortcuts — just the molecule your cells need to make energy.</p>"
+    },
+    {
+      "type": "text",
+      "id": "link_label",
+      "label": "Link label",
+      "default": "Nutrition & Ingredients"
+    },
+    {
+      "type": "text",
+      "id": "link_url",
+      "label": "Link",
+      "info": "A page URL, or an anchor like #neu-stats",
+      "default": "#neu-stats"
+    }
+  ],
+  "presets": [{ "name": "NEU+ product intro", "category": "Product" }]
+}
+{% endschema %}

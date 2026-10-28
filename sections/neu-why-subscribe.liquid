@@ -1,0 +1,132 @@
+{{ 'neu-product.css' | asset_url | stylesheet_tag }}
+
+<div
+  class="neu neu-section"
+  style="--neu-pad-top: {{ section.settings.padding_top }}px; --neu-pad-bottom: {{ section.settings.padding_bottom }}px;"
+>
+  <div class="neu-page">
+    <div class="neu-why neu-narrow">
+      <div class="neu-why__head">
+        <div>
+          {%- if section.settings.eyebrow != blank -%}
+            <p class="neu-eyebrow">{{ section.settings.eyebrow | escape }}</p>
+          {%- endif -%}
+          <h2 class="neu-h2">{{ section.settings.heading }}</h2>
+        </div>
+        {%- if section.settings.link_label != blank -%}
+          <a class="neu-link" href="{{ section.settings.link_url | default: '#' }}">
+            {{- section.settings.link_label | escape }}
+            {% render 'neu-icon', icon: 'arrow-right' -%}
+          </a>
+        {%- endif -%}
+      </div>
+
+      <div class="neu-why__grid">
+        {%- for block in section.blocks -%}
+          <div class="neu-why__card" {{ block.shopify_attributes }}>
+            <span class="neu-why__icon">{% render 'neu-icon', icon: block.settings.icon %}</span>
+            <h3>{{ block.settings.title | escape }}</h3>
+            <p>{{ block.settings.text }}</p>
+          </div>
+        {%- endfor -%}
+      </div>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "NEU+ why subscribe",
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "Why subscribe?"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Build the daily habit. Save up to 12%"
+    },
+    {
+      "type": "text",
+      "id": "link_label",
+      "label": "Link label",
+      "default": "How subscriptions work"
+    },
+    {
+      "type": "url",
+      "id": "link_url",
+      "label": "Link"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Top padding",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "default": 64
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Bottom padding",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "default": 40
+    }
+  ],
+  "blocks": [
+    {
+      "type": "card",
+      "name": "Card",
+      "settings": [
+        {
+          "type": "select",
+          "id": "icon",
+          "label": "Icon",
+          "options": [
+            { "value": "cycle", "label": "Repeat" },
+            { "value": "percent", "label": "Discount" },
+            { "value": "star", "label": "Star" },
+            { "value": "unlock", "label": "Unlock" },
+            { "value": "truck", "label": "Delivery" },
+            { "value": "gift", "label": "Gift" }
+          ],
+          "default": "cycle"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "default": "Never run out"
+        },
+        {
+          "type": "inline_richtext",
+          "id": "text",
+          "label": "Text",
+          "default": "Auto-delivered on your cadence. Skip, swap or pause in two taps."
+        }
+      ]
+    }
+  ],
+  "max_blocks": 8,
+  "presets": [
+    {
+      "name": "NEU+ why subscribe",
+      "blocks": [
+        { "type": "card" },
+        { "type": "card", "settings": { "icon": "percent", "title": "Lower price", "text": "Subscribers pay £3.32/day vs £3.57 one-off. Save more on quarterly." } },
+        { "type": "card", "settings": { "icon": "star", "title": "Subscriber perks", "text": "Early access to new flavours, free socks on first order, member-only drops." } },
+        { "type": "card", "settings": { "icon": "unlock", "title": "No commitment", "text": "Cancel any time from your account — no fees, no calls." } }
+      ]
+    }
+  ]
+}
+{% endschema %}

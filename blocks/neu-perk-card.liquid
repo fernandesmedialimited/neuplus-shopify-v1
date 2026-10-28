@@ -1,0 +1,78 @@
+<div class="neu-perk neu-perk--{{ block.settings.style }}" {{ block.shopify_attributes }}>
+  {% render 'neu-icon', icon: block.settings.icon %}
+  <div class="neu-perk__text">
+    {%- if block.settings.title != blank -%}
+      <div class="neu-perk__title">{{ block.settings.title }}</div>
+    {%- endif -%}
+    {%- if block.settings.link_label != blank -%}
+      <a
+        href="{{ block.settings.link_url | default: '#' }}"
+        {% if block.settings.style == 'outline' %}
+          class="neu-perk__link--muted"
+        {% endif %}
+      >
+        {{- block.settings.link_label | escape -}}
+      </a>
+    {%- endif -%}
+  </div>
+  {%- if block.settings.image -%}
+    <div class="neu-perk__image">
+      {{ block.settings.image | image_url: width: 240 | image_tag: loading: 'lazy', alt: block.settings.image.alt }}
+    </div>
+  {%- endif -%}
+</div>
+
+{% schema %}
+{
+  "name": "NEU+ perk card",
+  "tag": null,
+  "settings": [
+    {
+      "type": "select",
+      "id": "style",
+      "label": "Style",
+      "options": [
+        { "value": "tint", "label": "Green tint" },
+        { "value": "outline", "label": "Outline" }
+      ],
+      "default": "tint"
+    },
+    {
+      "type": "select",
+      "id": "icon",
+      "label": "Icon",
+      "options": [
+        { "value": "truck", "label": "Delivery" },
+        { "value": "gift", "label": "Gift" },
+        { "value": "socks", "label": "Socks" },
+        { "value": "shield", "label": "Shield" },
+        { "value": "star", "label": "Star" }
+      ],
+      "default": "truck"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "title",
+      "label": "Text",
+      "default": "Spend £50 to get free delivery within 2 working days"
+    },
+    {
+      "type": "text",
+      "id": "link_label",
+      "label": "Link label",
+      "default": "Delivery information"
+    },
+    {
+      "type": "url",
+      "id": "link_url",
+      "label": "Link"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Image"
+    }
+  ],
+  "presets": [{ "name": "NEU+ perk card", "category": "Product" }]
+}
+{% endschema %}

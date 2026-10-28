@@ -1,1 +1,567 @@
-{"sections":{"main":{"type":"product-information","blocks":{"media-gallery":{"type":"_product-media-gallery","static":true,"settings":{"media_presentation":"carousel","media_columns":"two","image_gap":1,"large_first_image":false,"icons_style":"arrows","slideshow_controls_style":"thumbnails","slideshow_mobile_controls_style":"dots","thumbnail_position":"bottom","thumbnail_width":48,"aspect_ratio":"1","constrain_to_viewport":true,"media_fit":"cover","media_radius":0,"extend_media":false,"zoom":true,"video_loop":true,"hide_variants":false,"padding-block-start":0,"padding-block-end":0,"padding-inline-start":0,"padding-inline-end":0},"blocks":{}},"product-details":{"type":"_product-details","static":true,"settings":{"width":"fill","custom_width":75,"width_mobile":"fill","custom_width_mobile":100,"height":"fit","details_position":"flex-start","gap":20,"sticky_details_desktop":true,"inherit_color_scheme":true,"color_scheme":"","background_media":"none","video_position":"cover","background_image_position":"cover","border":"none","border_width":1,"border_opacity":100,"border_radius":0,"padding-block-start":18,"padding-block-end":48,"padding-inline-start":0,"padding-inline-end":0},"blocks":{"group_JtXipy":{"type":"group","name":"t:names.group","settings":{"content_direction":"column","vertical_on_mobile":true,"horizontal_alignment":"flex-start","vertical_alignment":"center","align_baseline":false,"horizontal_alignment_flex_direction_column":"flex-start","vertical_alignment_flex_direction_column":"center","gap":28,"width":"fill","custom_width":65,"width_mobile":"fill","custom_width_mobile":100,"height":"fit","custom_height":100,"inherit_color_scheme":true,"color_scheme":"","background_media":"none","video_position":"cover","background_image_position":"cover","border":"none","border_width":1,"border_opacity":100,"border_radius":0,"toggle_overlay":false,"overlay_color":"#00000026","overlay_style":"solid","gradient_direction":"to top","link":"","open_in_new_tab":false,"placeholder":"","padding-block-start":40,"padding-block-end":0,"padding-inline-start":0,"padding-inline-end":0},"blocks":{"group_xr9GGL":{"type":"group","name":"Header","settings":{"content_direction":"column","vertical_on_mobile":true,"horizontal_alignment":"flex-start","vertical_alignment":"center","align_baseline":false,"horizontal_alignment_flex_direction_column":"flex-start","vertical_alignment_flex_direction_column":"center","gap":8,"width":"fill","custom_width":100,"width_mobile":"fill","custom_width_mobile":100,"height":"fit","custom_height":100,"inherit_color_scheme":true,"color_scheme":"","background_media":"none","video_position":"cover","background_image_position":"cover","border":"none","border_width":1,"border_opacity":100,"border_radius":0,"toggle_overlay":false,"overlay_color":"#00000026","overlay_style":"solid","gradient_direction":"to top","link":"","open_in_new_tab":false,"placeholder":"","padding-block-start":0,"padding-block-end":0,"padding-inline-start":0,"padding-inline-end":0},"blocks":{"text_AcTWLq":{"type":"text","name":"t:names.title","settings":{"text":"<h1>{{ closest.product.title }}<\/h1>","width":"fit-content","max_width":"normal","alignment":"left","type_preset":"h3","font":"var(--font-body--family)","font_size":"1rem","line_height":"normal","letter_spacing":"normal","case":"none","wrap":"pretty","color":"var(--color-foreground)","background":false,"background_color":"#00000026","corner_radius":0,"padding-block-start":0,"padding-block-end":0,"padding-inline-start":0,"padding-inline-end":0},"blocks":{}},"group_K8TE9x":{"type":"group","name":"Price & Rating","settings":{"content_direction":"column","vertical_on_mobile":true,"horizontal_alignment":"flex-start","vertical_alignment":"center","align_baseline":false,"horizontal_alignment_flex_direction_column":"flex-start","vertical_alignment_flex_direction_column":"center","gap":24,"width":"fill","custom_width":100,"width_mobile":"fill","custom_width_mobile":100,"height":"fit","custom_height":100,"inherit_color_scheme":true,"color_scheme":"","background_media":"none","video_position":"cover","background_image_position":"cover","border":"none","border_width":1,"border_opacity":100,"border_radius":0,"toggle_overlay":false,"overlay_color":"#00000026","overlay_style":"solid","gradient_direction":"to top","link":"","open_in_new_tab":false,"placeholder":"","padding-block-start":0,"padding-block-end":0,"padding-inline-start":0,"padding-inline-end":0},"blocks":{"price_WRfkDh":{"type":"price","settings":{"show_sale_price_first":false,"show_installments":true,"show_tax_info":true,"type_preset":"h5","width":"100%","alignment":"left","font":"var(--font-body--family)","font_size":"1rem","line_height":"normal","letter_spacing":"normal","case":"none","color":"var(--color-foreground)","padding-block-start":4,"padding-block-end":0,"padding-inline-start":0,"padding-inline-end":0},"blocks":{}},"review_m3RVcq":{"type":"review","settings":{"stars_style":"shaded","show_number":true,"rating_color":"primary","type_preset":"paragraph","alignment":"left"},"blocks":{}}},"block_order":["price_WRfkDh","review_m3RVcq"]}},"block_order":["text_AcTWLq","group_K8TE9x"]},"divider_grFKCP":{"type":"_divider","name":"t:names.divider","settings":{"thickness":1,"corner_radius":"square","width_percent":100,"padding-block-start":0,"padding-block-end":0},"blocks":{}},"variant_picker_nhbWcG":{"type":"variant-picker","settings":{"variant_style":"buttons","show_swatches":true,"alignment":"left","padding-block-start":0,"padding-block-end":0,"padding-inline-start":0,"padding-inline-end":0},"blocks":{}},"buy_buttons_B7HMzq":{"type":"buy-buttons","settings":{"stacking":false,"show_pickup_availability":false,"gift_card_form":true,"padding-block-start":0,"padding-block-end":0,"padding-inline-start":0,"padding-inline-end":0},"blocks":{"quantity":{"type":"quantity","static":true,"settings":{},"blocks":{}},"add-to-cart":{"type":"add-to-cart","static":true,"settings":{"style_class":"button"},"blocks":{}},"accelerated-checkout":{"type":"accelerated-checkout","static":true,"settings":{},"blocks":{}}},"block_order":[]},"ai_gen_block_7ba0f3e_Nc6KWG":{"type":"ai_gen_block_7ba0f3e","disabled":true,"settings":{"banner_text":"Use for up to 30 Days for best results. Subscribe & Save with our bundles.","background_color":"#d2f0cf","text_color":"#000000","icon_color":"#000000","text_size":14,"icon_size":24,"icon_text_gap":12,"padding_vertical":16,"padding_horizontal":24,"border_radius":4,"desktop_width_percent":100},"blocks":{}},"ai_gen_block_f854d25_FbapNe":{"type":"ai_gen_block_f854d25","settings":{"icon_text":"+","banner_text":"Use for up to 30 Days for best results. Subscribe & Save with our bundles.","background_color":"#d2f0cf","text_color":"#000000","text_size":14,"border_radius":4,"padding_vertical":10,"padding_horizontal":20,"desktop_width_percent":100,"icon_size":36,"icon_background_color":"#f9f8f6","icon_color":"#000000","icon_border_radius":20},"blocks":{}},"ai_gen_block_7ba0f3e_t38kUV":{"type":"ai_gen_block_7ba0f3e","settings":{"banner_text":"Orders typically delivered within 2-3 business days.","background_color":"#e6e6e6","text_color":"#000000","icon_color":"#000000","text_size":14,"icon_size":24,"icon_text_gap":12,"padding_vertical":8,"padding_horizontal":24,"border_radius":4,"desktop_width_percent":100},"blocks":{}},"product_description_8gHdXj":{"type":"product-description","name":"Product description","settings":{"text":"{{ closest.product.description }}","width":"100%","max_width":"normal","alignment":"left","type_preset":"paragraph","font":"var(--font-primary--family)","font_size":"","line_height":"normal","letter_spacing":"normal","case":"none","wrap":"pretty","color":"","background":false,"background_color":"#00000026","corner_radius":0,"padding-block-start":0,"padding-block-end":0,"padding-inline-start":0,"padding-inline-end":0},"blocks":{}},"judge_me_reviews_review_widget_WAC6ji":{"type":"shopify:\/\/apps\/judge-me-reviews\/blocks\/review_widget\/61ccd3b1-a9f2-4160-9fe9-4fec8413e5d8","settings":{"review_data":"sample_data","max_width":1200,"show_shop_reviews":false,"empty_state":"empty_widget"}},"accordion_jjaG39":{"type":"accordion","name":"t:names.accordion","settings":{"icon":"plus","dividers":true,"type_preset":"h5","inherit_color_scheme":true,"color_scheme":"","border":"none","border_width":1,"border_opacity":100,"border_radius":0,"padding-block-start":0,"padding-block-end":0,"padding-inline-start":0,"padding-inline-end":0},"blocks":{"accordion_row_WyAjHK":{"type":"_accordion-row","settings":{"heading":"USAGE & INSTRUCTIONS","open_by_default":false,"icon":"none","width":20},"blocks":{"text_UfENHV":{"type":"text","settings":{"text":"<p>Recommended Daily Dose: 1 x 60ml Shot per day.<\/p><p>Best Time to Take: AM<\/p>","width":"100%","max_width":"normal","alignment":"left","type_preset":"rte","font":"var(--font-body--family)","font_size":"1rem","line_height":"normal","letter_spacing":"normal","case":"none","wrap":"pretty","color":"var(--color-foreground)","background":false,"background_color":"#00000026","corner_radius":0,"padding-block-start":0,"padding-block-end":0,"padding-inline-start":0,"padding-inline-end":0},"blocks":{}}},"block_order":["text_UfENHV"]},"accordion_row_xktep7":{"type":"_accordion-row","settings":{"heading":"STORAGE INSTRUCTIONS","open_by_default":false,"icon":"none","width":20},"blocks":{"text_6rQYtf":{"type":"text","settings":{"text":"<p>Store in a cool, dry place away from sunlight, refrigerate after opening and consume within two days.<\/p><p>Shelf Life (unopened): Per date on bottle lid<\/p><p><\/p>","width":"100%","max_width":"normal","alignment":"left","type_preset":"rte","font":"var(--font-body--family)","font_size":"1rem","line_height":"normal","letter_spacing":"normal","case":"none","wrap":"pretty","color":"var(--color-foreground)","background":false,"background_color":"#00000026","corner_radius":0,"padding-block-start":0,"padding-block-end":0,"padding-inline-start":0,"padding-inline-end":0},"blocks":{}}},"block_order":["text_6rQYtf"]}},"block_order":["accordion_row_WyAjHK","accordion_row_xktep7"]},"text_FU3LQf":{"type":"text","name":"t:names.text","settings":{"text":"<p><strong>Warnings \/ Disclaimers:<\/strong><\/p><p>Not recommend for individuals under 18 years of age, or those who are pregnant, breast feeding, or trying to conceive. If you’re taking any medication or have a medical condition, please consult a healthcare professional before use. Keep out of sight and reach of children. Food supplements should not be used as a substitute for a varied and balanced diet and a healthy lifestyle.<\/p><p> <\/p>","width":"fit-content","max_width":"normal","alignment":"left","type_preset":"rte","font":"var(--font-body--family)","font_size":"1rem","line_height":"normal","letter_spacing":"normal","case":"none","wrap":"pretty","color":"var(--color-foreground)","background":false,"background_color":"#00000026","corner_radius":0,"padding-block-start":0,"padding-block-end":0,"padding-inline-start":0,"padding-inline-end":0},"blocks":{}}},"block_order":["group_xr9GGL","divider_grFKCP","variant_picker_nhbWcG","buy_buttons_B7HMzq","ai_gen_block_7ba0f3e_Nc6KWG","ai_gen_block_f854d25_FbapNe","ai_gen_block_7ba0f3e_t38kUV","product_description_8gHdXj","judge_me_reviews_review_widget_WAC6ji","accordion_jjaG39","text_FU3LQf"]}},"block_order":["group_JtXipy"]}},"settings":{"content_width":"content-center-aligned","desktop_media_position":"left","equal_columns":true,"limit_details_width":true,"gap":48,"color_scheme":"scheme-1","padding-block-start":0,"padding-block-end":20}},"media_with_content_kpQCTG":{"type":"media-with-content","blocks":{"media":{"type":"_media-without-appearance","static":true,"settings":{"media_type":"image","image":"shopify:\/\/shop_images\/TT100796_copy.jpg","link":"","video_loop":true,"video_autoplay":false,"image_position":"cover","video_position":"cover"},"blocks":{}},"content":{"type":"_content-without-appearance","static":true,"settings":{"horizontal_alignment_flex_direction_column":"center","vertical_alignment_flex_direction_column":"center","gap":24},"blocks":{"text_jfYyLY":{"type":"text","name":"t:names.heading","settings":{"text":"<h2>The first NAD+ Shot drink to market<\/h2>","width":"fit-content","max_width":"normal","alignment":"left","type_preset":"h1","font":"var(--font-primary--family)","font_size":"","line_height":"normal","letter_spacing":"normal","case":"none","wrap":"pretty","color":"","background":false,"background_color":"#00000026","corner_radius":0,"padding-block-start":20,"padding-block-end":0,"padding-inline-start":0,"padding-inline-end":0},"blocks":{}},"text_nnymP7":{"type":"text","settings":{"text":"<p>Just one refined, <strong>ready-to-drink shot<\/strong> that energises your day, strengthens your focus, and fortifies your future.<\/p>","width":"fit-content","max_width":"normal","alignment":"left","type_preset":"rte","font":"var(--font-primary--family)","font_size":"","line_height":"normal","letter_spacing":"normal","case":"none","wrap":"pretty","color":"","background":false,"background_color":"#00000026","corner_radius":0,"padding-block-start":0,"padding-block-end":20,"padding-inline-start":0,"padding-inline-end":0},"blocks":{}}},"block_order":["text_jfYyLY","text_nnymP7"]}},"name":"t:names.media_with_text","settings":{"media_position":"right","media_width":"medium","media_height":"60svh","section_width":"full-width","extend_media":true,"color_scheme":"scheme-2","padding-block-start":0,"padding-block-end":0}},"product-recommendations":{"type":"product-recommendations","blocks":{"header":{"type":"text","name":"t:names.header","settings":{"text":"<h3>You may also like<\/h3>","width":"100%","max_width":"normal","alignment":"center","type_preset":"h3","font":"var(--font-primary--family)","font_size":"","line_height":"normal","letter_spacing":"normal","case":"none","wrap":"pretty","color":"","background":false,"background_color":"#00000026","corner_radius":0,"padding-block-start":0,"padding-block-end":0,"padding-inline-start":0,"padding-inline-end":0},"blocks":{}},"static-product-card":{"type":"_product-card","name":"t:names.product_card","static":true,"settings":{"product_card_gap":16,"inherit_color_scheme":true,"color_scheme":"","border":"none","border_width":1,"border_opacity":100,"border_radius":0,"padding-block-start":0,"padding-block-end":0,"padding-inline-start":0,"padding-inline-end":0},"blocks":{"card-gallery":{"type":"_product-card-gallery","name":"t:names.product_card_media","settings":{"image_ratio":"square","border":"none","border_width":1,"border_opacity":100,"border_radius":0,"padding-block-start":0,"padding-block-end":0,"padding-inline-start":0,"padding-inline-end":0},"blocks":{}},"group":{"type":"_product-card-group","settings":{"content_direction":"column","vertical_on_mobile":true,"horizontal_alignment":"flex-start","vertical_alignment":"center","align_baseline":false,"horizontal_alignment_flex_direction_column":"center","vertical_alignment_flex_direction_column":"center","gap":4,"width":"fill","custom_width":100,"width_mobile":"fill","custom_width_mobile":100,"height":"fit","custom_height":100,"inherit_color_scheme":true,"color_scheme":"","background_media":"none","video_position":"cover","background_image_position":"cover","border":"none","border_width":1,"border_opacity":100,"border_radius":0,"toggle_overlay":false,"overlay_color":"#00000026","overlay_style":"solid","gradient_direction":"to top","link":"","open_in_new_tab":false,"padding-block-start":0,"padding-block-end":0,"padding-inline-start":0,"padding-inline-end":0},"blocks":{"product_title_AQqXJ9":{"type":"product-title","name":"t:names.product_title","settings":{"width":"fit-content","max_width":"normal","alignment":"left","type_preset":"h5","font":"var(--font-body--family)","font_size":"1rem","line_height":"normal","letter_spacing":"normal","case":"none","wrap":"pretty","color":"var(--color-foreground)","background":false,"background_color":"#00000026","corner_radius":0,"padding-block-start":0,"padding-block-end":0,"padding-inline-start":0,"padding-inline-end":0},"blocks":{}},"price":{"type":"price","disabled":true,"settings":{"show_sale_price_first":true,"show_installments":false,"show_tax_info":false,"type_preset":"paragraph","width":"100%","alignment":"center","font":"var(--font-body--family)","font_size":"1rem","line_height":"normal","letter_spacing":"normal","case":"none","color":"var(--color-foreground)","padding-block-start":0,"padding-block-end":0,"padding-inline-start":0,"padding-inline-end":0},"blocks":{}}},"block_order":["product_title_AQqXJ9","price"]}},"block_order":["card-gallery","group"]}},"block_order":["header"],"settings":{"product":"{{ closest.product }}","recommendation_type":"related","layout_type":"grid","carousel_on_mobile":false,"max_products":4,"columns":4,"mobile_columns":"2","columns_gap":12,"rows_gap":36,"icons_style":"arrow","icons_shape":"none","section_width":"page-width","gap":28,"color_scheme":"scheme-1","padding-block-start":48,"padding-block-end":48}}},"order":["main","media_with_content_kpQCTG","product-recommendations"]}
+{
+  "sections": {
+    "main": {
+      "type": "neu-product",
+      "blocks": {
+        "rating": {
+          "type": "neu-rating",
+          "settings": {
+            "fallback_rating": "4.8",
+            "fallback_count": "2,418",
+            "reviews_link": "#neu-reviews",
+            "proof_text": "<strong>312 orders</strong> placed this week · Trusted by 12,400+ people"
+          }
+        },
+        "intro": {
+          "type": "neu-intro",
+          "settings": {
+            "title": "",
+            "subtitle": "NAD+ liquid shot · Energy, focus & healthy ageing",
+            "pill_1": "From <strong>£3.00/day</strong> per shot",
+            "pill_2": "28 shots",
+            "text": "<p><strong>Cleaner energy. Sharper focus. Zero crash.</strong> Each 60ml shot delivers 300mg of Nicotinamide Riboside plus a full stack of cellular cofactors. No caffeine, no sugar, no shortcuts — just the molecule your cells need to make energy.</p>",
+            "link_label": "Nutrition & Ingredients",
+            "link_url": "#neu-stats"
+          }
+        },
+        "buy": {
+          "type": "neu-buy-box",
+          "settings": {
+            "show_options": true,
+            "plans_label": "Choose a plan",
+            "show_quantity": true,
+            "button_label": "Add to cart",
+            "dispatch_text": "Dispatched within 1–2 business days",
+            "show_dynamic_checkout": true,
+            "instalments_text": "<p>Choose <strong>Pay in Instalments</strong> at checkout to split orders over £50 into <strong>3 interest-free payments with Google Shop</strong>.</p>",
+            "show_payment_icons": true
+          },
+          "blocks": {
+            "plan_28": {
+              "type": "_neu-plan",
+              "settings": {
+                "plan_type": "subscription",
+                "selling_plan_id": "",
+                "plan_position": 1,
+                "selected": true,
+                "badge": "Recommended for maximum results",
+                "title": "28-Day Subscription",
+                "subtitle": "",
+                "subtitle_accent": false,
+                "perks": "Save 25% off your first order, then 14% off ongoing\nReschedule, skip or cancel any time\nEarly access to new products\nExclusive discounts and promotions\n28-day supply, delivered every 4 weeks\n£3.00 per shot",
+                "perks_inline": false,
+                "chips": "Free postage\nFree socks",
+                "servings": 28,
+                "billing_months": 1,
+                "show_per_month": true,
+                "price_note": ""
+              }
+            },
+            "plan_3m": {
+              "type": "_neu-plan",
+              "settings": {
+                "plan_type": "subscription",
+                "selling_plan_id": "",
+                "plan_position": 2,
+                "selected": false,
+                "badge": "Best value",
+                "title": "3-Month Subscription",
+                "subtitle": "",
+                "subtitle_accent": false,
+                "perks": "",
+                "perks_inline": false,
+                "chips": "Free socks\nFree water bottle\nFree postage",
+                "servings": 84,
+                "billing_months": 3,
+                "show_per_month": true,
+                "price_note": ""
+              }
+            },
+            "plan_discovery": {
+              "type": "_neu-plan",
+              "settings": {
+                "plan_type": "product",
+                "selling_plan_id": "",
+                "plan_position": 1,
+                "selected": false,
+                "badge": "Try before you subscribe",
+                "title": "12-Day Discovery Pack",
+                "subtitle": "4 Flavours · 3 Servings Each",
+                "subtitle_accent": true,
+                "perks": "Taste all flavours\nSelect your favourite\nGet 15% off your first subscription",
+                "perks_inline": true,
+                "chips": "Free postage",
+                "servings": 12,
+                "billing_months": 1,
+                "show_per_month": false,
+                "price_note": ""
+              }
+            },
+            "plan_once": {
+              "type": "_neu-plan",
+              "settings": {
+                "plan_type": "one_time",
+                "selling_plan_id": "",
+                "plan_position": 1,
+                "selected": false,
+                "badge": "",
+                "title": "One-Time 28-Day Pack",
+                "subtitle": "Choose your favourite flavour",
+                "subtitle_accent": false,
+                "perks": "",
+                "perks_inline": false,
+                "chips": "",
+                "servings": 28,
+                "billing_months": 1,
+                "show_per_month": false,
+                "price_note": "+ Postage"
+              }
+            }
+          },
+          "block_order": [
+            "plan_28",
+            "plan_3m",
+            "plan_discovery",
+            "plan_once"
+          ]
+        },
+        "delivery": {
+          "type": "neu-perk-card",
+          "settings": {
+            "style": "tint",
+            "icon": "truck",
+            "title": "Spend £50 to get free delivery within 2 working days",
+            "link_label": "Delivery information",
+            "link_url": "/policies/shipping-policy",
+            "image": ""
+          }
+        },
+        "rewards": {
+          "type": "neu-perk-card",
+          "settings": {
+            "style": "outline",
+            "icon": "gift",
+            "title": "Earn NEU+ points — free socks for new subscribers",
+            "link_label": "Learn more about NEU+ rewards",
+            "link_url": "",
+            "image": ""
+          }
+        },
+        "trust": {
+          "type": "neu-trust-icons",
+          "settings": {},
+          "blocks": {
+            "t1": {
+              "type": "_neu-trust-item",
+              "settings": {
+                "icon": "shield",
+                "label": "UK-Made",
+                "link": ""
+              }
+            },
+            "t2": {
+              "type": "_neu-trust-item",
+              "settings": {
+                "icon": "medal",
+                "label": "Informed Sport",
+                "link": ""
+              }
+            },
+            "t3": {
+              "type": "_neu-trust-item",
+              "settings": {
+                "icon": "refresh",
+                "label": "Cancel anytime",
+                "link": ""
+              }
+            },
+            "t4": {
+              "type": "_neu-trust-item",
+              "settings": {
+                "icon": "box",
+                "label": "Returns policy",
+                "link": "/policies/refund-policy"
+              }
+            }
+          },
+          "block_order": [
+            "t1",
+            "t2",
+            "t3",
+            "t4"
+          ]
+        }
+      },
+      "block_order": [
+        "rating",
+        "intro",
+        "buy",
+        "delivery",
+        "rewards",
+        "trust"
+      ],
+      "settings": {
+        "show_breadcrumb": true,
+        "breadcrumb_root": "Shop",
+        "breadcrumb_label": "",
+        "breadcrumb_url": "",
+        "badge": "Bestseller",
+        "tab_1_label": "Description",
+        "tab_1_source": "description",
+        "tab_1_content": "",
+        "tab_2_label": "The Science",
+        "tab_2_source": "custom",
+        "tab_2_content": "<p>NAD+ is the molecule every cell needs to produce energy. Levels fall ~50% by age 40 — and modern stressors deplete what's left.</p><p>NEU+ delivers 300mg of Nicotinamide Riboside (NR), a clinically studied NAD+ precursor, supported by TMG for methylation and Vitamin C for immune support. Together they restore the cofactors your body needs daily.</p>",
+        "tab_3_label": "Ingredients",
+        "tab_3_source": "custom",
+        "tab_3_content": "<h3>What's in every shot</h3><p><strong>Nicotinamide Riboside (300mg)</strong> — NAD+ precursor. Supports cellular energy, focus and recovery.</p><p><strong>Betaine / TMG (250mg)</strong> — Supports methylation and optimal cellular function.</p><p><strong>Vitamin C (80mg)</strong> — Supports immunity, reduces tiredness and supports collagen.</p><h3>Usage & instructions</h3><p>Recommended daily dose: 1 x 60ml shot per day. Best time to take: AM.</p><h3>Storage</h3><p>Store in a cool, dry place away from sunlight, refrigerate after opening and consume within two days. Shelf life (unopened): per date on bottle lid.</p><h3>Warnings / disclaimers</h3><p>Not recommend for individuals under 18 years of age, or those who are pregnant, breast feeding, or trying to conceive. If you’re taking any medication or have a medical condition, please consult a healthcare professional before use. Keep out of sight and reach of children. Food supplements should not be used as a substitute for a varied and balanced diet and a healthy lifestyle.</p>",
+        "show_sticky_bar": true,
+        "sticky_button_label": "Add to cart"
+      }
+    },
+    "featured_in": {
+      "type": "neu-marquee",
+      "settings": {
+        "speed": 40,
+        "padding": 24
+      },
+      "blocks": {
+        "f1": {
+          "type": "item",
+          "settings": {
+            "text": "As featured in",
+            "size": "small"
+          }
+        },
+        "f2": {
+          "type": "item",
+          "settings": {
+            "text": "Men's Fitness",
+            "size": "large"
+          }
+        },
+        "f3": {
+          "type": "item",
+          "settings": {
+            "text": "Top Santé",
+            "size": "large"
+          }
+        },
+        "f4": {
+          "type": "item",
+          "settings": {
+            "text": "Women's Fitness",
+            "size": "large"
+          }
+        }
+      },
+      "block_order": [
+        "f1",
+        "f2",
+        "f3",
+        "f4"
+      ]
+    },
+    "why_subscribe": {
+      "type": "neu-why-subscribe",
+      "settings": {
+        "eyebrow": "Why subscribe?",
+        "heading": "Build the daily habit. Save up to 12%",
+        "link_label": "How subscriptions work",
+        "link_url": "",
+        "padding_top": 64,
+        "padding_bottom": 40
+      },
+      "blocks": {
+        "w1": {
+          "type": "card",
+          "settings": {
+            "icon": "cycle",
+            "title": "Never run out",
+            "text": "Auto-delivered on your cadence. Skip, swap or pause in two taps."
+          }
+        },
+        "w2": {
+          "type": "card",
+          "settings": {
+            "icon": "percent",
+            "title": "Lower price",
+            "text": "Subscribers pay £3.32/day vs £3.57 one-off. Save more on quarterly."
+          }
+        },
+        "w3": {
+          "type": "card",
+          "settings": {
+            "icon": "star",
+            "title": "Subscriber perks",
+            "text": "Early access to new flavours, free socks on first order, member-only drops."
+          }
+        },
+        "w4": {
+          "type": "card",
+          "settings": {
+            "icon": "unlock",
+            "title": "No commitment",
+            "text": "Cancel any time from your account — no fees, no calls."
+          }
+        }
+      },
+      "block_order": [
+        "w1",
+        "w2",
+        "w3",
+        "w4"
+      ]
+    },
+    "certifications": {
+      "type": "neu-certifications",
+      "settings": {
+        "eyebrow": "Made right. Tested independently.",
+        "heading": "Certifications & standards",
+        "padding_top": 64,
+        "padding_bottom": 64
+      },
+      "blocks": {
+        "c1": {
+          "type": "cert",
+          "settings": {
+            "logo": "",
+            "title": "Informed Sport",
+            "text": "Batch tested"
+          }
+        },
+        "c2": {
+          "type": "cert",
+          "settings": {
+            "logo": "",
+            "title": "Vegan",
+            "text": "Plant-based formula"
+          }
+        },
+        "c3": {
+          "type": "cert",
+          "settings": {
+            "logo": "",
+            "title": "GMO-free",
+            "text": "No modified ingredients"
+          }
+        },
+        "c4": {
+          "type": "cert",
+          "settings": {
+            "logo": "",
+            "title": "Made in Britain",
+            "text": "Manufactured in the UK"
+          }
+        },
+        "c5": {
+          "type": "cert",
+          "settings": {
+            "logo": "",
+            "title": "B Corp Certified",
+            "text": "Verified social & environmental standards"
+          }
+        }
+      },
+      "block_order": [
+        "c1",
+        "c2",
+        "c3",
+        "c4",
+        "c5"
+      ]
+    },
+    "reviews": {
+      "type": "neu-reviews",
+      "settings": {
+        "eyebrow": "Customer reviews",
+        "fallback_rating": "4.8",
+        "fallback_count": "2,418",
+        "button_label": "Write a review",
+        "button_url": "#judgeme_product_reviews",
+        "speed": 60,
+        "padding_top": 64,
+        "padding_bottom": 80
+      },
+      "blocks": {
+        "r1": {
+          "type": "review",
+          "settings": {
+            "avatar": "",
+            "stars": 5,
+            "title": "Genuine difference",
+            "body": "Real energy difference after 3 weeks. No jitters, no crash. Will keep ordering.",
+            "name": "Sarah M.",
+            "verified": true
+          }
+        },
+        "r2": {
+          "type": "review",
+          "settings": {
+            "avatar": "",
+            "stars": 5,
+            "title": "Clean focus",
+            "body": "I take it before training. Cleaner energy than coffee and I sleep better.",
+            "name": "James T.",
+            "verified": true
+          }
+        },
+        "r3": {
+          "type": "review",
+          "settings": {
+            "avatar": "",
+            "stars": 5,
+            "title": "I feel like myself again",
+            "body": "Brain fog has lifted. Genuinely the first supplement I've felt in two weeks.",
+            "name": "Claire B.",
+            "verified": true
+          }
+        },
+        "r4": {
+          "type": "review",
+          "settings": {
+            "avatar": "",
+            "stars": 4,
+            "title": "Tastes great",
+            "body": "Lemon & Ginger is lovely. Looking forward to trying the new flavours.",
+            "name": "Mark D.",
+            "verified": true
+          }
+        },
+        "judge_me_reviews_review_widget_WAC6ji": {
+          "type": "shopify://apps/judge-me-reviews/blocks/review_widget/61ccd3b1-a9f2-4160-9fe9-4fec8413e5d8",
+          "disabled": true,
+          "settings": {
+            "review_data": "sample_data",
+            "max_width": 1200,
+            "show_shop_reviews": false,
+            "empty_state": "empty_widget"
+          }
+        }
+      },
+      "block_order": [
+        "r1",
+        "r2",
+        "r3",
+        "r4",
+        "judge_me_reviews_review_widget_WAC6ji"
+      ]
+    },
+    "stats": {
+      "type": "neu-stats-band",
+      "settings": {
+        "image": "shopify://shop_images/TT100796_copy.jpg",
+        "heading": "The daily <em>shot</em> with heavyweight credentials",
+        "button_label": "Nutrition & Ingredients",
+        "button_url": "",
+        "background": "#e8e2d5",
+        "padding_top": 80,
+        "padding_bottom": 80
+      },
+      "blocks": {
+        "s1": {
+          "type": "stat",
+          "settings": {
+            "value": "300mg",
+            "label": "Nicotinamide Riboside"
+          }
+        },
+        "s2": {
+          "type": "stat",
+          "settings": {
+            "value": "250mg",
+            "label": "Betaine (TMG)"
+          }
+        },
+        "s3": {
+          "type": "stat",
+          "settings": {
+            "value": "80mg",
+            "label": "Vitamin C"
+          }
+        },
+        "s4": {
+          "type": "stat",
+          "settings": {
+            "value": "0",
+            "label": "Caffeine or sugar"
+          }
+        }
+      },
+      "block_order": [
+        "s1",
+        "s2",
+        "s3",
+        "s4"
+      ]
+    },
+    "faq": {
+      "type": "neu-faq",
+      "settings": {
+        "eyebrow": "FAQ",
+        "heading": "Ask us anything?",
+        "faq_schema": true,
+        "padding_top": 80,
+        "padding_bottom": 80
+      },
+      "blocks": {
+        "q1": {
+          "type": "question",
+          "settings": {
+            "question": "When will I notice a difference?",
+            "answer": "<p>Most people feel sharper energy and focus within 2 weeks. Recovery and resilience benefits build between weeks 4–6, with compounding effects on cognition, skin and longevity from 9–12 weeks of daily use.</p>",
+            "open": true
+          }
+        },
+        "q2": {
+          "type": "question",
+          "settings": {
+            "question": "How does the subscription work?",
+            "answer": "<p>Your first order ships immediately. Subscriptions renew every 28 days (or 3 months for the prepaid plan). You can skip, pause or cancel any time from your account — no fees, no questions.</p>",
+            "open": false
+          }
+        },
+        "q3": {
+          "type": "question",
+          "settings": {
+            "question": "What is Nicotinamide Riboside (NR)?",
+            "answer": "<p>NR is a clinically studied form of vitamin B3 and a direct precursor to NAD+ — the molecule every cell needs to produce energy. NAD+ levels fall ~50% by age 40; NR helps restore them.</p>",
+            "open": false
+          }
+        },
+        "q4": {
+          "type": "question",
+          "settings": {
+            "question": "Is NEU+ vegan and gluten-free?",
+            "answer": "<p>Yes. NEU+ is vegan, gluten-free, sugar-free and made in the UK. Each batch is third-party tested and Informed Sport certified for safe use by athletes.</p>",
+            "open": false
+          }
+        },
+        "q5": {
+          "type": "question",
+          "settings": {
+            "question": "Delivery and returns",
+            "answer": "<p>Free UK delivery on orders over £45. Orders typically dispatched within 1–2 business days. 30-day money-back guarantee on first orders.</p>",
+            "open": false
+          }
+        }
+      },
+      "block_order": [
+        "q1",
+        "q2",
+        "q3",
+        "q4",
+        "q5"
+      ]
+    }
+  },
+  "order": [
+    "main",
+    "featured_in",
+    "why_subscribe",
+    "certifications",
+    "reviews",
+    "stats",
+    "faq"
+  ]
+}

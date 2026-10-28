@@ -1,0 +1,118 @@
+{{ 'neu-product.css' | asset_url | stylesheet_tag }}
+
+<div
+  class="neu neu-section"
+  style="--neu-pad-top: {{ section.settings.padding_top }}px; --neu-pad-bottom: {{ section.settings.padding_bottom }}px;"
+>
+  <div class="neu-page">
+    <div class="neu-certs neu-narrow">
+      {%- if section.settings.eyebrow != blank -%}
+        <p class="neu-eyebrow">{{ section.settings.eyebrow | escape }}</p>
+      {%- endif -%}
+      <h2 class="neu-h2">{{ section.settings.heading }}</h2>
+
+      <div class="neu-certs__grid" style="--neu-cert-cols: {{ section.blocks.size | at_least: 1 | at_most: 6 }}">
+        {%- for block in section.blocks -%}
+          <div class="neu-certs__card" {{ block.shopify_attributes }}>
+            <div class="neu-certs__logo">
+              {%- if block.settings.logo -%}
+                {{ block.settings.logo | image_url: height: 128 | image_tag: loading: 'lazy', alt: block.settings.logo.alt | default: block.settings.title }}
+              {%- else -%}
+                {{ 'image' | placeholder_svg_tag: 'neu-certs__placeholder' }}
+              {%- endif -%}
+            </div>
+            <h3>{{ block.settings.title | escape }}</h3>
+            <p>{{ block.settings.text | escape }}</p>
+          </div>
+        {%- endfor -%}
+      </div>
+    </div>
+  </div>
+</div>
+
+{% stylesheet %}
+  .neu-certs__placeholder {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    background: #f2efe8;
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "NEU+ certifications",
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "Made right. Tested independently."
+    },
+    {
+      "type": "inline_richtext",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Certifications & standards"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Top padding",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "default": 64
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Bottom padding",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "default": 64
+    }
+  ],
+  "blocks": [
+    {
+      "type": "cert",
+      "name": "Certification",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "logo",
+          "label": "Logo"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "default": "Informed Sport"
+        },
+        {
+          "type": "text",
+          "id": "text",
+          "label": "Text",
+          "default": "Batch tested"
+        }
+      ]
+    }
+  ],
+  "max_blocks": 6,
+  "presets": [
+    {
+      "name": "NEU+ certifications",
+      "blocks": [
+        { "type": "cert" },
+        { "type": "cert", "settings": { "title": "Vegan", "text": "Plant-based formula" } },
+        { "type": "cert", "settings": { "title": "GMO-free", "text": "No modified ingredients" } },
+        { "type": "cert", "settings": { "title": "Made in Britain", "text": "Manufactured in the UK" } },
+        { "type": "cert", "settings": { "title": "B Corp Certified", "text": "Verified social & environmental standards" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

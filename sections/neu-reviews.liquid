@@ -1,0 +1,219 @@
+{{ 'neu-product.css' | asset_url | stylesheet_tag }}
+
+{%- liquid
+  assign rating = product.metafields.reviews.rating.value.rating | default: section.settings.fallback_rating
+  assign rating_count = product.metafields.reviews.rating_count.value | default: section.settings.fallback_count
+  assign rating_float = rating | times: 1.0
+  assign review_blocks = section.blocks | where: 'type', 'review'
+  assign app_block_count = section.blocks.size | minus: review_blocks.size
+-%}
+
+{%- capture cards -%}
+  {%- for block in review_blocks -%}
+    <article class="neu-review" {{ block.shopify_attributes }}>
+      <div class="neu-review__top">
+        {%- if block.settings.avatar -%}
+          {{ block.settings.avatar | image_url: width: 64, height: 64, crop: 'center' | image_tag: class: 'neu-review__avatar', loading: 'lazy', alt: '' }}
+        {%- else -%}
+          <span class="neu-review__avatar" aria-hidden="true"></span>
+        {%- endif -%}
+        <span class="neu-stars" role="img" aria-label="{{ block.settings.stars }} out of 5 stars">
+          {%- for i in (1..block.settings.stars) -%}
+            {% render 'neu-icon', icon: 'star-filled' %}
+          {%- endfor -%}
+        </span>
+      </div>
+      <h3>{{ block.settings.title | escape }}</h3>
+      <p>{{ block.settings.body | escape }}</p>
+      <div class="neu-review__by">
+        <span>{{ block.settings.name | escape }}</span>
+        {%- if block.settings.verified -%}
+          <span class="neu-review__verified">{% render 'neu-icon', icon: 'check' %}Verified buyer</span>
+        {%- endif -%}
+      </div>
+    </article>
+  {%- endfor -%}
+{%- endcapture -%}
+
+<div
+  id="neu-reviews"
+  class="neu neu-section neu-reviews"
+  style="--neu-pad-top: {{ section.settings.padding_top }}px; --neu-pad-bottom: {{ section.settings.padding_bottom }}px; --neu-marquee-speed: {{ section.settings.speed }}s;"
+>
+  <div class="neu-page">
+    <div class="neu-reviews__head">
+      <div>
+        {%- if section.settings.eyebrow != blank -%}
+          <p class="neu-eyebrow">{{ section.settings.eyebrow | escape }}</p>
+        {%- endif -%}
+        <div class="neu-reviews__summary">
+          <span class="neu-reviews__score">{{ rating_float | round: 1 }} / 5</span>
+          <span class="neu-stars" aria-hidden="true">
+            {%- for i in (1..5) -%}
+              {%- assign star_threshold = i | minus: 0.25 -%}
+              {%- if rating_float >= star_threshold -%}
+                {% render 'neu-icon', icon: 'star-filled' %}
+              {%- else -%}
+                {% render 'neu-icon', icon: 'star-filled', class: 'neu-icon--empty' %}
+              {%- endif -%}
+            {%- endfor -%}
+          </span>
+          <span class="neu-reviews__count">{{ rating_count }} verified reviews</span>
+        </div>
+      </div>
+      {%- if section.settings.button_label != blank -%}
+        <a class="neu-btn neu-btn--outline" href="{{ section.settings.button_url | default: '#judgeme_product_reviews' }}">
+          {{- section.settings.button_label | escape -}}
+        </a>
+      {%- endif -%}
+    </div>
+  </div>
+
+  {%- if review_blocks.size > 0 -%}
+    <div class="neu-reviews__viewport" aria-label="Customer reviews">
+      <div class="neu-reviews__track">
+        {{ cards }}
+        <div style="display: contents" aria-hidden="true" inert>{{ cards }}</div>
+      </div>
+    </div>
+  {%- endif -%}
+
+  {%- if app_block_count > 0 -%}
+    <div class="neu-page neu-reviews__apps">
+      {%- for block in section.blocks -%}
+        {%- unless block.type == 'review' -%}
+          {% render block %}
+        {%- endunless -%}
+      {%- endfor -%}
+    </div>
+  {%- endif -%}
+</div>
+
+{% schema %}
+{
+  "name": "NEU+ reviews",
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "The score and count come from Judge.me on product pages. Add the Judge.me widget as an app block to show the full review list under the cards."
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "Customer reviews"
+    },
+    {
+      "type": "text",
+      "id": "fallback_rating",
+      "label": "Fallback rating",
+      "default": "4.8"
+    },
+    {
+      "type": "text",
+      "id": "fallback_count",
+      "label": "Fallback review count",
+      "default": "2,418"
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Button label",
+      "default": "Write a review"
+    },
+    {
+      "type": "text",
+      "id": "button_url",
+      "label": "Button link",
+      "default": "#judgeme_product_reviews"
+    },
+    {
+      "type": "range",
+      "id": "speed",
+      "label": "Seconds per scroll loop",
+      "min": 20,
+      "max": 180,
+      "step": 5,
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Top padding",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "default": 64
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Bottom padding",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "default": 80
+    }
+  ],
+  "blocks": [
+    { "type": "@app" },
+    {
+      "type": "review",
+      "name": "Review",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "avatar",
+          "label": "Avatar"
+        },
+        {
+          "type": "range",
+          "id": "stars",
+          "label": "Stars",
+          "min": 1,
+          "max": 5,
+          "step": 1,
+          "default": 5
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "default": "Genuine difference"
+        },
+        {
+          "type": "textarea",
+          "id": "body",
+          "label": "Review",
+          "default": "Real energy difference after 3 weeks. No jitters, no crash. Will keep ordering."
+        },
+        {
+          "type": "text",
+          "id": "name",
+          "label": "Name",
+          "default": "Sarah M."
+        },
+        {
+          "type": "checkbox",
+          "id": "verified",
+          "label": "Verified buyer",
+          "default": true
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "NEU+ reviews",
+      "blocks": [
+        { "type": "review" },
+        { "type": "review", "settings": { "title": "Clean focus", "body": "I take it before training. Cleaner energy than coffee and I sleep better.", "name": "James T." } },
+        { "type": "review", "settings": { "title": "I feel like myself again", "body": "Brain fog has lifted. Genuinely the first supplement I've felt in two weeks.", "name": "Claire B." } },
+        { "type": "review", "settings": { "stars": 4, "title": "Tastes great", "body": "Lemon & Ginger is lovely. Looking forward to trying the new flavours.", "name": "Mark D." } }
+      ]
+    }
+  ]
+}
+{% endschema %}

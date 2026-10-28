@@ -1,0 +1,279 @@
+{%- liquid
+  assign p = closest.product | default: product
+  assign v = p.selected_or_first_available_variant
+  assign s = block.settings
+  assign type = s.plan_type
+  assign months = s.billing_months | default: 1 | at_least: 1
+  assign servings = s.servings | default: 1 | at_least: 1
+  assign plan_id = ''
+  assign target_variant = v
+  assign plan_price = v.price
+
+  if type == 'subscription'
+    assign wanted_id = s.selling_plan_id | strip
+    for allocation in v.selling_plan_allocations
+      assign this_id = allocation.selling_plan.id | append: ''
+      if wanted_id != blank and this_id == wanted_id
+        assign plan_id = this_id
+        assign plan_price = allocation.price
+        break
+      elsif wanted_id == blank and forloop.index == s.plan_position
+        assign plan_id = this_id
+        assign plan_price = allocation.price
+        break
+      endif
+    endfor
+  elsif type == 'product' and s.product != blank
+    assign target_variant = s.product.selected_or_first_available_variant
+    assign plan_price = target_variant.price
+  endif
+
+  if s.show_per_month
+    assign display_price = plan_price | divided_by: months
+  else
+    assign display_price = plan_price
+  endif
+  assign per_day = plan_price | divided_by: servings
+
+  assign baseline = v.price | times: months
+  assign save_percent = 0
+  if type == 'subscription' and baseline > plan_price
+    assign save_percent = baseline | minus: plan_price | times: 100.0 | divided_by: baseline | round
+  endif
+
+  assign radio_id = 'NeuPlan-' | append: block.id
+-%}
+
+<label
+  class="neu-plan{% if s.selected %} is-selected{% endif %}"
+  for="{{ radio_id }}"
+  data-plan
+  data-plan-type="{{ type }}"
+  data-plan-id="{{ plan_id }}"
+  data-wanted-plan-id="{{ s.selling_plan_id | strip }}"
+  data-plan-position="{{ s.plan_position }}"
+  data-variant-id="{% if type == 'product' %}{{ target_variant.id }}{% endif %}"
+  data-fixed-price="{% if type == 'product' %}{{ plan_price }}{% endif %}"
+  data-months="{{ months }}"
+  data-servings="{{ servings }}"
+  data-per-month="{{ s.show_per_month }}"
+  {{ block.shopify_attributes }}
+>
+  {%- if s.badge != blank -%}
+    <span class="neu-plan__badge">
+      {% render 'neu-icon', icon: 'star-filled' %}
+      {{ s.badge | escape }}
+    </span>
+  {%- endif -%}
+
+  <span class="neu-plan__body">
+    <span class="neu-plan__row">
+      <input
+        class="neu-plan__radio"
+        type="radio"
+        name="neu-plan"
+        id="{{ radio_id }}"
+        {% if s.selected %}
+          checked
+        {% endif %}
+      >
+      <span>
+        <span class="neu-plan__title">
+          {{ s.title | escape }}
+          {%- if type == 'subscription' -%}
+            <span class="neu-save" data-plan-save{% if save_percent <= 0 %} hidden{% endif %}>Save {{ save_percent }}%</span>
+          {%- endif -%}
+        </span>
+        {%- if s.subtitle != blank -%}
+          <span class="neu-plan__subtitle{% if s.subtitle_accent %} neu-plan__subtitle--accent{% endif %}">{{ s.subtitle | escape }}</span>
+        {%- endif -%}
+      </span>
+      <span class="neu-plan__price">
+        <span class="neu-plan__amount">
+          <span data-plan-amount>{{ display_price | money }}</span>
+          {%- if s.show_per_month -%}/mo{%- endif -%}
+        </span>
+        <span class="neu-plan__per" data-plan-per>
+          {{- per_day | money }}/day
+          {%- if months > 1 %} · {{ months }}mo = {{ plan_price | money }}{% endif -%}
+        </span>
+        {%- if s.price_note != blank -%}
+          <span class="neu-plan__note">{{ s.price_note | escape }}</span>
+        {%- endif -%}
+      </span>
+    </span>
+
+    {%- if s.perks != blank -%}
+      {%- assign perks = s.perks | newline_to_br | split: '<br />' -%}
+      <ul class="neu-plan__perks{% if s.perks_inline %} neu-plan__perks--inline{% endif %}">
+        {%- for perk in perks -%}
+          {%- assign perk_text = perk | strip -%}
+          {%- if perk_text != blank -%}
+            {%- liquid
+              assign icon = 'check'
+              if s.perks_inline
+                assign perk_lower = perk_text | downcase
+                if perk_lower contains 'taste'
+                  assign icon = 'leaf'
+                elsif perk_lower contains 'select' or perk_lower contains 'favourite'
+                  assign icon = 'tag'
+                elsif perk_lower contains 'off'
+                  assign icon = 'gift'
+                endif
+              endif
+            -%}
+            <li>{% render 'neu-icon', icon: icon %}<span>{{ perk_text | escape }}</span></li>
+          {%- endif -%}
+        {%- endfor -%}
+      </ul>
+    {%- endif -%}
+
+    {%- if s.chips != blank -%}
+      {%- assign chips = s.chips | newline_to_br | split: '<br />' -%}
+      <span class="neu-chips">
+        {%- for chip in chips -%}
+          {%- assign chip_text = chip | strip -%}
+          {%- if chip_text != blank -%}
+            {%- liquid
+              assign chip_lower = chip_text | downcase
+              assign icon = 'gift'
+              if chip_lower contains 'postage' or chip_lower contains 'delivery' or chip_lower contains 'shipping'
+                assign icon = 'truck'
+              elsif chip_lower contains 'sock'
+                assign icon = 'socks'
+              elsif chip_lower contains 'bottle'
+                assign icon = 'bottle'
+              endif
+            -%}
+            <span class="neu-chip">{% render 'neu-icon', icon: icon %}{{ chip_text | escape }}</span>
+          {%- endif -%}
+        {%- endfor -%}
+      </span>
+    {%- endif -%}
+  </span>
+</label>
+
+{% schema %}
+{
+  "name": "Plan",
+  "tag": null,
+  "settings": [
+    {
+      "type": "select",
+      "id": "plan_type",
+      "label": "Plan type",
+      "options": [
+        { "value": "subscription", "label": "Subscription (selling plan)" },
+        { "value": "one_time", "label": "One-time purchase" },
+        { "value": "product", "label": "Different product (e.g. discovery pack)" }
+      ],
+      "default": "subscription"
+    },
+    {
+      "type": "text",
+      "id": "selling_plan_id",
+      "label": "Selling plan ID",
+      "info": "From Appstle. Leave blank to use the selling plan position below."
+    },
+    {
+      "type": "number",
+      "id": "plan_position",
+      "label": "Selling plan position",
+      "info": "1 = the product's first selling plan. Used when the ID is blank.",
+      "default": 1
+    },
+    {
+      "type": "product",
+      "id": "product",
+      "label": "Product",
+      "info": "Only for the 'Different product' plan type"
+    },
+    {
+      "type": "checkbox",
+      "id": "selected",
+      "label": "Selected by default",
+      "default": false
+    },
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "text",
+      "id": "badge",
+      "label": "Badge",
+      "info": "Black bar above the card, e.g. Best value"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Title",
+      "default": "28-Day Subscription"
+    },
+    {
+      "type": "text",
+      "id": "subtitle",
+      "label": "Subtitle"
+    },
+    {
+      "type": "checkbox",
+      "id": "subtitle_accent",
+      "label": "Green subtitle",
+      "default": false
+    },
+    {
+      "type": "textarea",
+      "id": "perks",
+      "label": "Perks",
+      "info": "One per line"
+    },
+    {
+      "type": "checkbox",
+      "id": "perks_inline",
+      "label": "Compact perks row",
+      "default": false
+    },
+    {
+      "type": "textarea",
+      "id": "chips",
+      "label": "Chips",
+      "info": "One per line, e.g. Free postage. Icon is picked from the words postage, socks or bottle."
+    },
+    {
+      "type": "header",
+      "content": "Pricing display"
+    },
+    {
+      "type": "number",
+      "id": "servings",
+      "label": "Shots per delivery",
+      "info": "Used for the per-day price",
+      "default": 28
+    },
+    {
+      "type": "number",
+      "id": "billing_months",
+      "label": "Months per delivery",
+      "info": "3 for a quarterly plan. Savings compare against this many one-time packs.",
+      "default": 1
+    },
+    {
+      "type": "checkbox",
+      "id": "show_per_month",
+      "label": "Show price per month",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "price_note",
+      "label": "Note under price",
+      "info": "e.g. + Postage"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Plan"
+    }
+  ]
+}
+{% endschema %}

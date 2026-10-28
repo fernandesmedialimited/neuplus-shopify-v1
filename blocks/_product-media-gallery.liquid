@@ -12,7 +12,6 @@
 {%- liquid
   assign selected_product = closest.product
   assign selected_variant_media = selected_product.selected_or_first_available_variant.featured_media
-  assign first_3d_model = selected_product.media | where: 'media_type', 'model' | first
 
   if block_settings.hide_variants
     assign variant_images = selected_product.images | where: 'attached_to_variant?', true | map: 'src'
@@ -99,6 +98,8 @@
   else
     assign sorted_media = selected_product.media
   endif
+  # 3D models are not used on this store
+  assign sorted_media = sorted_media | reject: 'media_type', 'model'
   assign has_image_drop = sorted_media | has: 'media_type', 'image'
 
   # Determine if we're in single column mode (carousel or grid with one column)
@@ -522,45 +523,6 @@
     </zoom-dialog>
   {%- endif -%}
 
-  {%- if first_3d_model -%}
-    <link
-      id="ModelViewerStyle"
-      rel="stylesheet"
-      href="https://cdn.shopify.com/shopifycloud/model-viewer-ui/assets/v1.0/model-viewer-ui.css"
-      media="print"
-      onload="this.media='all'"
-    >
-    <script>
-      window.ProductModel = {
-        loadShopifyXR() {
-          Shopify.loadFeatures([
-            {
-              name: 'shopify-xr',
-              version: '1.0',
-              onLoad: this.setupShopifyXR.bind(this),
-            },
-          ]);
-        },
-
-        setupShopifyXR(errors) {
-          if (errors) return;
-
-          if (!window.ShopifyXR) {
-            document.addEventListener('shopify_xr_initialized', () => this.setupShopifyXR());
-            return;
-          }
-
-          document.querySelectorAll('[id^="ProductModelJSON-"]').forEach((modelJSON) => {
-            window.ShopifyXR.addModels(JSON.parse(modelJSON.textContent));
-            modelJSON.remove();
-          });
-          window.ShopifyXR.setupXRElements();
-        },
-      };
-
-      window.ProductModel.loadShopifyXR();
-    </script>
-  {%- endif -%}
 </media-gallery>
 
 {% stylesheet %}
