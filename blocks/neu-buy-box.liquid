@@ -1,0 +1,243 @@
+{%- liquid
+  assign p = closest.product | default: product
+  assign v = p.selected_or_first_available_variant
+  assign form_id = 'NeuBuyForm-' | append: block.id
+-%}
+
+<neu-buy-box class="neu-buy" data-block-id="{{ block.id }}" {{ block.shopify_attributes }}>
+  {%- form 'product', p, id: form_id, novalidate: 'novalidate', data-type: 'add-to-cart-form' -%}
+    <input type="hidden" name="id" value="{{ v.id }}" data-variant-input>
+    <input type="hidden" name="selling_plan" value="" data-plan-input disabled>
+
+    {%- if block.settings.show_options and p.has_only_default_variant == false -%}
+      {%- for option in p.options_with_values -%}
+        {%- liquid
+          assign option_index = forloop.index0
+          assign has_images = false
+          for value in option.values
+            if value.swatch.image or value.variant.featured_image
+              assign has_images = true
+              break
+            endif
+          endfor
+        -%}
+        <fieldset class="neu-option">
+          <legend class="neu-option__head">
+            <span class="neu-eyebrow">{{ option.name | escape }}</span>
+            <span data-option-label="{{ option_index }}">{{ option.selected_value | escape }}</span>
+          </legend>
+          <div class="neu-option__values{% unless has_images %} neu-option__values--pills{% endunless %}">
+            {%- for value in option.values -%}
+              {%- assign swatch_image = value.swatch.image | default: value.variant.featured_image -%}
+              <label class="neu-swatch{% unless has_images %} neu-swatch--pill{% endunless %}{% unless value.available %} neu-swatch--unavailable{% endunless %}">
+                <input
+                  type="radio"
+                  name="neu-option-{{ block.id }}-{{ option_index }}"
+                  value="{{ value | escape }}"
+                  data-option-index="{{ option_index }}"
+                  {% if value.selected %}
+                    checked
+                  {% endif %}
+                >
+                {%- if has_images -%}
+                  <span class="neu-swatch__media">
+                    {%- if swatch_image -%}
+                      {{ swatch_image | image_url: width: 180, height: 180, crop: 'center' | image_tag: loading: 'lazy', alt: '' }}
+                    {%- elsif value.swatch.color -%}
+                      <span style="background: {{ value.swatch.color }}"></span>
+                    {%- else -%}
+                      <span></span>
+                    {%- endif -%}
+                  </span>
+                {%- endif -%}
+                <span>{{ value | escape }}</span>
+              </label>
+            {%- endfor -%}
+          </div>
+        </fieldset>
+      {%- endfor -%}
+    {%- endif -%}
+
+    <div class="neu-plans" role="radiogroup" aria-label="{{ block.settings.plans_label | escape }}">
+      {% content_for 'blocks' %}
+    </div>
+
+    <div class="neu-total">
+      <div class="neu-total__prices">
+        <span class="neu-total__price" data-total-price>{{ v.price | money }}</span>
+        <span class="neu-total__compare" data-total-compare hidden></span>
+        <span class="neu-save" data-total-save hidden></span>
+      </div>
+      {%- if block.settings.show_quantity -%}
+        <div class="neu-qty">
+          <button type="button" data-qty-minus aria-label="Decrease quantity">{% render 'neu-icon', icon: 'minus' %}</button>
+          <input type="number" name="quantity" value="1" min="1" inputmode="numeric" aria-label="Quantity" data-qty>
+          <button type="button" data-qty-plus aria-label="Increase quantity">{% render 'neu-icon', icon: 'plus' %}</button>
+        </div>
+      {%- endif -%}
+    </div>
+
+    <button
+      type="submit"
+      name="add"
+      class="neu-btn neu-atc"
+      data-add-button
+      {% unless v.available %}
+        disabled
+      {% endunless %}
+    >
+      {% render 'neu-icon', icon: 'cart' %}
+      <span data-add-label>
+        {%- if v.available -%}
+          {{ block.settings.button_label | escape }} — {{ v.price | money }}
+        {%- else -%}
+          {{ 'products.product.sold_out' | t }}
+        {%- endif -%}
+      </span>
+    </button>
+    <p class="neu-buy__error" role="alert" data-error></p>
+
+    {%- if block.settings.dispatch_text != blank -%}
+      <p class="neu-buy__dispatch">
+        {% render 'neu-icon', icon: 'truck' %}
+        {{ block.settings.dispatch_text | escape }}
+      </p>
+    {%- endif -%}
+
+    {%- if block.settings.show_dynamic_checkout -%}
+      {{ form | payment_button }}
+    {%- endif -%}
+  {%- endform -%}
+
+  {%- if block.settings.instalments_text != blank -%}
+    <div class="neu-instalments">{{ block.settings.instalments_text }}</div>
+  {%- endif -%}
+
+  {%- if block.settings.show_payment_icons -%}
+    <ul class="neu-payments" aria-label="Payment methods">
+      {%- for type in shop.enabled_payment_types -%}
+        <li>{{ type | payment_type_svg_tag }}</li>
+      {%- endfor -%}
+    </ul>
+  {%- endif -%}
+
+  <script type="application/json" data-product-json>
+    {
+      "moneyFormat": {{ shop.money_format | json }},
+      "buttonLabel": {{ block.settings.button_label | json }},
+      "soldOutLabel": {{ 'products.product.sold_out' | t | json }},
+      "variants": [
+        {%- for variant in p.variants -%}
+          {
+            "id": {{ variant.id }},
+            "title": {{ variant.title | json }},
+            "options": {{ variant.options | json }},
+            "price": {{ variant.price }},
+            "available": {{ variant.available }},
+            "media": {{ variant.featured_media.id | default: 'null' }},
+            "image": {% if variant.featured_image %}{{ variant.featured_image | image_url: width: 120 | json }}{% else %}null{% endif %},
+            "plans": {
+              {%- for allocation in variant.selling_plan_allocations -%}
+                "{{ allocation.selling_plan.id }}": {{ allocation.price }}{% unless forloop.last %},{% endunless %}
+              {%- endfor -%}
+            },
+            "planOrder": [
+              {%- for allocation in variant.selling_plan_allocations -%}
+                "{{ allocation.selling_plan.id }}"{% unless forloop.last %},{% endunless %}
+              {%- endfor -%}
+            ]
+          }{% unless forloop.last %},{% endunless %}
+        {%- endfor -%}
+      ]
+    }
+  </script>
+</neu-buy-box>
+
+{% schema %}
+{
+  "name": "NEU+ buy box",
+  "tag": null,
+  "blocks": [{ "type": "_neu-plan" }],
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "show_options",
+      "label": "Show flavour picker",
+      "info": "Uses each option value's swatch image, or the variant image",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "plans_label",
+      "label": "Plan list label (screen readers)",
+      "default": "Choose a plan"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_quantity",
+      "label": "Show quantity",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Button label",
+      "default": "Add to cart"
+    },
+    {
+      "type": "text",
+      "id": "dispatch_text",
+      "label": "Dispatch note",
+      "default": "Dispatched within 1–2 business days"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_dynamic_checkout",
+      "label": "Show Shop Pay / dynamic checkout button",
+      "default": true
+    },
+    {
+      "type": "richtext",
+      "id": "instalments_text",
+      "label": "Instalments note"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_payment_icons",
+      "label": "Show payment icons",
+      "default": true
+    }
+  ],
+  "presets": [
+    {
+      "name": "NEU+ buy box",
+      "category": "Product",
+      "blocks": [
+        {
+          "type": "_neu-plan",
+          "settings": {
+            "plan_type": "subscription",
+            "plan_position": 1,
+            "badge": "Recommended for maximum results",
+            "title": "28-Day Subscription",
+            "servings": 28,
+            "billing_months": 1,
+            "selected": true
+          }
+        },
+        {
+          "type": "_neu-plan",
+          "settings": {
+            "plan_type": "one_time",
+            "title": "One-Time 28-Day Pack",
+            "subtitle": "Choose your favourite flavour",
+            "servings": 28,
+            "show_per_month": false,
+            "price_note": "+ Postage"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

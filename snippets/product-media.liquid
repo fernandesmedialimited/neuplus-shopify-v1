@@ -8,8 +8,6 @@
   @param {string} [loading] - The loading attribute for the image.
   @param {object} [block] - The block object.
   @param {object} [section] - The section object.
-  @param {object} [selected_product] - The currently selected product.
-  @param {boolean} [first_3d_model] - Indicates if this is the first 3D model.
   @param {boolean} [is_main_product_media] - Indicates if this is the main product image.
 
   @example
@@ -50,75 +48,6 @@
 
   {% unless preview_image_only %}
     {%- case media.media_type -%}
-      {% when 'model' %}
-        <product-model
-          class="product-model-wrapper"
-          data-media-id="{{ media.id }}"
-        >
-          <button
-            class="button deferred-media__poster-button button-unstyled"
-            ref="deferredMediaPlayButton"
-            on:click="/showDeferredMedia"
-          >
-            {{
-              media.preview_image
-              | image_url: width: 3840
-              | image_tag:
-                widths: widths,
-                alt: media.alt,
-                sizes: sizes,
-                loading: loading,
-                class: 'deferred-media__poster-image'
-            }}
-            <span class="deferred-media__poster-icon">
-              <span class="visually-hidden">{{ 'accessibility.play_model' | t }}</span>
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                aria-hidden="true"
-                focusable="false"
-                class="icon icon-3d-model"
-                fill="none"
-                viewBox="0 0 18 21"
-              >
-                {% render 'icon', icon: '3d-model' %}
-              </svg>
-            </span>
-          </button>
-
-          <template>
-            {% # Should I be using media_tag here instead like on Dawn? 🤔 %}
-            {{ media | model_viewer_tag }}
-          </template>
-        </product-model>
-        <button
-          class="button button-secondary button-shopify-xr"
-          type="button"
-          data-shopify-xr
-          data-shopify-model3d-id="{{ media.id }}"
-          data-shopify-title="{{ selected_product.title | escape }}"
-          data-shopify-xr-hidden
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            aria-hidden="true"
-            focusable="false"
-            class="icon icon-3d-model"
-            fill="none"
-            viewBox="0 0 18 21"
-          >
-            {% render 'icon', icon: '3d-model' %}
-          </svg>
-          {{ 'actions.view_in_your_space' | t }}
-        </button>
-
-        {%- if first_3d_model -%}
-          <script
-            type="application/json"
-            id="ProductModelJSON-{{ selected_product.id }}"
-          >
-            {{ selected_product.media | where: 'media_type', 'model' | json }}
-          </script>
-        {%- endif -%}
       {% when 'video', 'external_video' %}
         {%- render 'video',
           video: media,

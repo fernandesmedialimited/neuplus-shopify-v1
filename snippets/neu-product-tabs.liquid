@@ -1,0 +1,71 @@
+{%- comment -%}
+  Description / science / ingredients tabs for the NEU+ product section.
+
+  @param {object} section - The neu-product section
+  @param {object} product - The product
+  @param {string} suffix - Unique id suffix, as the tabs render twice (desktop and mobile)
+  @param {string} class - Extra class
+{%- endcomment -%}
+{%- liquid
+  assign s = section.settings
+  assign tab_count = 0
+  for i in (1..3)
+    assign label_key = 'tab_' | append: i | append: '_label'
+    if s[label_key] != blank
+      assign tab_count = tab_count | plus: 1
+    endif
+  endfor
+-%}
+{%- if tab_count > 0 -%}
+  <neu-tabs class="neu-tabs {{ class }}">
+    <div class="neu-tabs__list" role="tablist">
+      {%- assign first_tab = true -%}
+      {%- for i in (1..3) -%}
+        {%- assign label_key = 'tab_' | append: i | append: '_label' -%}
+        {%- if s[label_key] != blank -%}
+          <button
+            class="neu-tabs__tab"
+            type="button"
+            role="tab"
+            id="NeuTab-{{ section.id }}-{{ suffix }}-{{ i }}"
+            aria-controls="NeuPanel-{{ section.id }}-{{ suffix }}-{{ i }}"
+            aria-selected="{{ first_tab }}"
+            {% unless first_tab %}
+              tabindex="-1"
+            {% endunless %}
+          >
+            {{ s[label_key] | escape }}
+          </button>
+          {%- assign first_tab = false -%}
+        {%- endif -%}
+      {%- endfor -%}
+    </div>
+    {%- assign first_tab = true -%}
+    {%- for i in (1..3) -%}
+      {%- liquid
+        assign label_key = 'tab_' | append: i | append: '_label'
+        assign content_key = 'tab_' | append: i | append: '_content'
+        assign source_key = 'tab_' | append: i | append: '_source'
+      -%}
+      {%- if s[label_key] != blank -%}
+        <div
+          class="neu-tabs__panel rte"
+          role="tabpanel"
+          id="NeuPanel-{{ section.id }}-{{ suffix }}-{{ i }}"
+          aria-labelledby="NeuTab-{{ section.id }}-{{ suffix }}-{{ i }}"
+          tabindex="0"
+          {% unless first_tab %}
+            hidden
+          {% endunless %}
+        >
+          {%- if s[source_key] == 'description' -%}
+            {{ product.description }}
+          {%- else -%}
+            {{ s[content_key] }}
+          {%- endif -%}
+        </div>
+        {%- assign first_tab = false -%}
+      {%- endif -%}
+    {%- endfor -%}
+  </neu-tabs>
+{%- endif -%}

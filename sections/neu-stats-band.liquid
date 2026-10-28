@@ -1,0 +1,135 @@
+{{ 'neu-product.css' | asset_url | stylesheet_tag }}
+
+<div
+  id="neu-stats"
+  class="neu neu-section"
+  style="--neu-pad-top: {{ section.settings.padding_top }}px; --neu-pad-bottom: {{ section.settings.padding_bottom }}px;"
+>
+  <div class="neu-page">
+    <div class="neu-stats neu-narrow" style="--neu-stats-bg: {{ section.settings.background }}">
+      <div class="neu-stats__media">
+        {%- if section.settings.image -%}
+          {{
+            section.settings.image
+            | image_url: width: 1000
+            | image_tag:
+              widths: '400, 600, 800, 1000',
+              sizes: '(min-width: 990px) 480px, 90vw',
+              loading: 'lazy',
+              alt: section.settings.image.alt
+          }}
+        {%- else -%}
+          {{ 'product-2' | placeholder_svg_tag }}
+        {%- endif -%}
+      </div>
+
+      <div>
+        <h2 class="neu-stats__heading">{{ section.settings.heading }}</h2>
+
+        <div class="neu-stats__grid">
+          {%- for block in section.blocks -%}
+            <div {{ block.shopify_attributes }}>
+              <div class="neu-stats__value">{{ block.settings.value | escape }}</div>
+              <div class="neu-stats__label">{{ block.settings.label | escape }}</div>
+            </div>
+          {%- endfor -%}
+        </div>
+
+        {%- if section.settings.button_label != blank -%}
+          <a class="neu-btn" href="{{ section.settings.button_url | default: '#' }}">
+            {{- section.settings.button_label | escape -}}
+          </a>
+        {%- endif -%}
+      </div>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "NEU+ stats band",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Image"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "heading",
+      "label": "Heading",
+      "info": "Use italics for the serif word",
+      "default": "The daily <em>shot</em> with heavyweight credentials"
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Button label",
+      "default": "Nutrition & Ingredients"
+    },
+    {
+      "type": "url",
+      "id": "button_url",
+      "label": "Button link"
+    },
+    {
+      "type": "color",
+      "id": "background",
+      "label": "Background",
+      "default": "#e8e2d5"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Top padding",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Bottom padding",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "default": 80
+    }
+  ],
+  "blocks": [
+    {
+      "type": "stat",
+      "name": "Stat",
+      "settings": [
+        {
+          "type": "text",
+          "id": "value",
+          "label": "Value",
+          "default": "300mg"
+        },
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Label",
+          "default": "Nicotinamide Riboside"
+        }
+      ]
+    }
+  ],
+  "max_blocks": 6,
+  "presets": [
+    {
+      "name": "NEU+ stats band",
+      "blocks": [
+        { "type": "stat" },
+        { "type": "stat", "settings": { "value": "250mg", "label": "Betaine (TMG)" } },
+        { "type": "stat", "settings": { "value": "80mg", "label": "Vitamin C" } },
+        { "type": "stat", "settings": { "value": "0", "label": "Caffeine or sugar" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

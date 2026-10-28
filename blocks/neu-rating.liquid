@@ -1,0 +1,73 @@
+{%- liquid
+  assign p = closest.product | default: product
+  assign rating = p.metafields.reviews.rating.value.rating | default: block.settings.fallback_rating
+  assign rating_count = p.metafields.reviews.rating_count.value | default: block.settings.fallback_count
+  assign rating_float = rating | times: 1.0
+-%}
+
+<div class="neu-rating" {{ block.shopify_attributes }}>
+  {%- if rating != blank -%}
+    <div class="neu-rating__score">
+      <span class="neu-stars" aria-hidden="true">
+        {%- for i in (1..5) -%}
+          {%- assign star_threshold = i | minus: 0.25 -%}
+          {%- if rating_float >= star_threshold -%}
+            {% render 'neu-icon', icon: 'star-filled' %}
+          {%- else -%}
+            {% render 'neu-icon', icon: 'star-filled', class: 'neu-icon--empty' %}
+          {%- endif -%}
+        {%- endfor -%}
+      </span>
+      <strong>{{ rating_float | round: 1 }}</strong>
+      <span class="visually-hidden">out of 5</span>
+      {%- if rating_count != blank -%}
+        <a href="{{ block.settings.reviews_link | default: '#neu-reviews' }}">({{ rating_count }} reviews)</a>
+      {%- endif -%}
+    </div>
+  {%- endif -%}
+
+  {%- if block.settings.proof_text != blank -%}
+    <div class="neu-rating__proof">
+      <span class="neu-rating__dot" aria-hidden="true"></span>
+      <span>{{ block.settings.proof_text }}</span>
+    </div>
+  {%- endif -%}
+</div>
+
+{% schema %}
+{
+  "name": "NEU+ rating",
+  "tag": null,
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "Rating and count come from Judge.me when available. The fallback values show otherwise."
+    },
+    {
+      "type": "text",
+      "id": "fallback_rating",
+      "label": "Fallback rating",
+      "default": "4.8"
+    },
+    {
+      "type": "text",
+      "id": "fallback_count",
+      "label": "Fallback review count",
+      "default": "2,418"
+    },
+    {
+      "type": "text",
+      "id": "reviews_link",
+      "label": "Reviews link",
+      "default": "#neu-reviews"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "proof_text",
+      "label": "Social proof line",
+      "default": "<strong>312 orders</strong> placed this week · Trusted by 12,400+ people"
+    }
+  ],
+  "presets": [{ "name": "NEU+ rating", "category": "Product" }]
+}
+{% endschema %}

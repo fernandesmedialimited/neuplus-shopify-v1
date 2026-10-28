@@ -1,0 +1,283 @@
+{{ 'neu-product.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'neu-product.js' | asset_url }}" type="module"></script>
+
+{%- liquid
+  assign current_variant = product.selected_or_first_available_variant
+  # 3D models are not used on this store
+  assign gallery_media = product.media | reject: 'media_type', 'model'
+  assign selected_media = current_variant.featured_media
+
+  assign crumb_label = section.settings.breadcrumb_label
+  assign crumb_url = section.settings.breadcrumb_url
+  if crumb_label == blank and product.collections.size > 0
+    assign crumb_label = product.collections.first.title
+    assign crumb_url = product.collections.first.url
+  endif
+-%}
+
+<div
+  class="neu neu-product"
+  data-section-id="{{ section.id }}"
+  data-product-id="{{ product.id }}"
+>
+  <div class="neu-page">
+    {%- if section.settings.show_breadcrumb -%}
+      <nav class="neu-breadcrumb" aria-label="Breadcrumb">
+        <a href="{{ routes.all_products_collection_url }}">{{ section.settings.breadcrumb_root | default: 'Shop' | escape }}</a>
+        <span aria-hidden="true">/</span>
+        {%- if crumb_label != blank -%}
+          <a href="{{ crumb_url | default: '#' }}">{{ crumb_label | escape }}</a>
+          <span aria-hidden="true">/</span>
+        {%- endif -%}
+        <span aria-current="page">{{ product.title | escape }}</span>
+      </nav>
+    {%- endif -%}
+
+    <div class="neu-product__grid">
+      <div class="neu-product__media">
+        <neu-gallery class="neu-gallery" data-section-id="{{ section.id }}">
+          {%- if gallery_media.size > 1 -%}
+            <ul class="neu-gallery__thumbs" aria-label="Product images">
+              {%- for media in gallery_media -%}
+                <li>
+                  <button
+                    class="neu-gallery__thumb"
+                    type="button"
+                    data-index="{{ forloop.index0 }}"
+                    data-media-id="{{ media.id }}"
+                    aria-label="Show image {{ forloop.index }} of {{ gallery_media.size }}"
+                    aria-current="{% if selected_media.id == media.id or selected_media == blank and forloop.first %}true{% else %}false{% endif %}"
+                  >
+                    {{ media.preview_image | image_url: width: 160 | image_tag: loading: 'lazy', alt: '' }}
+                  </button>
+                </li>
+              {%- endfor -%}
+            </ul>
+          {%- endif -%}
+
+          <div class="neu-gallery__stage"{% if gallery_media.size <= 1 %} style="grid-column: 1 / -1"{% endif %}>
+            {%- if section.settings.badge != blank -%}
+              <span class="neu-gallery__badge">{{ section.settings.badge | escape }}</span>
+            {%- endif -%}
+
+            <div class="neu-gallery__track" data-track tabindex="0" aria-label="{{ product.title | escape }} media">
+              {%- for media in gallery_media -%}
+                <div class="neu-gallery__slide" data-media-id="{{ media.id }}">
+                  {%- case media.media_type -%}
+                    {%- when 'video' -%}
+                      {{ media | video_tag: controls: true, muted: true, playsinline: true, image_size: '1400x' }}
+                    {%- when 'external_video' -%}
+                      {{ media | external_video_tag }}
+                    {%- else -%}
+                      {%- liquid
+                        if forloop.first
+                          assign loading = 'eager'
+                          assign priority = 'high'
+                        else
+                          assign loading = 'lazy'
+                          assign priority = 'auto'
+                        endif
+                      -%}
+                      {{
+                        media.preview_image
+                        | image_url: width: 1400
+                        | image_tag:
+                          widths: '400, 600, 800, 1000, 1200, 1400',
+                          sizes: '(min-width: 990px) 50vw, 90vw',
+                          loading: loading,
+                          fetchpriority: priority,
+                          alt: media.alt
+                      }}
+                  {%- endcase -%}
+                </div>
+              {%- else -%}
+                <div class="neu-gallery__slide">
+                  {{ 'product-1' | placeholder_svg_tag }}
+                </div>
+              {%- endfor -%}
+            </div>
+
+            {%- if gallery_media.size > 1 -%}
+              <button class="neu-gallery__arrow neu-gallery__arrow--prev" type="button" data-prev aria-label="Previous image">
+                {% render 'neu-icon', icon: 'chevron-left' %}
+              </button>
+              <button class="neu-gallery__arrow neu-gallery__arrow--next" type="button" data-next aria-label="Next image">
+                {% render 'neu-icon', icon: 'chevron-right' %}
+              </button>
+            {%- endif -%}
+          </div>
+        </neu-gallery>
+
+        {% render 'neu-product-tabs', section: section, product: product, suffix: 'd', class: 'neu-tabs--desktop' %}
+      </div>
+
+      <div class="neu-product__info">
+        {% content_for 'blocks' %}
+      </div>
+
+      {% render 'neu-product-tabs', section: section, product: product, suffix: 'm', class: 'neu-tabs--mobile' %}
+    </div>
+  </div>
+
+  {%- if section.settings.show_sticky_bar -%}
+    <neu-sticky-bar class="neu-sticky" aria-hidden="true">
+      <div class="neu-sticky__info">
+        {%- assign sticky_image = current_variant.featured_image | default: product.featured_image -%}
+        {%- if sticky_image -%}
+          {{ sticky_image | image_url: width: 120 | image_tag: class: 'neu-sticky__image', loading: 'lazy', alt: '', data-sticky-image: '' }}
+        {%- endif -%}
+        <div>
+          <div class="neu-sticky__title">
+            {{ product.title | escape -}}
+            {%- unless product.has_only_default_variant %} · <span data-sticky-variant>{{ current_variant.title | escape }}</span>{% endunless -%}
+          </div>
+          <div class="neu-sticky__prices">
+            <span class="neu-sticky__price" data-sticky-price>{{ current_variant.price | money }}</span>
+            <span class="neu-total__compare" data-sticky-compare hidden></span>
+            <span class="neu-sticky__save" data-sticky-save hidden></span>
+          </div>
+        </div>
+      </div>
+      <button class="neu-btn" type="button" data-sticky-add tabindex="-1">
+        {% render 'neu-icon', icon: 'cart' %}
+        {{ section.settings.sticky_button_label | escape }}
+      </button>
+    </neu-sticky-bar>
+  {%- endif -%}
+</div>
+
+{% schema %}
+{
+  "name": "NEU+ product",
+  "class": "neu-product-section",
+  "blocks": [{ "type": "@theme" }, { "type": "@app" }],
+  "settings": [
+    {
+      "type": "header",
+      "content": "Breadcrumb"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_breadcrumb",
+      "label": "Show breadcrumb",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "breadcrumb_root",
+      "label": "First link label",
+      "default": "Shop"
+    },
+    {
+      "type": "text",
+      "id": "breadcrumb_label",
+      "label": "Middle link label",
+      "info": "Leave blank to use the product's first collection"
+    },
+    {
+      "type": "url",
+      "id": "breadcrumb_url",
+      "label": "Middle link"
+    },
+    {
+      "type": "header",
+      "content": "Gallery"
+    },
+    {
+      "type": "text",
+      "id": "badge",
+      "label": "Badge",
+      "default": "Bestseller"
+    },
+    {
+      "type": "header",
+      "content": "Tabs under the gallery"
+    },
+    {
+      "type": "text",
+      "id": "tab_1_label",
+      "label": "Tab 1 label",
+      "default": "Description"
+    },
+    {
+      "type": "select",
+      "id": "tab_1_source",
+      "label": "Tab 1 content",
+      "options": [
+        { "value": "description", "label": "Product description" },
+        { "value": "custom", "label": "Custom text" }
+      ],
+      "default": "description"
+    },
+    {
+      "type": "richtext",
+      "id": "tab_1_content",
+      "label": "Tab 1 custom text"
+    },
+    {
+      "type": "text",
+      "id": "tab_2_label",
+      "label": "Tab 2 label",
+      "default": "The Science"
+    },
+    {
+      "type": "select",
+      "id": "tab_2_source",
+      "label": "Tab 2 content",
+      "options": [
+        { "value": "description", "label": "Product description" },
+        { "value": "custom", "label": "Custom text" }
+      ],
+      "default": "custom"
+    },
+    {
+      "type": "richtext",
+      "id": "tab_2_content",
+      "label": "Tab 2 custom text"
+    },
+    {
+      "type": "text",
+      "id": "tab_3_label",
+      "label": "Tab 3 label",
+      "default": "Ingredients"
+    },
+    {
+      "type": "select",
+      "id": "tab_3_source",
+      "label": "Tab 3 content",
+      "options": [
+        { "value": "description", "label": "Product description" },
+        { "value": "custom", "label": "Custom text" }
+      ],
+      "default": "custom"
+    },
+    {
+      "type": "richtext",
+      "id": "tab_3_content",
+      "label": "Tab 3 custom text"
+    },
+    {
+      "type": "header",
+      "content": "Sticky add to cart"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_sticky_bar",
+      "label": "Show sticky bar when scrolling",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "sticky_button_label",
+      "label": "Button label",
+      "default": "Add to cart"
+    }
+  ],
+  "presets": [
+    {
+      "name": "NEU+ product",
+      "category": "Product"
+    }
+  ]
+}
+{% endschema %}

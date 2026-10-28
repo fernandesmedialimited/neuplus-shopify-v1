@@ -1,0 +1,24 @@
+<div class="neu-trust" {{ block.shopify_attributes }}>
+  {% content_for 'blocks' %}
+</div>
+
+{% schema %}
+{
+  "name": "NEU+ trust icons",
+  "tag": null,
+  "blocks": [{ "type": "_neu-trust-item" }],
+  "settings": [],
+  "presets": [
+    {
+      "name": "NEU+ trust icons",
+      "category": "Product",
+      "blocks": [
+        { "type": "_neu-trust-item", "settings": { "icon": "shield", "label": "UK-Made" } },
+        { "type": "_neu-trust-item", "settings": { "icon": "medal", "label": "Informed Sport" } },
+        { "type": "_neu-trust-item", "settings": { "icon": "refresh", "label": "Cancel anytime" } },
+        { "type": "_neu-trust-item", "settings": { "icon": "box", "label": "Returns policy" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

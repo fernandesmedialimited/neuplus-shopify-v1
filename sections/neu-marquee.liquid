@@ -1,0 +1,85 @@
+{{ 'neu-product.css' | asset_url | stylesheet_tag }}
+
+{%- capture items -%}
+  {%- for block in section.blocks -%}
+    <span class="neu-marquee__item" {{ block.shopify_attributes }}>
+      <span class="neu-marquee__text--{{ block.settings.size }}">{{ block.settings.text | escape }}</span>
+    </span>
+  {%- endfor -%}
+{%- endcapture -%}
+
+<div
+  class="neu neu-marquee"
+  style="--neu-marquee-speed: {{ section.settings.speed }}s; padding-block: {{ section.settings.padding }}px;"
+>
+  {%- if section.blocks.size > 0 -%}
+    <div class="neu-marquee__track">
+      {%- for i in (1..4) -%}
+        <div class="neu-marquee__group"{% if i > 1 %} aria-hidden="true"{% endif %}>{{ items }}</div>
+      {%- endfor -%}
+    </div>
+  {%- endif -%}
+</div>
+
+{% schema %}
+{
+  "name": "NEU+ marquee",
+  "class": "neu-marquee-section",
+  "settings": [
+    {
+      "type": "range",
+      "id": "speed",
+      "label": "Seconds per loop",
+      "min": 10,
+      "max": 120,
+      "step": 5,
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "padding",
+      "label": "Vertical padding",
+      "min": 8,
+      "max": 48,
+      "step": 2,
+      "unit": "px",
+      "default": 24
+    }
+  ],
+  "blocks": [
+    {
+      "type": "item",
+      "name": "Item",
+      "settings": [
+        {
+          "type": "text",
+          "id": "text",
+          "label": "Text",
+          "default": "Men's Fitness"
+        },
+        {
+          "type": "select",
+          "id": "size",
+          "label": "Style",
+          "options": [
+            { "value": "large", "label": "Large" },
+            { "value": "small", "label": "Small caps" }
+          ],
+          "default": "large"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "NEU+ marquee",
+      "blocks": [
+        { "type": "item", "settings": { "text": "As featured in", "size": "small" } },
+        { "type": "item", "settings": { "text": "Men's Fitness" } },
+        { "type": "item", "settings": { "text": "Top Santé" } },
+        { "type": "item", "settings": { "text": "Women's Fitness" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

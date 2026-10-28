@@ -1,0 +1,127 @@
+{{ 'neu-product.css' | asset_url | stylesheet_tag }}
+
+<div
+  class="neu neu-section"
+  style="--neu-pad-top: {{ section.settings.padding_top }}px; --neu-pad-bottom: {{ section.settings.padding_bottom }}px;"
+>
+  <div class="neu-page">
+    <div class="neu-faq">
+      {%- if section.settings.eyebrow != blank -%}
+        <p class="neu-eyebrow">{{ section.settings.eyebrow | escape }}</p>
+      {%- endif -%}
+      <h2 class="neu-faq__heading">{{ section.settings.heading }}</h2>
+
+      <div class="neu-faq__list">
+        {%- for block in section.blocks -%}
+          <details class="neu-faq__item" {{ block.shopify_attributes }}{% if block.settings.open %} open{% endif %}>
+            <summary>
+              <span>{{ block.settings.question | escape }}</span>
+              {% render 'neu-icon', icon: 'plus', class: 'neu-faq__plus' %}
+              {% render 'neu-icon', icon: 'minus', class: 'neu-faq__minus' %}
+            </summary>
+            <div class="neu-faq__answer">{{ block.settings.answer }}</div>
+          </details>
+        {%- endfor -%}
+      </div>
+    </div>
+  </div>
+</div>
+
+{%- if section.settings.faq_schema and section.blocks.size > 0 -%}
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        {%- for block in section.blocks -%}
+          {
+            "@type": "Question",
+            "name": {{ block.settings.question | json }},
+            "acceptedAnswer": { "@type": "Answer", "text": {{ block.settings.answer | strip_html | json }} }
+          }{% unless forloop.last %},{% endunless %}
+        {%- endfor -%}
+      ]
+    }
+  </script>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "NEU+ FAQ",
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "FAQ"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Ask us anything?"
+    },
+    {
+      "type": "checkbox",
+      "id": "faq_schema",
+      "label": "Add FAQ structured data for search engines",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Top padding",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Bottom padding",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "default": 80
+    }
+  ],
+  "blocks": [
+    {
+      "type": "question",
+      "name": "Question",
+      "settings": [
+        {
+          "type": "text",
+          "id": "question",
+          "label": "Question",
+          "default": "When will I notice a difference?"
+        },
+        {
+          "type": "richtext",
+          "id": "answer",
+          "label": "Answer",
+          "default": "<p>Most people feel sharper energy and focus within 2 weeks.</p>"
+        },
+        {
+          "type": "checkbox",
+          "id": "open",
+          "label": "Open by default",
+          "default": false
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "NEU+ FAQ",
+      "blocks": [
+        { "type": "question", "settings": { "open": true } },
+        { "type": "question", "settings": { "question": "How does the subscription work?" } }
+      ]
+    }
+  ]
+}
+{% endschema %}
