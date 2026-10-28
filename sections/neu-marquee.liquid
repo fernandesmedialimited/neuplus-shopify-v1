@@ -10,7 +10,7 @@
 
 <div
   class="neu neu-marquee"
-  style="--neu-marquee-speed: {{ section.settings.speed }}s; padding-block: {{ section.settings.padding }}px;"
+  style="--neu-marquee-speed: {{ section.settings.speed }}s; padding-block: {{ section.settings.padding }}px; background: {{ section.settings.background }};"
 >
   {%- if section.blocks.size > 0 -%}
     <div class="neu-marquee__track">
@@ -44,6 +44,12 @@
       "step": 2,
       "unit": "px",
       "default": 24
+    },
+    {
+      "type": "color",
+      "id": "background",
+      "label": "Background",
+      "default": "#0b0b0b"
     }
   ],
   "blocks": [
@@ -63,7 +69,9 @@
           "label": "Style",
           "options": [
             { "value": "large", "label": "Large" },
-            { "value": "small", "label": "Small caps" }
+            { "value": "small", "label": "Small caps, muted" },
+            { "value": "caps", "label": "Small caps" },
+            { "value": "serif", "label": "Serif, spaced" }
           ],
           "default": "large"
         }

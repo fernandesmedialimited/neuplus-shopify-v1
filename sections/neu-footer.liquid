@@ -1,0 +1,208 @@
+{{ 'neu-product.css' | asset_url | stylesheet_tag }}
+
+{%- liquid
+  assign logo = section.settings.logo | default: settings.logo
+  assign social_keys = 'youtube,facebook,x,linkedin,tiktok,instagram' | split: ','
+  assign has_social = false
+  for key in social_keys
+    assign url_key = key | append: '_url'
+    if section.settings[url_key] != blank
+      assign has_social = true
+    endif
+  endfor
+  assign cert_blocks = section.blocks | where: 'type', 'cert'
+-%}
+
+<footer class="neu neu-footer">
+  <div class="neu-page">
+    <div class="neu-footer__grid">
+      <div class="neu-footer__brand">
+        <a href="{{ routes.root_url }}" class="neu-footer__logo">
+          {%- if logo -%}
+            {{ logo | image_url: height: 80 | image_tag: loading: 'lazy', alt: shop.name }}
+          {%- else -%}
+            {{ shop.name | escape }}
+          {%- endif -%}
+        </a>
+        {%- if section.settings.blurb != blank -%}
+          <div class="neu-footer__blurb">{{ section.settings.blurb }}</div>
+        {%- endif -%}
+      </div>
+
+      {%- for i in (1..2) -%}
+        {%- liquid
+          assign heading_key = 'menu_' | append: i | append: '_heading'
+          assign menu_key = 'menu_' | append: i
+          assign menu = section.settings[menu_key]
+        -%}
+        {%- if menu != blank -%}
+          <nav class="neu-footer__col" aria-label="{{ section.settings[heading_key] | default: menu.title | escape }}">
+            <p class="neu-footer__heading">{{ section.settings[heading_key] | default: menu.title | escape }}</p>
+            <ul>
+              {%- for link in menu.links -%}
+                <li><a href="{{ link.url }}">{{ link.title | escape }}</a></li>
+              {%- endfor -%}
+            </ul>
+          </nav>
+        {%- endif -%}
+      {%- endfor -%}
+
+      {%- if has_social -%}
+        <div class="neu-footer__col">
+          <p class="neu-footer__heading">{{ section.settings.follow_heading | escape }}</p>
+          <ul class="neu-footer__circles">
+            {%- for key in social_keys -%}
+              {%- assign url_key = key | append: '_url' -%}
+              {%- if section.settings[url_key] != blank -%}
+                <li>
+                  <a href="{{ section.settings[url_key] }}" target="_blank" rel="noopener" aria-label="{{ key | capitalize }}">
+                    {% render 'neu-icon', icon: key %}
+                  </a>
+                </li>
+              {%- endif -%}
+            {%- endfor -%}
+          </ul>
+        </div>
+      {%- endif -%}
+
+      {%- if cert_blocks.size > 0 -%}
+        <div class="neu-footer__col">
+          <p class="neu-footer__heading">{{ section.settings.certified_heading | escape }}</p>
+          <ul class="neu-footer__circles neu-footer__circles--certs">
+            {%- for block in cert_blocks -%}
+              <li {{ block.shopify_attributes }}>
+                {%- if block.settings.logo -%}
+                  {{ block.settings.logo | image_url: width: 80, height: 80 | image_tag: loading: 'lazy', alt: block.settings.label }}
+                {%- else -%}
+                  <span>{{ block.settings.label | slice: 0, 2 | escape }}</span>
+                {%- endif -%}
+              </li>
+            {%- endfor -%}
+          </ul>
+        </div>
+      {%- endif -%}
+    </div>
+
+    <div class="neu-footer__bottom">
+      <p class="neu-footer__legal">
+        <span>&copy; {{ 'now' | date: '%Y' }} {{ section.settings.copyright | default: shop.name | escape }}</span>
+        {%- if section.settings.made_in != blank -%}
+          <span aria-hidden="true">·</span>
+          <span class="neu-footer__made">{{ section.settings.made_in | escape }}</span>
+        {%- endif -%}
+      </p>
+      {%- if section.settings.show_payment_icons -%}
+        <ul class="neu-payments neu-footer__payments" aria-label="Payment methods">
+          {%- for type in shop.enabled_payment_types -%}
+            <li>{{ type | payment_type_svg_tag }}</li>
+          {%- endfor -%}
+        </ul>
+      {%- endif -%}
+    </div>
+  </div>
+</footer>
+
+{% schema %}
+{
+  "name": "NEU+ footer",
+  "class": "neu-footer-section",
+  "enabled_on": { "groups": ["footer"] },
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "logo",
+      "label": "Logo",
+      "info": "Defaults to the theme logo"
+    },
+    {
+      "type": "richtext",
+      "id": "blurb",
+      "label": "Text",
+      "default": "<p>Daily NAD+ cellular energy. Made in the UK. Backed by science.</p>"
+    },
+    {
+      "type": "text",
+      "id": "menu_1_heading",
+      "label": "First menu heading",
+      "default": "Explore"
+    },
+    {
+      "type": "link_list",
+      "id": "menu_1",
+      "label": "First menu",
+      "default": "main-menu"
+    },
+    {
+      "type": "text",
+      "id": "menu_2_heading",
+      "label": "Second menu heading",
+      "default": "Discover"
+    },
+    {
+      "type": "link_list",
+      "id": "menu_2",
+      "label": "Second menu",
+      "default": "footer"
+    },
+    {
+      "type": "header",
+      "content": "Social"
+    },
+    {
+      "type": "text",
+      "id": "follow_heading",
+      "label": "Heading",
+      "default": "Follow"
+    },
+    { "type": "url", "id": "youtube_url", "label": "YouTube" },
+    { "type": "url", "id": "facebook_url", "label": "Facebook" },
+    { "type": "url", "id": "x_url", "label": "X" },
+    { "type": "url", "id": "linkedin_url", "label": "LinkedIn" },
+    { "type": "url", "id": "tiktok_url", "label": "TikTok" },
+    { "type": "url", "id": "instagram_url", "label": "Instagram" },
+    {
+      "type": "header",
+      "content": "Certifications"
+    },
+    {
+      "type": "text",
+      "id": "certified_heading",
+      "label": "Heading",
+      "default": "Certified"
+    },
+    {
+      "type": "header",
+      "content": "Bottom row"
+    },
+    {
+      "type": "text",
+      "id": "copyright",
+      "label": "Copyright text",
+      "default": "NEU+. All rights reserved."
+    },
+    {
+      "type": "text",
+      "id": "made_in",
+      "label": "Made in text",
+      "default": "Made in the UK 🇬🇧"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_payment_icons",
+      "label": "Show payment icons",
+      "default": true
+    }
+  ],
+  "blocks": [
+    {
+      "type": "cert",
+      "name": "Certification logo",
+      "settings": [
+        { "type": "image_picker", "id": "logo", "label": "Logo" },
+        { "type": "text", "id": "label", "label": "Name", "default": "Informed Sport" }
+      ]
+    }
+  ],
+  "presets": [{ "name": "NEU+ footer" }]
+}
+{% endschema %}
