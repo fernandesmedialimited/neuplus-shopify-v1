@@ -1,0 +1,500 @@
+{% doc %}
+  @prompt
+    Create a new custom Liquid section for the NEU+ product page called
+    neu-daily-ritual-nad-graph.
+    
+    Goal: Visually show how NAD+ levels increase over time with NEU+ using a coded line graph (no images) and supporting benefit blocks.
+    
+    1. Section layout & styling
+    
+    Full-width section with a black / very dark background and white text.
+    
+    Centered content, maximum width around 1200px.
+    
+    Use modern, clean typography to match a premium wellness brand.
+    
+    Make it fully responsive on desktop and mobile.
+    
+    2. Headings
+    
+    At the top, include:
+    
+    Main headline (H2): “Why Make NEU+ Your Daily Ritual”
+    
+    Subheading (H3, lighter weight): “NAD+ elevation based on a 12-week NEU+ subscription”
+    
+    Center-align both.
+    
+    3. Line graph (coded, no image)
+    
+    Under the subheading, create a responsive SVG or HTML/CSS line chart that visually plots NAD+ increase over time.
+    
+    Graph requirements:
+    
+    X-axis label: Time (Days)
+    
+    Y-axis label: NAD+ Increase % (above baseline)
+    
+    X-axis ticks and labels: 0, 7, 14, 30, 60, 90
+    
+    Y-axis ticks at 0, 10, 20, 30, 40, 50, 60.
+    
+    Plot a single line for “NAD+ Increase % (above baseline)” with circular markers at each data point.
+    
+    Use a smooth stroke line with a subtle glow or slightly thicker stroke to stand out on the dark background.
+    
+    Data points (x = days, y = % increase above baseline):
+    
+    (0, 0)
+    
+    (7, 20)
+    
+    (14, 40)
+    
+    (30, 55)
+    
+    (60, 55)
+    
+    (90, 55)
+    
+    Add a small legend above or below the chart:
+    
+    Legend dot + label: “NAD+ Increase % (above baseline)”
+    
+    No external JS libraries; use pure HTML, CSS, and inline SVG, with minimal optional JS only if needed for responsiveness.
+    
+    4. Benefit timeline blocks
+    
+    Below the graph, add three horizontally aligned rounded cards (stacked vertically on mobile).
+    Each card should have a subtle dark grey background with white text.
+    
+{% enddoc %}
+{% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
+
+{% style %}
+  .neu-daily-ritual-{{ ai_gen_id }} {
+    background-color: {{ block.settings.background_color }};
+    color: {{ block.settings.text_color }};
+    padding: {{ block.settings.section_padding_top }}px 0px {{ block.settings.section_padding_bottom }}px;
+    width: 100%;
+  }
+
+  .neu-daily-ritual-container-{{ ai_gen_id }} {
+    max-width: {{ block.settings.max_width }}px;
+    margin: 0 auto;
+  }
+
+  .neu-daily-ritual-header-{{ ai_gen_id }} {
+    text-align: center;
+    margin-bottom: 40px;
+  }
+
+  .neu-daily-ritual-title-{{ ai_gen_id }} {
+    font-size: {{ block.settings.title_size }}px;
+    font-weight: 700;
+    margin: 0 0 16px;
+    color: {{ block.settings.text_color }};
+  }
+
+  .neu-daily-ritual-subtitle-{{ ai_gen_id }} {
+    font-size: {{ block.settings.subtitle_size }}px;
+    font-weight: 300;
+    margin: 0;
+    color: {{ block.settings.text_color }};
+    opacity: 0.8;
+  }
+
+  .neu-daily-ritual-graph-wrapper-{{ ai_gen_id }} {
+    margin-bottom: 60px;
+  }
+
+  .neu-daily-ritual-legend-{{ ai_gen_id }} {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 24px;
+    font-size: 14px;
+  }
+
+  .neu-daily-ritual-legend-dot-{{ ai_gen_id }} {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background-color: {{ block.settings.line_color }};
+  }
+
+  .neu-daily-ritual-chart-container-{{ ai_gen_id }} {
+    position: relative;
+    width: 100%;
+    height: 400px;
+    background-color: {{ block.settings.chart_background }};
+    border-radius: 8px;
+    padding: 40px 20px 40px 60px;
+  }
+
+  .neu-daily-ritual-chart-{{ ai_gen_id }} {
+    width: 100%;
+    height: 100%;
+  }
+
+  .neu-daily-ritual-axis-label-{{ ai_gen_id }} {
+    fill: {{ block.settings.text_color }};
+    font-size: 12px;
+    font-weight: 400;
+  }
+
+  .neu-daily-ritual-grid-line-{{ ai_gen_id }} {
+    stroke: {{ block.settings.text_color }};
+    stroke-width: 0.5;
+    opacity: 0.2;
+  }
+
+  .neu-daily-ritual-axis-line-{{ ai_gen_id }} {
+    stroke: {{ block.settings.text_color }};
+    stroke-width: 1;
+    opacity: 0.4;
+  }
+
+  .neu-daily-ritual-data-line-{{ ai_gen_id }} {
+    fill: none;
+    stroke: {{ block.settings.line_color }};
+    stroke-width: 3;
+    filter: drop-shadow(0 0 4px {{ block.settings.line_color }}66);
+  }
+
+  .neu-daily-ritual-data-point-{{ ai_gen_id }} {
+    fill: {{ block.settings.line_color }};
+    stroke: {{ block.settings.chart_background }};
+    stroke-width: 2;
+  }
+
+  .neu-daily-ritual-benefits-{{ ai_gen_id }} {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 24px;
+  }
+
+  .neu-daily-ritual-benefit-card-{{ ai_gen_id }} {
+    background-color: {{ block.settings.card_background }};
+    border-radius: {{ block.settings.card_border_radius }}px;
+    padding: 32px 24px;
+    text-align: center;
+  }
+
+  .neu-daily-ritual-benefit-title-{{ ai_gen_id }} {
+    font-size: {{ block.settings.card_title_size }}px;
+    font-weight: 600;
+    margin: 0 0 12px;
+    color: {{ block.settings.text_color }};
+  }
+
+  .neu-daily-ritual-benefit-text-{{ ai_gen_id }} {
+    font-size: {{ block.settings.card_text_size }}px;
+    line-height: 1.6;
+    margin: 0;
+    color: {{ block.settings.text_color }};
+    opacity: 0.9;
+  }
+
+  @media screen and (max-width: 749px) {
+    .neu-daily-ritual-{{ ai_gen_id }} {
+      padding: {{ block.settings.section_padding_top | times: 0.6 }}px 16px {{ block.settings.section_padding_bottom | times: 0.6 }}px;
+    }
+
+    .neu-daily-ritual-title-{{ ai_gen_id }} {
+      font-size: {{ block.settings.title_size | times: 0.6 }}px;
+    }
+
+    .neu-daily-ritual-subtitle-{{ ai_gen_id }} {
+      font-size: {{ block.settings.subtitle_size | times: 0.8 }}px;
+    }
+
+    .neu-daily-ritual-chart-container-{{ ai_gen_id }} {
+      height: 300px;
+      padding: 30px 10px 30px 40px;
+    }
+
+    .neu-daily-ritual-benefits-{{ ai_gen_id }} {
+      grid-template-columns: 1fr;
+    }
+  }
+{% endstyle %}
+
+<div class="neu-daily-ritual-{{ ai_gen_id }}" {{ block.shopify_attributes }}>
+  <div class="neu-daily-ritual-container-{{ ai_gen_id }}">
+    <div class="neu-daily-ritual-header-{{ ai_gen_id }}">
+      <h2 class="neu-daily-ritual-title-{{ ai_gen_id }}">{{ block.settings.main_heading }}</h2>
+      <h3 class="neu-daily-ritual-subtitle-{{ ai_gen_id }}">{{ block.settings.subheading }}</h3>
+    </div>
+
+    <div class="neu-daily-ritual-graph-wrapper-{{ ai_gen_id }}">
+      <div class="neu-daily-ritual-legend-{{ ai_gen_id }}">
+        <span class="neu-daily-ritual-legend-dot-{{ ai_gen_id }}"></span>
+        <span>{{ block.settings.legend_label }}</span>
+      </div>
+
+      <div class="neu-daily-ritual-chart-container-{{ ai_gen_id }}">
+        <svg class="neu-daily-ritual-chart-{{ ai_gen_id }}" viewBox="0 0 800 400" preserveAspectRatio="xMidYMid meet">
+          <text x="10" y="200" class="neu-daily-ritual-axis-label-{{ ai_gen_id }}" text-anchor="middle" transform="rotate(-90 10 200)">NAD+ Increase % (above baseline)</text>
+          
+          <text x="400" y="390" class="neu-daily-ritual-axis-label-{{ ai_gen_id }}" text-anchor="middle">Time (Days)</text>
+          
+          <line x1="80" y1="20" x2="80" y2="340" class="neu-daily-ritual-axis-line-{{ ai_gen_id }}"/>
+          <line x1="80" y1="340" x2="760" y2="340" class="neu-daily-ritual-axis-line-{{ ai_gen_id }}"/>
+          
+          <line x1="80" y1="287" x2="760" y2="287" class="neu-daily-ritual-grid-line-{{ ai_gen_id }}"/>
+          <line x1="80" y1="234" x2="760" y2="234" class="neu-daily-ritual-grid-line-{{ ai_gen_id }}"/>
+          <line x1="80" y1="181" x2="760" y2="181" class="neu-daily-ritual-grid-line-{{ ai_gen_id }}"/>
+          <line x1="80" y1="128" x2="760" y2="128" class="neu-daily-ritual-grid-line-{{ ai_gen_id }}"/>
+          <line x1="80" y1="75" x2="760" y2="75" class="neu-daily-ritual-grid-line-{{ ai_gen_id }}"/>
+          <line x1="80" y1="22" x2="760" y2="22" class="neu-daily-ritual-grid-line-{{ ai_gen_id }}"/>
+          
+          <text x="75" y="345" class="neu-daily-ritual-axis-label-{{ ai_gen_id }}" text-anchor="end">0</text>
+          <text x="75" y="292" class="neu-daily-ritual-axis-label-{{ ai_gen_id }}" text-anchor="end">10</text>
+          <text x="75" y="239" class="neu-daily-ritual-axis-label-{{ ai_gen_id }}" text-anchor="end">20</text>
+          <text x="75" y="186" class="neu-daily-ritual-axis-label-{{ ai_gen_id }}" text-anchor="end">30</text>
+          <text x="75" y="133" class="neu-daily-ritual-axis-label-{{ ai_gen_id }}" text-anchor="end">40</text>
+          <text x="75" y="80" class="neu-daily-ritual-axis-label-{{ ai_gen_id }}" text-anchor="end">50</text>
+          <text x="75" y="27" class="neu-daily-ritual-axis-label-{{ ai_gen_id }}" text-anchor="end">60</text>
+          
+          <text x="80" y="360" class="neu-daily-ritual-axis-label-{{ ai_gen_id }}" text-anchor="middle">0</text>
+          <text x="193" y="360" class="neu-daily-ritual-axis-label-{{ ai_gen_id }}" text-anchor="middle">7</text>
+          <text x="306" y="360" class="neu-daily-ritual-axis-label-{{ ai_gen_id }}" text-anchor="middle">14</text>
+          <text x="419" y="360" class="neu-daily-ritual-axis-label-{{ ai_gen_id }}" text-anchor="middle">30</text>
+          <text x="532" y="360" class="neu-daily-ritual-axis-label-{{ ai_gen_id }}" text-anchor="middle">60</text>
+          <text x="760" y="360" class="neu-daily-ritual-axis-label-{{ ai_gen_id }}" text-anchor="middle">90</text>
+          
+          <polyline 
+            points="80,340 193,234 306,128 419,75 532,75 760,75" 
+            class="neu-daily-ritual-data-line-{{ ai_gen_id }}"
+          />
+          
+          <circle cx="80" cy="340" r="6" class="neu-daily-ritual-data-point-{{ ai_gen_id }}"/>
+          <circle cx="193" cy="234" r="6" class="neu-daily-ritual-data-point-{{ ai_gen_id }}"/>
+          <circle cx="306" cy="128" r="6" class="neu-daily-ritual-data-point-{{ ai_gen_id }}"/>
+          <circle cx="419" cy="75" r="6" class="neu-daily-ritual-data-point-{{ ai_gen_id }}"/>
+          <circle cx="532" cy="75" r="6" class="neu-daily-ritual-data-point-{{ ai_gen_id }}"/>
+          <circle cx="760" cy="75" r="6" class="neu-daily-ritual-data-point-{{ ai_gen_id }}"/>
+        </svg>
+      </div>
+    </div>
+
+    <div class="neu-daily-ritual-benefits-{{ ai_gen_id }}">
+      {% if block.settings.benefit_1_title != blank %}
+        <div class="neu-daily-ritual-benefit-card-{{ ai_gen_id }}">
+          <h4 class="neu-daily-ritual-benefit-title-{{ ai_gen_id }}">{{ block.settings.benefit_1_title }}</h4>
+          <p class="neu-daily-ritual-benefit-text-{{ ai_gen_id }}">{{ block.settings.benefit_1_text }}</p>
+        </div>
+      {% endif %}
+
+      {% if block.settings.benefit_2_title != blank %}
+        <div class="neu-daily-ritual-benefit-card-{{ ai_gen_id }}">
+          <h4 class="neu-daily-ritual-benefit-title-{{ ai_gen_id }}">{{ block.settings.benefit_2_title }}</h4>
+          <p class="neu-daily-ritual-benefit-text-{{ ai_gen_id }}">{{ block.settings.benefit_2_text }}</p>
+        </div>
+      {% endif %}
+
+      {% if block.settings.benefit_3_title != blank %}
+        <div class="neu-daily-ritual-benefit-card-{{ ai_gen_id }}">
+          <h4 class="neu-daily-ritual-benefit-title-{{ ai_gen_id }}">{{ block.settings.benefit_3_title }}</h4>
+          <p class="neu-daily-ritual-benefit-text-{{ ai_gen_id }}">{{ block.settings.benefit_3_text }}</p>
+        </div>
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "NAD+ daily ritual graph",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Headings"
+    },
+    {
+      "type": "text",
+      "id": "main_heading",
+      "label": "Main heading",
+      "default": "Why Make NEU+ Your Daily Ritual"
+    },
+    {
+      "type": "text",
+      "id": "subheading",
+      "label": "Subheading",
+      "default": "NAD+ elevation based on a 12-week NEU+ subscription"
+    },
+    {
+      "type": "range",
+      "id": "title_size",
+      "min": 20,
+      "max": 80,
+      "step": 2,
+      "unit": "px",
+      "label": "Main heading size",
+      "default": 48
+    },
+    {
+      "type": "range",
+      "id": "subtitle_size",
+      "min": 12,
+      "max": 32,
+      "step": 2,
+      "unit": "px",
+      "label": "Subheading size",
+      "default": 18
+    },
+    {
+      "type": "header",
+      "content": "Graph"
+    },
+    {
+      "type": "text",
+      "id": "legend_label",
+      "label": "Legend label",
+      "default": "NAD+ Increase % (above baseline)"
+    },
+    {
+      "type": "color",
+      "id": "line_color",
+      "label": "Line color",
+      "default": "#00D4AA"
+    },
+    {
+      "type": "color",
+      "id": "chart_background",
+      "label": "Chart background",
+      "default": "#1a1a1a"
+    },
+    {
+      "type": "header",
+      "content": "Benefit cards"
+    },
+    {
+      "type": "text",
+      "id": "benefit_1_title",
+      "label": "Benefit 1 title",
+      "default": "Week 1-2"
+    },
+    {
+      "type": "textarea",
+      "id": "benefit_1_text",
+      "label": "Benefit 1 text",
+      "default": "Initial NAD+ boost begins. You may notice improved energy and mental clarity."
+    },
+    {
+      "type": "text",
+      "id": "benefit_2_title",
+      "label": "Benefit 2 title",
+      "default": "Week 3-4"
+    },
+    {
+      "type": "textarea",
+      "id": "benefit_2_text",
+      "label": "Benefit 2 text",
+      "default": "NAD+ levels reach peak elevation. Enhanced cellular repair and metabolic function."
+    },
+    {
+      "type": "text",
+      "id": "benefit_3_title",
+      "label": "Benefit 3 title",
+      "default": "Week 5-12"
+    },
+    {
+      "type": "textarea",
+      "id": "benefit_3_text",
+      "label": "Benefit 3 text",
+      "default": "Sustained optimal NAD+ levels. Long-term benefits for healthy aging and vitality."
+    },
+    {
+      "type": "range",
+      "id": "card_title_size",
+      "min": 14,
+      "max": 32,
+      "step": 2,
+      "unit": "px",
+      "label": "Card title size",
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "card_text_size",
+      "min": 12,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "label": "Card text size",
+      "default": 14
+    },
+    {
+      "type": "color",
+      "id": "card_background",
+      "label": "Card background",
+      "default": "#2a2a2a"
+    },
+    {
+      "type": "range",
+      "id": "card_border_radius",
+      "min": 0,
+      "max": 24,
+      "step": 2,
+      "unit": "px",
+      "label": "Card border radius",
+      "default": 12
+    },
+    {
+      "type": "header",
+      "content": "Section style"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background color",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "range",
+      "id": "max_width",
+      "min": 800,
+      "max": 1600,
+      "step": 100,
+      "unit": "px",
+      "label": "Maximum width",
+      "default": 1200
+    },
+    {
+      "type": "range",
+      "id": "section_padding_top",
+      "min": 0,
+      "max": 120,
+      "step": 10,
+      "unit": "px",
+      "label": "Top padding",
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "section_padding_bottom",
+      "min": 0,
+      "max": 120,
+      "step": 10,
+      "unit": "px",
+      "label": "Bottom padding",
+      "default": 80
+    }
+  ],
+  "presets": [
+    {
+      "name": "NAD+ daily ritual graph"
+    }
+  ],
+  "tag": null
+}
+{% endschema %}

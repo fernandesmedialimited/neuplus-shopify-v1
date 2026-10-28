@@ -1,0 +1,571 @@
+{% doc %}
+  @prompt
+    meet the team section, 6 profiles with image, title and role
+{% enddoc %}
+{% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
+
+{% style %}
+  .ai-team-section-{{ ai_gen_id }} {
+    display: block;
+    width: {{ block.settings.desktop_width_percent }}%;
+    max-width: 100%;
+    padding: {{ block.settings.section_padding }}px 0;
+  }
+
+  .ai-team-header-{{ ai_gen_id }} {
+    text-align: {{ block.settings.text_alignment }};
+    margin-bottom: {{ block.settings.header_spacing }}px;
+  }
+
+  .ai-team-title-{{ ai_gen_id }} {
+    font-size: {{ block.settings.title_size }}px;
+    color: {{ block.settings.title_color }};
+    margin: 0 0 {{ block.settings.title_bottom_margin }}px;
+  }
+
+  .ai-team-description-{{ ai_gen_id }} {
+    font-size: {{ block.settings.description_size }}px;
+    color: {{ block.settings.description_color }};
+    margin: 0;
+    max-width: 800px;
+    {% if block.settings.text_alignment == 'center' %}
+      margin-left: auto;
+      margin-right: auto;
+    {% endif %}
+  }
+
+  .ai-team-grid-{{ ai_gen_id }} {
+    display: grid;
+    grid-template-columns: repeat({{ block.settings.columns_desktop }}, 1fr);
+    gap: {{ block.settings.grid_gap }}px;
+  }
+
+  .ai-team-member-{{ ai_gen_id }} {
+    text-align: {{ block.settings.card_text_alignment }};
+  }
+
+  .ai-team-image-wrapper-{{ ai_gen_id }} {
+    position: relative;
+    width: 100%;
+    margin-bottom: {{ block.settings.image_spacing }}px;
+    overflow: hidden;
+    border-radius: {{ block.settings.image_border_radius }}px;
+  }
+
+  .ai-team-image-{{ ai_gen_id }} {
+    width: 100%;
+    height: auto;
+    display: block;
+    border-radius: {{ block.settings.image_border_radius }}px;
+  }
+
+  .ai-team-image-placeholder-{{ ai_gen_id }} {
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    background-color: {{ block.settings.placeholder_bg_color }};
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: {{ block.settings.image_border_radius }}px;
+  }
+
+  .ai-team-image-placeholder-{{ ai_gen_id }} svg {
+    width: 60%;
+    height: 60%;
+    opacity: 0.3;
+  }
+
+  .ai-team-name-{{ ai_gen_id }} {
+    font-size: {{ block.settings.name_size }}px;
+    color: {{ block.settings.name_color }};
+    margin: 0 0 {{ block.settings.name_spacing }}px;
+    font-weight: 600;
+  }
+
+  .ai-team-role-{{ ai_gen_id }} {
+    font-size: {{ block.settings.role_size }}px;
+    color: {{ block.settings.role_color }};
+    margin: 0;
+  }
+
+  @media screen and (max-width: 989px) {
+    .ai-team-grid-{{ ai_gen_id }} {
+      grid-template-columns: repeat({{ block.settings.columns_tablet }}, 1fr);
+    }
+  }
+
+  @media screen and (max-width: 749px) {
+    .ai-team-grid-{{ ai_gen_id }} {
+      grid-template-columns: repeat({{ block.settings.columns_mobile }}, 1fr);
+    }
+
+    .ai-team-section-{{ ai_gen_id }} {
+      padding: {{ block.settings.section_padding | times: 0.6 }}px 0;
+    }
+
+    .ai-team-title-{{ ai_gen_id }} {
+      font-size: {{ block.settings.title_size | times: 0.7 }}px;
+    }
+
+    .ai-team-description-{{ ai_gen_id }} {
+      font-size: {{ block.settings.description_size | times: 0.9 }}px;
+    }
+  }
+{% endstyle %}
+
+<team-section-{{ ai_gen_id }} class="ai-team-section-{{ ai_gen_id }}" {{ block.shopify_attributes }}>
+  {% if block.settings.section_title != blank or block.settings.section_description != blank %}
+    <div class="ai-team-header-{{ ai_gen_id }}">
+      {% if block.settings.section_title != blank %}
+        <h2 class="ai-team-title-{{ ai_gen_id }}">{{ block.settings.section_title }}</h2>
+      {% endif %}
+      {% if block.settings.section_description != blank %}
+        <div class="ai-team-description-{{ ai_gen_id }}">{{ block.settings.section_description }}</div>
+      {% endif %}
+    </div>
+  {% endif %}
+
+  <div class="ai-team-grid-{{ ai_gen_id }}">
+    {% for i in (1..6) %}
+      {% liquid
+        assign image_key = 'member_' | append: i | append: '_image'
+        assign name_key = 'member_' | append: i | append: '_name'
+        assign role_key = 'member_' | append: i | append: '_role'
+
+        assign member_image = block.settings[image_key]
+        assign member_name = block.settings[name_key]
+        assign member_role = block.settings[role_key]
+      %}
+
+      <div class="ai-team-member-{{ ai_gen_id }}">
+        <div class="ai-team-image-wrapper-{{ ai_gen_id }}">
+          {% if member_image %}
+            <img
+              src="{{ member_image | image_url: width: 600 }}"
+              alt="{{ member_name | escape }}"
+              loading="lazy"
+              width="{{ member_image.width }}"
+              height="{{ member_image.height }}"
+              class="ai-team-image-{{ ai_gen_id }}"
+            >
+          {% else %}
+            <div class="ai-team-image-placeholder-{{ ai_gen_id }}">
+              {{ 'image' | placeholder_svg_tag }}
+            </div>
+          {% endif %}
+        </div>
+
+        {% if member_name != blank %}
+          <h3 class="ai-team-name-{{ ai_gen_id }}">{{ member_name }}</h3>
+        {% endif %}
+
+        {% if member_role != blank %}
+          <p class="ai-team-role-{{ ai_gen_id }}">{{ member_role }}</p>
+        {% endif %}
+      </div>
+    {% endfor %}
+  </div>
+</team-section-{{ ai_gen_id }}>
+
+<script>
+  (function() {
+    class TeamSection{{ ai_gen_id }} extends HTMLElement {
+      constructor() {
+        super();
+      }
+
+      connectedCallback() {
+      }
+    }
+
+    customElements.define('team-section-{{ ai_gen_id }}', TeamSection{{ ai_gen_id }});
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Meet the team",
+  "tag": null,
+  "settings": [
+    {
+      "type": "header",
+      "content": "Section header"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "section_title",
+      "label": "Title",
+      "default": "Meet the team"
+    },
+    {
+      "type": "richtext",
+      "id": "section_description",
+      "label": "Description",
+      "default": "<p>Get to know the people behind our brand</p>"
+    },
+    {
+      "type": "select",
+      "id": "text_alignment",
+      "label": "Text alignment",
+      "options": [
+        {
+          "value": "left",
+          "label": "Left"
+        },
+        {
+          "value": "center",
+          "label": "Center"
+        }
+      ],
+      "default": "center"
+    },
+    {
+      "type": "range",
+      "id": "header_spacing",
+      "label": "Header spacing",
+      "min": 20,
+      "max": 80,
+      "step": 5,
+      "unit": "px",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "section_padding",
+      "label": "Section padding",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "desktop_width_percent",
+      "label": "Desktop width",
+      "min": 50,
+      "max": 100,
+      "step": 5,
+      "unit": "%",
+      "default": 100
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "range",
+      "id": "columns_desktop",
+      "label": "Columns on desktop",
+      "min": 2,
+      "max": 6,
+      "step": 1,
+      "default": 3
+    },
+    {
+      "type": "range",
+      "id": "columns_tablet",
+      "label": "Columns on tablet",
+      "min": 2,
+      "max": 4,
+      "step": 1,
+      "default": 2
+    },
+    {
+      "type": "select",
+      "id": "columns_mobile",
+      "label": "Columns on mobile",
+      "options": [
+        {
+          "value": "1",
+          "label": "1"
+        },
+        {
+          "value": "2",
+          "label": "2"
+        }
+      ],
+      "default": "1"
+    },
+    {
+      "type": "range",
+      "id": "grid_gap",
+      "label": "Grid gap",
+      "min": 10,
+      "max": 60,
+      "step": 5,
+      "unit": "px",
+      "default": 30
+    },
+    {
+      "type": "select",
+      "id": "card_text_alignment",
+      "label": "Card text alignment",
+      "options": [
+        {
+          "value": "left",
+          "label": "Left"
+        },
+        {
+          "value": "center",
+          "label": "Center"
+        }
+      ],
+      "default": "center"
+    },
+    {
+      "type": "header",
+      "content": "Member 1"
+    },
+    {
+      "type": "image_picker",
+      "id": "member_1_image",
+      "label": "Image"
+    },
+    {
+      "type": "text",
+      "id": "member_1_name",
+      "label": "Name",
+      "default": "Alex Johnson"
+    },
+    {
+      "type": "text",
+      "id": "member_1_role",
+      "label": "Role",
+      "default": "Founder & CEO"
+    },
+    {
+      "type": "header",
+      "content": "Member 2"
+    },
+    {
+      "type": "image_picker",
+      "id": "member_2_image",
+      "label": "Image"
+    },
+    {
+      "type": "text",
+      "id": "member_2_name",
+      "label": "Name",
+      "default": "Sam Taylor"
+    },
+    {
+      "type": "text",
+      "id": "member_2_role",
+      "label": "Role",
+      "default": "Creative Director"
+    },
+    {
+      "type": "header",
+      "content": "Member 3"
+    },
+    {
+      "type": "image_picker",
+      "id": "member_3_image",
+      "label": "Image"
+    },
+    {
+      "type": "text",
+      "id": "member_3_name",
+      "label": "Name",
+      "default": "Jordan Lee"
+    },
+    {
+      "type": "text",
+      "id": "member_3_role",
+      "label": "Role",
+      "default": "Head of Marketing"
+    },
+    {
+      "type": "header",
+      "content": "Member 4"
+    },
+    {
+      "type": "image_picker",
+      "id": "member_4_image",
+      "label": "Image"
+    },
+    {
+      "type": "text",
+      "id": "member_4_name",
+      "label": "Name",
+      "default": "Casey Morgan"
+    },
+    {
+      "type": "text",
+      "id": "member_4_role",
+      "label": "Role",
+      "default": "Product Manager"
+    },
+    {
+      "type": "header",
+      "content": "Member 5"
+    },
+    {
+      "type": "image_picker",
+      "id": "member_5_image",
+      "label": "Image"
+    },
+    {
+      "type": "text",
+      "id": "member_5_name",
+      "label": "Name",
+      "default": "Riley Chen"
+    },
+    {
+      "type": "text",
+      "id": "member_5_role",
+      "label": "Role",
+      "default": "Lead Designer"
+    },
+    {
+      "type": "header",
+      "content": "Member 6"
+    },
+    {
+      "type": "image_picker",
+      "id": "member_6_image",
+      "label": "Image"
+    },
+    {
+      "type": "text",
+      "id": "member_6_name",
+      "label": "Name",
+      "default": "Avery Brooks"
+    },
+    {
+      "type": "text",
+      "id": "member_6_role",
+      "label": "Role",
+      "default": "Operations Lead"
+    },
+    {
+      "type": "header",
+      "content": "Image style"
+    },
+    {
+      "type": "range",
+      "id": "image_border_radius",
+      "label": "Border radius",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "image_spacing",
+      "label": "Spacing below image",
+      "min": 5,
+      "max": 40,
+      "step": 5,
+      "unit": "px",
+      "default": 20
+    },
+    {
+      "type": "color",
+      "id": "placeholder_bg_color",
+      "label": "Placeholder background",
+      "default": "#f4f4f4"
+    },
+    {
+      "type": "header",
+      "content": "Typography"
+    },
+    {
+      "type": "range",
+      "id": "title_size",
+      "label": "Section title size",
+      "min": 20,
+      "max": 60,
+      "step": 2,
+      "unit": "px",
+      "default": 32
+    },
+    {
+      "type": "range",
+      "id": "title_bottom_margin",
+      "label": "Title bottom margin",
+      "min": 5,
+      "max": 30,
+      "step": 5,
+      "unit": "px",
+      "default": 15
+    },
+    {
+      "type": "range",
+      "id": "description_size",
+      "label": "Description size",
+      "min": 12,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "name_size",
+      "label": "Name size",
+      "min": 14,
+      "max": 32,
+      "step": 1,
+      "unit": "px",
+      "default": 18
+    },
+    {
+      "type": "range",
+      "id": "name_spacing",
+      "label": "Name spacing",
+      "min": 2,
+      "max": 20,
+      "step": 2,
+      "unit": "px",
+      "default": 8
+    },
+    {
+      "type": "range",
+      "id": "role_size",
+      "label": "Role size",
+      "min": 12,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "default": 14
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "title_color",
+      "label": "Section title",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "description_color",
+      "label": "Description",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "name_color",
+      "label": "Name",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "role_color",
+      "label": "Role",
+      "default": "#666666"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Meet the team"
+    }
+  ]
+}
+{% endschema %}

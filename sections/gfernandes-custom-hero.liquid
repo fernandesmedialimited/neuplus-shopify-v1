@@ -1,0 +1,351 @@
+{%- style -%}
+  .subscription-wrapper {
+    max-width: 900px;
+    margin: 0 auto;
+    font-family: inherit;
+    color: #000;
+  }
+  .plan-card {
+    border: 1px solid #e0e0e0;
+    border-radius: 12px;
+    margin-bottom: 20px;
+    overflow: hidden;
+    position: relative;
+    transition: all 0.2s ease;
+    cursor: pointer;
+  }
+  .plan-card.is-active {
+    border: 2px solid #1a1a1a;
+  }
+  .plan-badge {
+    text-align: center;
+    color: #fff;
+    padding: 6px;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+  .plan-content {
+    display: flex;
+    padding: 24px;
+    gap: 20px;
+    align-items: flex-start;
+  }
+  /* Custom Radio Button */
+  .radio-wrapper {
+    display: flex;
+    align-items: center;
+  }
+  .custom-radio {
+    appearance: none;
+    width: 24px;
+    height: 24px;
+    border: 1px solid #ccc;
+    border-radius: 50%;
+    outline: none;
+    position: relative;
+    cursor: pointer;
+  }
+  .custom-radio:checked {
+    border-color: #2b5f2b;
+  }
+  .custom-radio:checked::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 14px;
+    height: 14px;
+    background-color: #2b5f2b;
+    border-radius: 50%;
+  }
+  .plan-image img {
+    max-width: 120px;
+    height: auto;
+    display: block;
+  }
+  .plan-details {
+    flex: 1;
+  }
+  .plan-title {
+    font-size: 24px;
+    font-weight: 700;
+    margin: 0 0 4px 0;
+  }
+  .plan-subtitle {
+    font-size: 14px;
+    color: #555;
+    margin: 0 0 16px 0;
+  }
+  .plan-price-wrap {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    margin-bottom: 12px;
+  }
+  .plan-price {
+    font-size: 32px;
+    font-weight: 700;
+  }
+  .plan-suffix {
+    font-size: 12px;
+    text-transform: uppercase;
+    color: #555;
+  }
+  .plan-features {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    font-size: 13px;
+    margin-top: 16px;
+  }
+  .feature-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .feature-item svg {
+    width: 16px;
+    height: 16px;
+    fill: none;
+    stroke: #2b5f2b;
+    stroke-width: 2;
+  }
+  /* Bottom Action Bar */
+  .bottom-action-bar {
+    border: 1px solid #e0e0e0;
+    border-radius: 12px;
+    padding: 20px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    background: #fff;
+    margin-top: 30px;
+  }
+  .add-to-cart-btn {
+    background: #1a1a1a;
+    color: #fff;
+    border: none;
+    padding: 14px 32px;
+    border-radius: 30px;
+    font-weight: 700;
+    font-size: 16px;
+    cursor: pointer;
+    flex: 1;
+    text-align: center;
+  }
+  .qty-selector {
+    display: flex;
+    align-items: center;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    margin-right: 16px;
+  }
+  .qty-btn {
+    background: none;
+    border: none;
+    padding: 8px 12px;
+    cursor: pointer;
+    font-size: 18px;
+  }
+  .qty-input {
+    width: 40px;
+    text-align: center;
+    border: none;
+    font-size: 16px;
+    pointer-events: none;
+  }
+{%- endstyle -%}
+
+<div class="subscription-wrapper">
+  <form action="/cart/add" method="post" id="subscription-form">
+    <!-- Hidden input for Appstle Selling Plan -->
+    <input type="hidden" name="selling_plan" id="selected-selling-plan" value="">
+    
+    <div class="plans-container">
+      {%- for block in section.blocks -%}
+        {%- assign product = block.settings.product -%}
+        {%- assign current_variant = product.selected_or_first_available_variant -%}
+        
+        <label class="plan-card {% if forloop.first %}is-active{% endif %}" for="plan-{{ block.id }}" data-price="{{ current_variant.price | money }}" data-selling-plan="{{ block.settings.selling_plan_id }}">
+          
+          {%- if block.settings.badge_text != blank -%}
+            <div class="plan-badge" style="background-color: {{ block.settings.badge_color }};">
+              ★ {{ block.settings.badge_text }}
+            </div>
+          {%- endif -%}
+
+          <div class="plan-content">
+            <div class="radio-wrapper">
+              <input type="radio" name="id" value="{{ current_variant.id }}" id="plan-{{ block.id }}" class="custom-radio" {% if forloop.first %}checked{% endif %}>
+            </div>
+            
+            <div class="plan-image">
+              {%- if block.settings.override_image -%}
+                {{ block.settings.override_image | image_url: width: 200 | image_tag }}
+              {%- else -%}
+                {{ product.featured_image | image_url: width: 200 | image_tag }}
+              {%- endif -%}
+            </div>
+
+            <div class="plan-details">
+              <h2 class="plan-title">{{ block.settings.title_override | default: product.title }}</h2>
+              <p class="plan-subtitle">{{ block.settings.subtitle }}</p>
+              
+              <div class="plan-price-wrap">
+                <span class="plan-price">{{ current_variant.price | money }}</span>
+                <span class="plan-suffix">{{ block.settings.price_suffix }}</span>
+              </div>
+
+              {%- if block.settings.features != blank -%}
+                <div class="plan-features">
+                  {%- assign features_array = block.settings.features | newline_to_br | split: '<br />' -%}
+                  {%- for feature in features_array -%}
+                    <div class="feature-item">
+                      <svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                      <span>{{ feature | strip }}</span>
+                    </div>
+                  {%- endfor -%}
+                </div>
+              {%- endif -%}
+            </div>
+          </div>
+        </label>
+      {%- endfor -%}
+    </div>
+
+    <div class="bottom-action-bar">
+      <div class="summary-details">
+        <div style="font-size: 12px; color: #555;">TOTAL TODAY</div>
+        <div class="summary-price" style="font-size: 24px; font-weight: 700;"></div>
+      </div>
+      
+      <div style="display: flex; align-items: center;">
+        <div class="qty-selector">
+          <button type="button" class="qty-btn minus">-</button>
+          <input type="number" name="quantity" class="qty-input" value="1" min="1">
+          <button type="button" class="qty-btn plus">+</button>
+        </div>
+        
+        <button type="submit" class="add-to-cart-btn">
+          ADD TO CART — <span class="btn-price-display"></span>
+        </button>
+      </div>
+    </div>
+  </form>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const cards = document.querySelectorAll('.plan-card');
+    const radios = document.querySelectorAll('.custom-radio');
+    const summaryPrice = document.querySelector('.summary-price');
+    const btnPriceDisplay = document.querySelector('.btn-price-display');
+    const sellingPlanInput = document.getElementById('selected-selling-plan');
+    
+    function updateSelection(card) {
+      cards.forEach(c => c.classList.remove('is-active'));
+      card.classList.add('is-active');
+      
+      const price = card.getAttribute('data-price');
+      const sellingPlan = card.getAttribute('data-selling-plan');
+      
+      summaryPrice.textContent = price;
+      btnPriceDisplay.textContent = price;
+      sellingPlanInput.value = sellingPlan || '';
+    }
+
+    radios.forEach(radio => {
+      radio.addEventListener('change', (e) => {
+        updateSelection(e.target.closest('.plan-card'));
+      });
+    });
+
+    // Initialize first active
+    const activeCard = document.querySelector('.plan-card.is-active');
+    if(activeCard) updateSelection(activeCard);
+
+    // Quantity logic
+    const qtyInput = document.querySelector('.qty-input');
+    document.querySelector('.qty-btn.minus').addEventListener('click', () => {
+      if (qtyInput.value > 1) qtyInput.value = parseInt(qtyInput.value) - 1;
+    });
+    document.querySelector('.qty-btn.plus').addEventListener('click', () => {
+      qtyInput.value = parseInt(qtyInput.value) + 1;
+    });
+  });
+</script>
+
+{% schema %}
+{
+  "name": "Subscription Selector",
+  "settings": [],
+  "blocks": [
+    {
+      "type": "plan",
+      "name": "Subscription Plan",
+      "settings": [
+        {
+          "type": "product",
+          "id": "product",
+          "label": "Select Product"
+        },
+        {
+          "type": "text",
+          "id": "selling_plan_id",
+          "label": "Appstle Selling Plan ID",
+          "info": "Find this in the Appstle dashboard or product JSON."
+        },
+        {
+          "type": "text",
+          "id": "badge_text",
+          "label": "Badge Text",
+          "default": "MOST POPULAR"
+        },
+        {
+          "type": "color",
+          "id": "badge_color",
+          "label": "Badge Background Color",
+          "default": "#1a1a1a"
+        },
+        {
+          "type": "image_picker",
+          "id": "override_image",
+          "label": "Override Product Image"
+        },
+        {
+          "type": "text",
+          "id": "title_override",
+          "label": "Title Override"
+        },
+        {
+          "type": "text",
+          "id": "subtitle",
+          "label": "Subtitle",
+          "default": "Your daily ritual. Delivered every 4 weeks."
+        },
+        {
+          "type": "text",
+          "id": "price_suffix",
+          "label": "Price Suffix",
+          "default": "EVERY 4 WEEKS"
+        },
+        {
+          "type": "textarea",
+          "id": "features",
+          "label": "Features (One per line)",
+          "default": "Save 14% on every order\nSubscriber-only pricing\nFree delivery\nSkip, pause or cancel"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Subscription Selector"
+    }
+  ]
+}
+{% endschema %}

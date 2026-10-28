@@ -1,0 +1,627 @@
+{% doc %}
+  @prompt
+    Build a custom section called "Why NEU+ Works Over Time".
+    
+    Goal:
+    Showcase that NEU+ delivers results gradually over 12 weeks. The section should visually communicate a timeline (Weeks 1–12) and pair it with supporting copy that explains why consistency matters. It should also include a short subscription reinforcement at the end.
+    
+    Layout Requirements:
+    
+    Section Header (top)
+    
+    Headline: “True Cellular Change Takes Consistency”
+    
+    Body text (1–2 short paragraphs):
+    “Your body’s NAD+ levels don’t change overnight — they rebuild gradually with daily use.”
+    
+    Timeline Block (main content)
+    
+    Create a horizontal timeline (on desktop) and a stacked/accordion layout (on mobile).
+    
+    The timeline should be split into 3 stages:
+    
+    Weeks 1–4
+    
+    Title: “Weeks 1–4”
+    
+    Description: “Renewed energy and clearer focus.”
+    
+    Weeks 5–8
+    
+    Title: “Weeks 5–8”
+    
+    Description: “Faster recovery and stronger resilience.”
+    
+    Weeks 9–12
+    
+    Title: “Weeks 9–12”
+    
+    Description: “Visible vitality and long-term performance.”
+    
+    Each stage should look like a “step” in the journey — include an icon or number and a short description.
+    
+    Closing Copy (below timeline)
+    
+    Short paragraph:
+    
+    “Daily use = lasting results.”
+    
+    “Our subscription ensures your NAD+ levels stay balanced — and your progress never dips.”
+    
+    Optional CTA
+    
+    Add a button at the bottom:
+    
+    Label: “Subscribe for Lasting Results”
+    
+    Link setting so I can choose a product or subscription page.
+    
+    Design Style:
+    
+    Clean, premium, wellness/biotech aesthetic.
+    
+    Light background, subtle divider lines between the 3 timeline steps.
+    
+    Rounded cards for each week group.
+    
+    Make sure text is readable on mobile.
+    
+    Content Settings (make these editable):
+    
+    Headline text
+    
+    Intro/Body text
+    
+    Each of the 3 timeline steps (title + description)
+    
+    Closing paragraph
+    
+    CTA label + link
+    
+    Background color
+    
+    Responsive Behavior:
+    
+    Desktop: 3-step horizontal timeline.
+    
+    Mobile: 3 stacked blocks, in order: Weeks 1–4 → Weeks 5–8 → Weeks 9–12., centralize content, centralize section
+{% enddoc %}
+{% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
+
+{% style %}
+  .ai-neu-timeline-{{ ai_gen_id }} {
+    padding: {{ block.settings.section_padding_top }}px 20px {{ block.settings.section_padding_bottom }}px;
+    background-color: {{ block.settings.background_color }};
+  }
+
+  .ai-neu-timeline-container-{{ ai_gen_id }} {
+    max-width: 900px;
+    margin: 0 auto;
+  }
+
+  .ai-neu-timeline-header-{{ ai_gen_id }} {
+    text-align: center;
+    margin-bottom: 48px;
+  }
+
+  .ai-neu-timeline-headline-{{ ai_gen_id }} {
+    font-size: {{ block.settings.headline_size }}px;
+    color: {{ block.settings.text_color }};
+    margin: 0 0 24px;
+    font-weight: 300;
+  }
+
+  .ai-neu-timeline-intro-{{ ai_gen_id }} {
+    font-size: {{ block.settings.body_text_size }}px;
+    color: {{ block.settings.text_color }};
+    max-width: 700px;
+    margin: 0 auto;
+    line-height: 1.6;
+  }
+
+  .ai-neu-timeline-steps-{{ ai_gen_id }} {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 32px;
+    margin-bottom: 48px;
+  }
+
+  .ai-neu-timeline-step-{{ ai_gen_id }} {
+    background-color: {{ block.settings.card_background_color }};
+    border-radius: {{ block.settings.card_border_radius }}px;
+    padding: 32px 24px;
+    text-align: center;
+    position: relative;
+    border: 1px solid {{ block.settings.card_border_color }};
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  .ai-neu-timeline-step-{{ ai_gen_id }}:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+  }
+
+  .ai-neu-timeline-step-number-{{ ai_gen_id }} {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background-color: {{ block.settings.accent_color }};
+    color: {{ block.settings.accent_text_color }};
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    font-weight: 600;
+    margin: 0 auto 20px;
+  }
+
+  .ai-neu-timeline-step-title-{{ ai_gen_id }} {
+    font-size: {{ block.settings.step_title_size }}px;
+    color: {{ block.settings.text_color }};
+    margin: 0 0 12px;
+    font-weight: 600;
+  }
+
+  .ai-neu-timeline-step-description-{{ ai_gen_id }} {
+    font-size: {{ block.settings.step_description_size }}px;
+    color: {{ block.settings.text_color }};
+    line-height: 1.5;
+    opacity: 0.85;
+  }
+
+  .ai-neu-timeline-connector-{{ ai_gen_id }} {
+    display: none;
+  }
+
+  .ai-neu-timeline-closing-{{ ai_gen_id }} {
+    text-align: center;
+    margin-bottom: 32px;
+  }
+
+  .ai-neu-timeline-closing-text-{{ ai_gen_id }} {
+    font-size: {{ block.settings.closing_text_size }}px;
+    color: {{ block.settings.text_color }};
+    max-width: 700px;
+    margin: 0 auto;
+    line-height: 1.6;
+  }
+
+  .ai-neu-timeline-cta-{{ ai_gen_id }} {
+    text-align: center;
+  }
+
+  .ai-neu-timeline-button-{{ ai_gen_id }} {
+    display: inline-block;
+    padding: 16px 40px;
+    background-color: {{ block.settings.button_background_color }};
+    color: {{ block.settings.button_text_color }};
+    text-decoration: none;
+    border-radius: {{ block.settings.button_border_radius }}px;
+    font-size: {{ block.settings.button_text_size }}px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    border: {{ block.settings.button_border_width }}px solid {{ block.settings.button_border_color }};
+  }
+
+  .ai-neu-timeline-button-{{ ai_gen_id }}:hover {
+    background-color: {{ block.settings.button_hover_background_color }};
+    color: {{ block.settings.button_hover_text_color }};
+    border-color: {{ block.settings.button_hover_border_color }};
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  }
+
+  @media screen and (max-width: 989px) {
+    .ai-neu-timeline-steps-{{ ai_gen_id }} {
+      grid-template-columns: 1fr;
+      gap: 24px;
+      max-width: 500px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .ai-neu-timeline-headline-{{ ai_gen_id }} {
+      font-size: {{ block.settings.headline_size | times: 0.7 }}px;
+    }
+
+    .ai-neu-timeline-step-{{ ai_gen_id }} {
+      padding: 24px 20px;
+    }
+  }
+
+  @media screen and (max-width: 749px) {
+    .ai-neu-timeline-{{ ai_gen_id }} {
+      padding: {{ block.settings.section_padding_top | times: 0.7 }}px 16px {{ block.settings.section_padding_bottom | times: 0.7 }}px;
+    }
+
+    .ai-neu-timeline-header-{{ ai_gen_id }} {
+      margin-bottom: 32px;
+    }
+
+    .ai-neu-timeline-headline-{{ ai_gen_id }} {
+      font-size: {{ block.settings.headline_size | times: 0.6 }}px;
+      margin-bottom: 16px;
+    }
+
+    .ai-neu-timeline-intro-{{ ai_gen_id }} {
+      font-size: {{ block.settings.body_text_size | minus: 2 }}px;
+    }
+
+    .ai-neu-timeline-closing-text-{{ ai_gen_id }} {
+      font-size: {{ block.settings.closing_text_size | minus: 2 }}px;
+    }
+
+    .ai-neu-timeline-button-{{ ai_gen_id }} {
+      padding: 14px 32px;
+      font-size: {{ block.settings.button_text_size | minus: 2 }}px;
+    }
+  }
+{% endstyle %}
+
+<div class="ai-neu-timeline-{{ ai_gen_id }}" {{ block.shopify_attributes }}>
+  <div class="ai-neu-timeline-container-{{ ai_gen_id }}">
+    <div class="ai-neu-timeline-header-{{ ai_gen_id }}">
+      {% if block.settings.headline != blank %}
+        <h2 class="ai-neu-timeline-headline-{{ ai_gen_id }}">{{ block.settings.headline }}</h2>
+      {% endif %}
+      {% if block.settings.intro_text != blank %}
+        <div class="ai-neu-timeline-intro-{{ ai_gen_id }}">
+          {{ block.settings.intro_text }}
+        </div>
+      {% endif %}
+    </div>
+
+    <div class="ai-neu-timeline-steps-{{ ai_gen_id }}">
+      <div class="ai-neu-timeline-step-{{ ai_gen_id }}">
+        <div class="ai-neu-timeline-step-number-{{ ai_gen_id }}">1</div>
+        {% if block.settings.step_1_title != blank %}
+          <h3 class="ai-neu-timeline-step-title-{{ ai_gen_id }}">{{ block.settings.step_1_title }}</h3>
+        {% endif %}
+        {% if block.settings.step_1_description != blank %}
+          <div class="ai-neu-timeline-step-description-{{ ai_gen_id }}">
+            {{ block.settings.step_1_description }}
+          </div>
+        {% endif %}
+      </div>
+
+      <div class="ai-neu-timeline-step-{{ ai_gen_id }}">
+        <div class="ai-neu-timeline-step-number-{{ ai_gen_id }}">2</div>
+        {% if block.settings.step_2_title != blank %}
+          <h3 class="ai-neu-timeline-step-title-{{ ai_gen_id }}">{{ block.settings.step_2_title }}</h3>
+        {% endif %}
+        {% if block.settings.step_2_description != blank %}
+          <div class="ai-neu-timeline-step-description-{{ ai_gen_id }}">
+            {{ block.settings.step_2_description }}
+          </div>
+        {% endif %}
+      </div>
+
+      <div class="ai-neu-timeline-step-{{ ai_gen_id }}">
+        <div class="ai-neu-timeline-step-number-{{ ai_gen_id }}">3</div>
+        {% if block.settings.step_3_title != blank %}
+          <h3 class="ai-neu-timeline-step-title-{{ ai_gen_id }}">{{ block.settings.step_3_title }}</h3>
+        {% endif %}
+        {% if block.settings.step_3_description != blank %}
+          <div class="ai-neu-timeline-step-description-{{ ai_gen_id }}">
+            {{ block.settings.step_3_description }}
+          </div>
+        {% endif %}
+      </div>
+    </div>
+
+    {% if block.settings.closing_text != blank %}
+      <div class="ai-neu-timeline-closing-{{ ai_gen_id }}">
+        <div class="ai-neu-timeline-closing-text-{{ ai_gen_id }}">
+          {{ block.settings.closing_text }}
+        </div>
+      </div>
+    {% endif %}
+
+    {% if block.settings.show_cta %}
+      <div class="ai-neu-timeline-cta-{{ ai_gen_id }}">
+        <a href="{{ block.settings.cta_link }}" class="ai-neu-timeline-button-{{ ai_gen_id }}">
+          {{ block.settings.cta_label }}
+        </a>
+      </div>
+    {% endif %}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Why NEU+ Works Over Time",
+  "tag": null,
+  "settings": [
+    {
+      "type": "header",
+      "content": "Section header"
+    },
+    {
+      "type": "text",
+      "id": "headline",
+      "label": "Headline",
+      "default": "True Cellular Change Takes Consistency"
+    },
+    {
+      "type": "richtext",
+      "id": "intro_text",
+      "label": "Intro text",
+      "default": "<p>Your body's NAD+ levels don't change overnight — they rebuild gradually with daily use.</p>"
+    },
+    {
+      "type": "header",
+      "content": "Timeline steps"
+    },
+    {
+      "type": "text",
+      "id": "step_1_title",
+      "label": "Step 1 title",
+      "default": "Weeks 1–4"
+    },
+    {
+      "type": "textarea",
+      "id": "step_1_description",
+      "label": "Step 1 description",
+      "default": "Renewed energy and clearer focus."
+    },
+    {
+      "type": "text",
+      "id": "step_2_title",
+      "label": "Step 2 title",
+      "default": "Weeks 5–8"
+    },
+    {
+      "type": "textarea",
+      "id": "step_2_description",
+      "label": "Step 2 description",
+      "default": "Faster recovery and stronger resilience."
+    },
+    {
+      "type": "text",
+      "id": "step_3_title",
+      "label": "Step 3 title",
+      "default": "Weeks 9–12"
+    },
+    {
+      "type": "textarea",
+      "id": "step_3_description",
+      "label": "Step 3 description",
+      "default": "Visible vitality and long-term performance."
+    },
+    {
+      "type": "header",
+      "content": "Closing section"
+    },
+    {
+      "type": "richtext",
+      "id": "closing_text",
+      "label": "Closing text",
+      "default": "<p>Daily use = lasting results. Our subscription ensures your NAD+ levels stay balanced — and your progress never dips.</p>"
+    },
+    {
+      "type": "header",
+      "content": "Call to action"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_cta",
+      "label": "Show CTA button",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "cta_label",
+      "label": "Button label",
+      "default": "Subscribe for Lasting Results"
+    },
+    {
+      "type": "url",
+      "id": "cta_link",
+      "label": "Button link"
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background",
+      "default": "#f9f8f6"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "card_background_color",
+      "label": "Card background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "card_border_color",
+      "label": "Card border",
+      "default": "#e6e6e6"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Step number background",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "accent_text_color",
+      "label": "Step number text",
+      "default": "#ffffff"
+    },
+    {
+      "type": "header",
+      "content": "Button style"
+    },
+    {
+      "type": "color",
+      "id": "button_background_color",
+      "label": "Background",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "button_text_color",
+      "label": "Text",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "button_border_color",
+      "label": "Border",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "button_hover_background_color",
+      "label": "Hover background",
+      "default": "#1a1a1a"
+    },
+    {
+      "type": "color",
+      "id": "button_hover_text_color",
+      "label": "Hover text",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "button_hover_border_color",
+      "label": "Hover border",
+      "default": "#1a1a1a"
+    },
+    {
+      "type": "range",
+      "id": "button_border_width",
+      "label": "Border width",
+      "min": 0,
+      "max": 4,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "button_border_radius",
+      "label": "Border radius",
+      "min": 0,
+      "max": 50,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "header",
+      "content": "Typography"
+    },
+    {
+      "type": "range",
+      "id": "headline_size",
+      "label": "Headline size",
+      "min": 20,
+      "max": 72,
+      "step": 2,
+      "unit": "px",
+      "default": 48
+    },
+    {
+      "type": "range",
+      "id": "body_text_size",
+      "label": "Body text size",
+      "min": 12,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "step_title_size",
+      "label": "Step title size",
+      "min": 14,
+      "max": 32,
+      "step": 1,
+      "unit": "px",
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "step_description_size",
+      "label": "Step description size",
+      "min": 12,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "default": 14
+    },
+    {
+      "type": "range",
+      "id": "closing_text_size",
+      "label": "Closing text size",
+      "min": 12,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "button_text_size",
+      "label": "Button text size",
+      "min": 12,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "range",
+      "id": "card_border_radius",
+      "label": "Card border radius",
+      "min": 0,
+      "max": 32,
+      "step": 2,
+      "unit": "px",
+      "default": 8
+    },
+    {
+      "type": "range",
+      "id": "section_padding_top",
+      "label": "Top padding",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "section_padding_bottom",
+      "label": "Bottom padding",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "default": 80
+    }
+  ],
+  "presets": [
+    {
+      "name": "Why NEU+ Works Over Time"
+    }
+  ]
+}
+{% endschema %}
