@@ -124,7 +124,7 @@
   </div>
 
   {%- if section.settings.show_sticky_bar -%}
-    <neu-sticky-bar class="neu-sticky" aria-hidden="true">
+    <neu-sticky-bar class="neu-sticky">
       <div class="neu-sticky__info">
         {%- assign sticky_image = current_variant.featured_image | default: product.featured_image -%}
         {%- if sticky_image -%}
@@ -142,7 +142,7 @@
           </div>
         </div>
       </div>
-      <button class="neu-btn" type="button" data-sticky-add tabindex="-1">
+      <button class="neu-btn" type="button" data-sticky-add>
         {% render 'neu-icon', icon: 'cart' %}
         {{ section.settings.sticky_button_label | escape }}
       </button>
@@ -267,7 +267,7 @@
     {
       "type": "checkbox",
       "id": "show_sticky_bar",
-      "label": "Show sticky bar when scrolling",
+      "label": "Show sticky add to cart bar",
       "default": true
     },
     {

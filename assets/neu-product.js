@@ -470,13 +470,10 @@ class NeuStickyBar extends HTMLElement {
       target.click();
     });
 
-    this.observer = new IntersectionObserver(([entry]) => {
-      const past = !entry.isIntersecting && entry.boundingClientRect.top < 0;
-      this.classList.toggle('is-visible', past);
-      this.setAttribute('aria-hidden', String(!past));
-      if (this.button) this.button.tabIndex = past ? 0 : -1;
-    });
-    this.observer.observe(target);
+    // Always shown, so add to cart is one click away anywhere on the page
+    this.classList.add('is-visible');
+    this.removeAttribute('aria-hidden');
+    if (this.button) this.button.tabIndex = 0;
 
     this.onState = (event) => {
       const { variant, price, compare, save, available } = event.detail;
@@ -495,7 +492,6 @@ class NeuStickyBar extends HTMLElement {
   }
 
   disconnectedCallback() {
-    this.observer?.disconnect();
     document.removeEventListener(STATE_EVENT, this.onState);
   }
 
