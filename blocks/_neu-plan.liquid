@@ -40,8 +40,7 @@
   endif
   assign plan_price = target_variant.price
 
-  # A pack card sells its variant once, plus Subscribe & Save when the variant has a selling plan
-  if type == 'subscription' or type == 'pack'
+  if type == 'subscription'
     assign wanted_id = s.selling_plan_id | strip
     for allocation in target_variant.selling_plan_allocations
       assign this_id = allocation.selling_plan.id | append: ''
@@ -55,21 +54,7 @@
         break
       endif
     endfor
-  endif
-  assign one_time_price = target_variant.price
-  assign has_toggle = false
-  assign subscribe_selected = false
-  if type == 'pack'
-    if plan_id != blank
-      assign has_toggle = true
-      assign subscribe_selected = s.subscribe_by_default
-    endif
-    unless subscribe_selected
-      assign plan_price = one_time_price
-    endunless
-  endif
-
-  if type == 'product' and s.product != blank
+  elsif type == 'product' and s.product != blank
     assign target_variant = s.product.selected_or_first_available_variant
     assign plan_price = target_variant.price
   endif
@@ -80,25 +65,9 @@
     assign display_price = plan_price
   endif
   assign per_day = plan_price | divided_by: servings
-  assign per_label = s.per_label | default: '/day'
-  if type == 'pack'
-    assign display_price = one_time_price
-    assign per_day = one_time_price | divided_by: servings
-  endif
 
   assign baseline = target_variant.price | times: months
   assign save_percent = 0
-  if type == 'subscription' or has_toggle
-    assign sub_price = plan_price
-    if has_toggle
-      for allocation in target_variant.selling_plan_allocations
-        assign this_id = allocation.selling_plan.id | append: ''
-        if this_id == plan_id
-          assign sub_price = allocation.price
-        endif
-      endfor
-    endif
-  endif
   if type == 'subscription' and baseline > plan_price
     assign save_percent = baseline | minus: plan_price | times: 100.0 | divided_by: baseline | round
   endif
@@ -106,8 +75,9 @@
   assign radio_id = 'NeuPlan-' | append: block.id
 -%}
 
-<div
+<label
   class="neu-plan{% if s.selected %} is-selected{% endif %}"
+  for="{{ radio_id }}"
   data-plan
   data-plan-type="{{ type }}"
   data-plan-id="{{ plan_id }}"
@@ -119,7 +89,6 @@
   data-months="{{ months }}"
   data-servings="{{ servings }}"
   data-per-month="{{ s.show_per_month }}"
-  data-per-label="{{ per_label | escape }}"
   {{ block.shopify_attributes }}
 >
   {%- if s.badge != blank -%}
@@ -136,13 +105,12 @@
         type="radio"
         name="neu-plan"
         id="{{ radio_id }}"
-        aria-labelledby="{{ radio_id }}-title"
         {% if s.selected %}
           checked
         {% endif %}
       >
       <span>
-        <span class="neu-plan__title" id="{{ radio_id }}-title">
+        <span class="neu-plan__title">
           {{ s.title | escape }}
           {%- if type == 'subscription' -%}
             <span class="neu-save" data-plan-save{% if save_percent <= 0 %} hidden{% endif %}>Save {{ save_percent }}%</span>
@@ -158,7 +126,7 @@
           {%- if s.show_per_month -%}/mo{%- endif -%}
         </span>
         <span class="neu-plan__per" data-plan-per>
-          {{- per_day | money }}{{ per_label }}
+          {{- per_day | money }}/day
           {%- if months > 1 %} · {{ months }}mo = {{ plan_price | money }}{% endif -%}
         </span>
         {%- if s.price_note != blank -%}
@@ -214,61 +182,8 @@
         {%- endfor -%}
       </span>
     {%- endif -%}
-
-    {%- if has_toggle -%}
-      {%- liquid
-        assign toggle_save = 0
-        if one_time_price > sub_price
-          assign toggle_save = one_time_price | minus: sub_price | times: 100.0 | divided_by: one_time_price | round
-        endif
-      -%}
-      <span class="neu-purchase" role="radiogroup" aria-label="{{ s.title | escape }}">
-        <label class="neu-purchase__option">
-          <input
-            type="radio"
-            name="neu-purchase-{{ block.id }}"
-            value="subscription"
-            data-purchase
-            {% if subscribe_selected %}
-              checked
-            {% endif %}
-          >
-          <span class="neu-purchase__label">
-            {{ s.subscribe_label | escape }}
-            {%- if toggle_save > 0 %} <span class="neu-save" data-purchase-save>Save {{ toggle_save }}%</span>{% endif -%}
-          </span>
-          <span class="neu-purchase__price">
-            <span data-purchase-price="subscription">{{ sub_price | money }}</span>
-            {%- if s.subscribe_note != blank -%}
-              <span class="neu-purchase__note">{{ s.subscribe_note | escape }}</span>
-            {%- endif -%}
-          </span>
-        </label>
-        <label class="neu-purchase__option">
-          <input
-            type="radio"
-            name="neu-purchase-{{ block.id }}"
-            value="one_time"
-            data-purchase
-            {% unless subscribe_selected %}
-              checked
-            {% endunless %}
-          >
-          <span class="neu-purchase__label">{{ s.one_time_label | escape }}</span>
-          <span class="neu-purchase__price">
-            <span data-purchase-price="one_time">{{ one_time_price | money }}</span>
-            {%- if s.one_time_note != blank -%}
-              <span class="neu-purchase__note">{{ s.one_time_note | escape }}</span>
-            {%- endif -%}
-          </span>
-        </label>
-      </span>
-      {%- if s.subscribe_footnote != blank -%}
-        <span class="neu-purchase__footnote">{{ s.subscribe_footnote | escape }}</span>
-      {%- endif -%}
-    {%- endif -%}
   </span>
-</div>
+</label>
 
 {% schema %}
 {
@@ -282,7 +197,6 @@
       "options": [
         { "value": "subscription", "label": "Subscription (selling plan)" },
         { "value": "one_time", "label": "One-time purchase" },
-        { "value": "pack", "label": "Pack: one-time, plus Subscribe & Save when the variant has a selling plan" },
         { "value": "product", "label": "Different product (e.g. discovery pack)" }
       ],
       "default": "subscription"
@@ -389,56 +303,9 @@
     },
     {
       "type": "text",
-      "id": "per_label",
-      "label": "Per-serving label",
-      "info": "Follows the per-serving price, e.g. /day or  per shot",
-      "default": "/day"
-    },
-    {
-      "type": "text",
       "id": "price_note",
       "label": "Note under price",
       "info": "e.g. + Postage"
-    },
-    {
-      "type": "header",
-      "content": "Subscribe & Save (Pack plan type)"
-    },
-    {
-      "type": "checkbox",
-      "id": "subscribe_by_default",
-      "label": "Subscribe & Save selected by default",
-      "default": true
-    },
-    {
-      "type": "text",
-      "id": "subscribe_label",
-      "label": "Subscribe label",
-      "default": "Subscribe & save"
-    },
-    {
-      "type": "text",
-      "id": "subscribe_note",
-      "label": "Subscribe note",
-      "default": "Free delivery"
-    },
-    {
-      "type": "text",
-      "id": "one_time_label",
-      "label": "One-time label",
-      "default": "Buy once"
-    },
-    {
-      "type": "text",
-      "id": "one_time_note",
-      "label": "One-time note",
-      "info": "e.g. + £3.50 delivery"
-    },
-    {
-      "type": "text",
-      "id": "subscribe_footnote",
-      "label": "Footnote",
-      "default": "Cancel or change anytime. No commitment."
     }
   ],
   "presets": [

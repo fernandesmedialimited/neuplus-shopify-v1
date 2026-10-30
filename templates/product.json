@@ -1,3 +1,12 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
 {
   "sections": {
     "main": {
@@ -28,14 +37,14 @@
           "type": "neu-buy-box",
           "settings": {
             "show_options": true,
+            "plan_option": "Pack Types",
             "plans_label": "Choose a plan",
             "show_quantity": true,
             "button_label": "Add to cart",
             "dispatch_text": "Dispatched within 1–2 business days",
             "show_dynamic_checkout": true,
             "instalments_text": "<p>Choose <strong>Pay in Instalments</strong> at checkout to split orders over £50 into <strong>3 interest-free payments with Google Shop</strong>.</p>",
-            "show_payment_icons": true,
-            "plan_option": "Pack Types"
+            "show_payment_icons": true
           },
           "blocks": {
             "sub_24": {
@@ -56,7 +65,6 @@
                 "servings": 24,
                 "billing_months": 1,
                 "show_per_month": false,
-                "per_label": " per shot",
                 "price_note": ""
               }
             },
@@ -78,7 +86,6 @@
                 "servings": 36,
                 "billing_months": 1,
                 "show_per_month": false,
-                "per_label": " per shot",
                 "price_note": ""
               }
             },
@@ -100,7 +107,6 @@
                 "servings": 12,
                 "billing_months": 1,
                 "show_per_month": false,
-                "per_label": " per shot",
                 "price_note": "+ £3.50 delivery"
               }
             },
@@ -122,7 +128,6 @@
                 "servings": 24,
                 "billing_months": 1,
                 "show_per_month": false,
-                "per_label": " per shot",
                 "price_note": "+ £3.50 delivery"
               }
             },
@@ -144,7 +149,6 @@
                 "servings": 36,
                 "billing_months": 1,
                 "show_per_month": false,
-                "per_label": " per shot",
                 "price_note": ""
               }
             }
@@ -265,10 +269,6 @@
     },
     "featured_in": {
       "type": "neu-marquee",
-      "settings": {
-        "speed": 40,
-        "padding": 24
-      },
       "blocks": {
         "f1": {
           "type": "item",
@@ -304,18 +304,14 @@
         "f2",
         "f3",
         "f4"
-      ]
+      ],
+      "settings": {
+        "speed": 40,
+        "padding": 24
+      }
     },
     "why_subscribe": {
       "type": "neu-why-subscribe",
-      "settings": {
-        "eyebrow": "Why subscribe?",
-        "heading": "Build the daily habit. Save up to 12%",
-        "link_label": "How subscriptions work",
-        "link_url": "",
-        "padding_top": 64,
-        "padding_bottom": 40
-      },
       "blocks": {
         "w1": {
           "type": "card",
@@ -355,16 +351,18 @@
         "w2",
         "w3",
         "w4"
-      ]
+      ],
+      "settings": {
+        "eyebrow": "Why subscribe?",
+        "heading": "Build the daily habit. Save up to 12%",
+        "link_label": "How subscriptions work",
+        "link_url": "",
+        "padding_top": 64,
+        "padding_bottom": 40
+      }
     },
     "certifications": {
       "type": "neu-certifications",
-      "settings": {
-        "eyebrow": "Made right. Tested independently.",
-        "heading": "Certifications & standards",
-        "padding_top": 64,
-        "padding_bottom": 64
-      },
       "blocks": {
         "c1": {
           "type": "cert",
@@ -413,20 +411,16 @@
         "c3",
         "c4",
         "c5"
-      ]
+      ],
+      "settings": {
+        "eyebrow": "Made right. Tested independently.",
+        "heading": "Certifications & standards",
+        "padding_top": 64,
+        "padding_bottom": 64
+      }
     },
     "reviews": {
       "type": "neu-reviews",
-      "settings": {
-        "eyebrow": "Customer reviews",
-        "fallback_rating": "4.8",
-        "fallback_count": "2,418",
-        "button_label": "Write a review",
-        "button_url": "#judgeme_product_reviews",
-        "speed": 60,
-        "padding_top": 64,
-        "padding_bottom": 80
-      },
       "blocks": {
         "r1": {
           "type": "review",
@@ -489,19 +483,20 @@
         "r3",
         "r4",
         "judge_me_reviews_review_widget_WAC6ji"
-      ]
+      ],
+      "settings": {
+        "eyebrow": "Customer reviews",
+        "fallback_rating": "4.8",
+        "fallback_count": "2,418",
+        "button_label": "Write a review",
+        "button_url": "#judgeme_product_reviews",
+        "speed": 60,
+        "padding_top": 64,
+        "padding_bottom": 80
+      }
     },
     "stats": {
       "type": "neu-stats-band",
-      "settings": {
-        "image": "shopify://shop_images/TT100796_copy.jpg",
-        "heading": "The daily <em>shot</em> with heavyweight credentials",
-        "button_label": "Nutrition & Ingredients",
-        "button_url": "",
-        "background": "#e8e2d5",
-        "padding_top": 80,
-        "padding_bottom": 80
-      },
       "blocks": {
         "s1": {
           "type": "stat",
@@ -537,17 +532,19 @@
         "s2",
         "s3",
         "s4"
-      ]
+      ],
+      "settings": {
+        "image": "shopify://shop_images/TT100796_copy.jpg",
+        "heading": "The daily <em>shot</em> with heavyweight credentials",
+        "button_label": "Nutrition & Ingredients",
+        "button_url": "",
+        "background": "#e8e2d5",
+        "padding_top": 80,
+        "padding_bottom": 80
+      }
     },
     "faq": {
       "type": "neu-faq",
-      "settings": {
-        "eyebrow": "FAQ",
-        "heading": "Ask us anything?",
-        "faq_schema": true,
-        "padding_top": 80,
-        "padding_bottom": 80
-      },
       "blocks": {
         "q1": {
           "type": "question",
@@ -632,7 +629,14 @@
         "q2",
         "harrods",
         "q5"
-      ]
+      ],
+      "settings": {
+        "eyebrow": "FAQ",
+        "heading": "Ask us anything?",
+        "faq_schema": true,
+        "padding_top": 80,
+        "padding_bottom": 80
+      }
     }
   },
   "order": [
