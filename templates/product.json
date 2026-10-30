@@ -17,8 +17,8 @@
           "settings": {
             "title": "",
             "subtitle": "NAD+ liquid shot · Energy, focus & healthy ageing",
-            "pill_1": "From <strong>£3.00/day</strong> per shot",
-            "pill_2": "28 shots",
+            "pill_1": "From <strong>£2.33</strong> per shot",
+            "pill_2": "12, 24 or 36 shots",
             "text": "<p><strong>Cleaner energy. Sharper focus. Zero crash.</strong> Each 60ml shot delivers 300mg of Nicotinamide Riboside plus a full stack of cellular cofactors. No caffeine, no sugar, no shortcuts — just the molecule your cells need to make energy.</p>",
             "link_label": "Nutrition & Ingredients",
             "link_url": "#neu-stats"
@@ -38,96 +38,95 @@
             "plan_option": "Pack Types"
           },
           "blocks": {
-            "plan_28": {
+            "pack_12": {
               "type": "_neu-plan",
               "settings": {
-                "plan_type": "subscription",
-                "selling_plan_id": "",
-                "plan_position": 1,
-                "selected": true,
-                "badge": "Recommended for maximum results",
-                "title": "28-Day Subscription",
-                "subtitle": "",
-                "subtitle_accent": false,
-                "perks": "Save 25% off your first order, then 14% off ongoing\nReschedule, skip or cancel any time\nEarly access to new products\nExclusive discounts and promotions\n28-day supply, delivered every 4 weeks\n£3.00 per shot",
-                "perks_inline": false,
-                "chips": "Free postage\nFree socks",
-                "servings": 24,
-                "billing_months": 1,
-                "show_per_month": false,
-                "price_note": "",
-                "pack": "24 Shots"
-              }
-            },
-            "plan_3m": {
-              "type": "_neu-plan",
-              "settings": {
-                "plan_type": "subscription",
-                "selling_plan_id": "",
-                "plan_position": 1,
-                "selected": false,
-                "badge": "Best value",
-                "title": "3-Month Subscription",
-                "subtitle": "",
-                "subtitle_accent": false,
-                "perks": "",
-                "perks_inline": false,
-                "chips": "Free socks\nFree water bottle\nFree postage",
-                "servings": 36,
-                "billing_months": 1,
-                "show_per_month": false,
-                "price_note": "",
-                "pack": "36 Shots"
-              }
-            },
-            "plan_discovery": {
-              "type": "_neu-plan",
-              "settings": {
-                "plan_type": "one_time",
-                "selling_plan_id": "",
-                "plan_position": 1,
-                "selected": false,
-                "badge": "Try before you subscribe",
-                "title": "12-Day Discovery Pack",
-                "subtitle": "2 Flavours · 6 Servings Each",
-                "subtitle_accent": true,
-                "perks": "Taste both flavours\nSelect your favourite\nGet 15% off your first subscription",
-                "perks_inline": true,
-                "chips": "Free postage",
-                "servings": 12,
-                "billing_months": 1,
-                "show_per_month": false,
-                "price_note": "",
-                "pack": "12 Shots"
-              }
-            },
-            "plan_once": {
-              "type": "_neu-plan",
-              "settings": {
-                "plan_type": "one_time",
+                "plan_type": "pack",
+                "pack": "12 Shots",
                 "selling_plan_id": "",
                 "plan_position": 1,
                 "selected": false,
                 "badge": "",
-                "title": "One-Time 28-Day Pack",
-                "subtitle": "Choose your favourite flavour",
+                "title": "12 Shots",
+                "subtitle": "Stock up and save.",
                 "subtitle_accent": false,
-                "perks": "",
+                "perks": "Choose your favourite flavour\n+ £3.50 delivery",
+                "perks_inline": false,
+                "chips": "",
+                "servings": 12,
+                "billing_months": 1,
+                "show_per_month": false,
+                "per_label": " per shot",
+                "price_note": "Upfront",
+                "subscribe_by_default": true,
+                "subscribe_label": "Subscribe & save",
+                "subscribe_note": "Free delivery",
+                "one_time_label": "Buy once",
+                "one_time_note": "",
+                "subscribe_footnote": "Cancel or change anytime. No commitment."
+              }
+            },
+            "pack_24": {
+              "type": "_neu-plan",
+              "settings": {
+                "plan_type": "pack",
+                "pack": "24 Shots",
+                "selling_plan_id": "691167494470",
+                "plan_position": 1,
+                "selected": true,
+                "badge": "Most popular",
+                "title": "24 Shots",
+                "subtitle": "Stock up and save.",
+                "subtitle_accent": false,
+                "perks": "Choose your favourite flavour\n+ £3.50 delivery\nOptional Subscribe & Save available",
                 "perks_inline": false,
                 "chips": "",
                 "servings": 24,
                 "billing_months": 1,
                 "show_per_month": false,
-                "price_note": "+ Postage",
-                "pack": "24 Shots"
+                "per_label": " per shot",
+                "price_note": "Upfront",
+                "subscribe_by_default": true,
+                "subscribe_label": "Subscribe & save",
+                "subscribe_note": "Free delivery",
+                "one_time_label": "Buy once",
+                "one_time_note": "+ £3.50 delivery",
+                "subscribe_footnote": "Cancel or change anytime. No commitment."
+              }
+            },
+            "pack_36": {
+              "type": "_neu-plan",
+              "settings": {
+                "plan_type": "pack",
+                "pack": "36 Shots",
+                "selling_plan_id": "694121562438",
+                "plan_position": 1,
+                "selected": false,
+                "badge": "Best value",
+                "title": "36 Shots",
+                "subtitle": "Stock up and save.",
+                "subtitle_accent": false,
+                "perks": "Choose your favourite flavour\nFREE delivery\nOptional Subscribe & Save available",
+                "perks_inline": false,
+                "chips": "",
+                "servings": 36,
+                "billing_months": 1,
+                "show_per_month": false,
+                "per_label": " per shot",
+                "price_note": "Upfront",
+                "subscribe_by_default": true,
+                "subscribe_label": "Subscribe & save",
+                "subscribe_note": "Free delivery",
+                "one_time_label": "Buy once",
+                "one_time_note": "Free delivery",
+                "subscribe_footnote": "Cancel or change anytime. No commitment."
               }
             }
           },
           "block_order": [
-            "plan_28",
-            "plan_3m",
-            "plan_discovery",
-            "plan_once"
+            "pack_12",
+            "pack_24",
+            "pack_36"
           ]
         },
         "delivery": {
@@ -522,7 +521,7 @@
           "type": "question",
           "settings": {
             "question": "How does the subscription work?",
-            "answer": "<p>Your first order ships immediately. Subscriptions renew every 28 days (or 3 months for the prepaid plan). You can skip, pause or cancel any time from your account — no fees, no questions.</p>",
+            "answer": "<p>Your first order ships immediately. 24-shot subscriptions renew every 3 weeks and 36-shot subscriptions every 4 weeks. You can skip, pause or cancel any time from your account — no fees, no questions.</p>",
             "open": false
           }
         },
