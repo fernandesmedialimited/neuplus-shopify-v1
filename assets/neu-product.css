@@ -1360,9 +1360,23 @@
 
 .neu-reviews__track {
   display: flex;
-  gap: 16px;
   width: max-content;
-  animation: neu-marquee var(--neu-marquee-speed, 60s) linear infinite;
+  animation: neu-reviews-marquee var(--neu-marquee-speed, 60s) linear infinite;
+}
+
+/* Each set carries its trailing gap as padding so every copy is the same width
+   and shifting by exactly one set lands on an identical frame. */
+.neu-reviews__set {
+  display: flex;
+  flex: none;
+  gap: 16px;
+  padding-inline-end: 16px;
+}
+
+@keyframes neu-reviews-marquee {
+  to {
+    transform: translateX(calc(-100% / var(--neu-reviews-copies, 2)));
+  }
 }
 
 .neu-reviews__viewport:hover .neu-reviews__track,
