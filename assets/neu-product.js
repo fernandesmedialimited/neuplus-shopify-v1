@@ -390,6 +390,15 @@ class NeuBuyBox extends HTMLElement {
     const formData = new FormData(this.form);
     [...formData.keys()].filter((key) => key.startsWith('neu-')).forEach((key) => formData.delete(key));
 
+    // Variant and selling plan come from the selected card, never from other inputs in the form:
+    // subscription apps (Appstle) can add their own selling_plan field, and the last one posted wins.
+    const plan = this.selectedPlan;
+    const resolved = plan ? this.priceFor(plan) : null;
+    formData.delete('id');
+    formData.delete('selling_plan');
+    formData.set('id', resolved ? resolved.variantId : this.variantInput.value);
+    if (resolved?.planId) formData.set('selling_plan', resolved.planId);
+
     const sectionIds = [...document.querySelectorAll('cart-items-component')]
       .map((element) => element instanceof HTMLElement && element.dataset.sectionId)
       .filter(Boolean);
