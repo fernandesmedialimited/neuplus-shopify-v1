@@ -222,6 +222,17 @@
             "t3",
             "t4"
           ]
+        },
+        "harrods": {
+          "type": "neu-perk-card",
+          "settings": {
+            "style": "outline",
+            "icon": "star",
+            "title": "Available at Harrods, London",
+            "link_label": "Find NEU+ at Harrods",
+            "link_url": "https://www.harrods.com/en-gb",
+            "image": ""
+          }
         }
       },
       "block_order": [
@@ -230,6 +241,7 @@
         "buy",
         "delivery",
         "rewards",
+        "harrods",
         "trust"
       ],
       "settings": {
@@ -243,7 +255,7 @@
         "tab_1_content": "",
         "tab_2_label": "The Science",
         "tab_2_source": "custom",
-        "tab_2_content": "<p>NAD+ is the molecule every cell needs to produce energy. Levels fall ~50% by age 40 — and modern stressors deplete what's left.</p><p>NEU+ delivers 300mg of Nicotinamide Riboside (NR), a clinically studied NAD+ precursor, supported by TMG for methylation and Vitamin C for immune support. Together they restore the cofactors your body needs daily.</p>",
+        "tab_2_content": "<p>NAD+ is the molecule every cell needs to produce energy. Levels fall by around half between the ages of 40 and 60.</p><p>NEU+ delivers 300mg of Nicotinamide Riboside (NR), a clinically studied NAD+ precursor, supported by TMG for methylation and Vitamin C for immune support. Together they restore the cofactors your body needs daily.</p>",
         "tab_3_label": "Ingredients",
         "tab_3_source": "custom",
         "tab_3_content": "<h3>What's in every shot</h3><p><strong>Nicotinamide Riboside (300mg)</strong> — NAD+ precursor. Supports cellular energy, focus and recovery.</p><p><strong>Betaine / TMG (250mg)</strong> — Supports methylation and optimal cellular function.</p><p><strong>Vitamin C (80mg)</strong> — Supports immunity, reduces tiredness and supports collagen.</p><h3>Usage & instructions</h3><p>Recommended daily dose: 1 x 60ml shot per day. Best time to take: AM.</p><h3>Storage</h3><p>Store in a cool, dry place away from sunlight, refrigerate after opening and consume within two days. Shelf life (unopened): per date on bottle lid.</p><h3>Warnings / disclaimers</h3><p>Not recommend for individuals under 18 years of age, or those who are pregnant, breast feeding, or trying to conceive. If you’re taking any medication or have a medical condition, please consult a healthcare professional before use. Keep out of sight and reach of children. Food supplements should not be used as a substitute for a varied and balanced diet and a healthy lifestyle.</p>",
@@ -541,7 +553,7 @@
           "type": "question",
           "settings": {
             "question": "When will I notice a difference?",
-            "answer": "<p>Most people feel sharper energy and focus within 2 weeks. Recovery and resilience benefits build between weeks 4–6, with compounding effects on cognition, skin and longevity from 9–12 weeks of daily use.</p>",
+            "answer": "<p>In clinical studies, daily NR raised blood NAD+ levels within 2 weeks, and they stayed raised with continued use (Conze et al., 2019). How that feels differs from person to person, so we suggest taking one shot every day for at least 8 weeks before you judge it.</p>",
             "open": true
           }
         },
@@ -557,7 +569,7 @@
           "type": "question",
           "settings": {
             "question": "What is Nicotinamide Riboside (NR)?",
-            "answer": "<p>NR is a clinically studied form of vitamin B3 and a direct precursor to NAD+ — the molecule every cell needs to produce energy. NAD+ levels fall ~50% by age 40; NR helps restore them.</p>",
+            "answer": "<p>NR is a form of vitamin B3 and a direct precursor to NAD+, the molecule every cell needs to produce energy. NAD+ levels fall by around half between the ages of 40 and 60, and NR is one of the most studied ways to raise them.</p>",
             "open": false
           }
         },
@@ -576,13 +588,49 @@
             "answer": "<p>Free UK delivery on orders over £45. Orders typically dispatched within 1–2 business days. 30-day money-back guarantee on first orders.</p>",
             "open": false
           }
+        },
+        "nmn": {
+          "type": "question",
+          "settings": {
+            "question": "NR or NMN: what's the difference?",
+            "answer": "<p>Both are NAD+ precursors. NR has the larger body of completed human clinical trials, showing it is absorbed (Trammell et al., 2016) and, in a randomised, placebo-controlled trial, that it raises blood NAD+ (Martens et al., 2018). NMN is a larger molecule with far fewer human trials so far. That's why NEU+ uses NR.</p>",
+            "open": false
+          }
+        },
+        "format": {
+          "type": "question",
+          "settings": {
+            "question": "Why a shot rather than capsules or an IV drip?",
+            "answer": "<p>One 60ml shot gives you 300mg NR with TMG and vitamin C, so there are no pills to swallow and it fits into your morning. NR taken by mouth is absorbed and raises NAD+ levels (Trammell et al., 2016). IV NAD+ drips need a clinic visit; NEU+ is made for steady daily use, which is how NR has been studied.</p>",
+            "open": false
+          }
+        },
+        "safety": {
+          "type": "question",
+          "settings": {
+            "question": "Is NR safe to take long term?",
+            "answer": "<p>NR has been well tolerated in human trials. In a randomised, placebo-controlled study, healthy adults took up to 1,000mg daily for 8 weeks with no serious side effects (Conze et al., 2019). Each NEU+ shot contains 300mg, and unlike niacin, NR doesn't cause flushing. If you're pregnant, breastfeeding, under 18, taking medication or have a medical condition, check with a healthcare professional first.</p>",
+            "open": false
+          }
+        },
+        "harrods": {
+          "type": "question",
+          "settings": {
+            "question": "Where can I buy NEU+?",
+            "answer": "<p>Here on neu-plus.com, and in store at <a href=\"https://www.harrods.com/en-gb\" target=\"_blank\" rel=\"noopener\">Harrods, London</a>, our exclusive retail partner.</p>",
+            "open": false
+          }
         }
       },
       "block_order": [
         "q1",
-        "q2",
         "q3",
+        "nmn",
+        "format",
+        "safety",
         "q4",
+        "q2",
+        "harrods",
         "q5"
       ]
     }
