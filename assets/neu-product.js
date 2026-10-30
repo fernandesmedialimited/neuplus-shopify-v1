@@ -430,7 +430,9 @@ class NeuBuyBox extends HTMLElement {
       const response = await fetch(window.Theme?.routes?.cart_add_url || '/cart/add.js', {
         method: 'POST',
         headers: { Accept: 'application/json', 'X-Requested-With': 'XMLHttpRequest' },
-        body: formData,
+        // Sent URL-encoded, not as FormData: Appstle wraps fetch and overwrites selling_plan in any
+        // FormData post to /cart/add with its own widget's choice, which is empty on this page.
+        body: new URLSearchParams(/** @type {any} */ (formData)),
       });
       const body = await response.json();
       const failed = !response.ok || Boolean(body.status);
