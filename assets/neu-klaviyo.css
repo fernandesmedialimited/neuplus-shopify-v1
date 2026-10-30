@@ -1,0 +1,217 @@
+/*
+  NEU+ restyle for Klaviyo popup forms.
+  Klaviyo renders its forms into the page with inline styles, so these
+  rules use !important to win. Scoped to popups only.
+*/
+
+[aria-label='POPUP Form'] {
+  --neu-k-ink: #0b0b0b;
+  --neu-k-muted: #6b6b6b;
+  --neu-k-line: rgba(11, 11, 11, 0.12);
+  --neu-k-font: var(--font-body--family, Inter, -apple-system, BlinkMacSystemFont, sans-serif);
+
+  background-color: rgba(11, 11, 11, 0.55) !important;
+  backdrop-filter: blur(3px);
+  padding: 16px !important;
+  box-sizing: border-box !important;
+}
+
+[aria-label='POPUP Form'] [data-testid='modal-form-container'] {
+  border-radius: 18px !important;
+}
+
+[aria-label='POPUP Form'] form.klaviyo-form {
+  width: min(880px, calc(100vw - 32px)) !important;
+  max-width: 880px !important;
+  min-width: 0 !important;
+  border-radius: 18px !important;
+  overflow: hidden !important;
+  box-shadow: 0 24px 60px rgba(11, 11, 11, 0.22) !important;
+  font-family: var(--neu-k-font) !important;
+}
+
+/* Image column */
+[aria-label='POPUP Form'] form.klaviyo-form > div:first-child {
+  width: 46% !important;
+  min-width: 0 !important;
+  min-height: 520px !important;
+  border-radius: 0 !important;
+}
+
+/* Content column */
+[aria-label='POPUP Form'] form.klaviyo-form > div:nth-child(2) {
+  flex: 1 1 0% !important;
+  padding: 56px 48px 48px !important;
+  justify-content: center !important;
+  gap: 0 !important;
+  box-sizing: border-box !important;
+}
+
+[aria-label='POPUP Form'] [data-testid='form-row'],
+[aria-label='POPUP Form'] [data-testid='form-component'] {
+  padding: 0 !important;
+  text-align: left !important;
+}
+
+[aria-label='POPUP Form'] [data-testid='form-component'] {
+  width: 100% !important;
+}
+
+/* Logo: the uploaded file is white on a white panel, so print it in ink */
+[aria-label='POPUP Form'] .klaviyo-form-image {
+  justify-content: flex-start !important;
+  margin: 0 0 28px !important;
+  padding: 0 !important;
+}
+
+[aria-label='POPUP Form'] .klaviyo-form-image img {
+  width: 96px !important;
+  max-width: 96px !important;
+  height: auto !important;
+  filter: brightness(0);
+}
+
+/* Heading */
+[aria-label='POPUP Form'] .klaviyo-form-richtext,
+[aria-label='POPUP Form'] .klaviyo-form-richtext :is(p, span, strong) {
+  font-family: var(--neu-k-font) !important;
+  color: var(--neu-k-ink) !important;
+  text-align: left !important;
+}
+
+[aria-label='POPUP Form'] .klaviyo-form-richtext {
+  margin: 0 0 32px !important;
+  padding: 0 !important;
+}
+
+[aria-label='POPUP Form'] .klaviyo-form-richtext p {
+  margin: 0 !important;
+  line-height: 1.15 !important;
+}
+
+[aria-label='POPUP Form'] .klaviyo-form-richtext span {
+  font-size: 34px !important;
+  font-weight: 700 !important;
+  letter-spacing: -0.025em !important;
+  line-height: 1.15 !important;
+}
+
+/* Buttons: primary is the first, the second becomes a quiet text link */
+[aria-label='POPUP Form'] .klaviyo-form-button {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 100% !important;
+  min-height: 52px !important;
+  height: auto !important;
+  margin: 0 !important;
+  padding: 0 24px !important;
+  border: 1px solid var(--neu-k-ink) !important;
+  border-radius: 999px !important;
+  background: var(--neu-k-ink) !important;
+  color: #fff !important;
+  font-family: var(--neu-k-font) !important;
+  font-size: 12px !important;
+  font-weight: 600 !important;
+  letter-spacing: 0.18em !important;
+  line-height: 1.2 !important;
+  text-align: center !important;
+  text-transform: uppercase !important;
+  cursor: pointer !important;
+  transition: opacity 0.2s ease !important;
+}
+
+[aria-label='POPUP Form'] .klaviyo-form-button:hover {
+  opacity: 0.85 !important;
+}
+
+[aria-label='POPUP Form'] .klaviyo-form-button:focus-visible {
+  outline: 2px solid var(--neu-k-ink) !important;
+  outline-offset: 3px !important;
+}
+
+[aria-label='POPUP Form'] [data-testid='form-row']:has(.klaviyo-form-button) + [data-testid='form-row'] .klaviyo-form-button {
+  width: auto !important;
+  min-height: 0 !important;
+  margin: 16px auto 0 !important;
+  padding: 4px 0 !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  color: var(--neu-k-muted) !important;
+  font-size: 13px !important;
+  font-weight: 500 !important;
+  letter-spacing: 0 !important;
+  text-transform: none !important;
+  text-decoration: underline !important;
+  text-underline-offset: 3px !important;
+}
+
+[aria-label='POPUP Form'] [data-testid='form-row']:has(.klaviyo-form-button) + [data-testid='form-row'] [data-testid='form-component'] {
+  display: flex !important;
+  justify-content: center !important;
+}
+
+/* Close */
+[aria-label='POPUP Form'] .klaviyo-close-form {
+  top: 16px !important;
+  right: 16px !important;
+  margin: 0 !important;
+  width: 36px !important;
+  height: 36px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  border: 1px solid var(--neu-k-line) !important;
+  border-radius: 50% !important;
+  background: #fff !important;
+  color: var(--neu-k-ink) !important;
+}
+
+[aria-label='POPUP Form'] .klaviyo-close-form svg {
+  width: 20px !important;
+  height: 20px !important;
+}
+
+[aria-label='POPUP Form'] .klaviyo-close-form svg :is(circle, rect) {
+  display: none !important;
+}
+
+[aria-label='POPUP Form'] .klaviyo-close-form svg :is(path, line) {
+  stroke: var(--neu-k-ink) !important;
+  stroke-width: 1.5 !important;
+}
+
+@media (max-width: 749px) {
+  /* Klaviyo shrinks the whole card with a transform on small screens */
+  [aria-label='POPUP Form'] > div {
+    transform: none !important;
+  }
+
+  [aria-label='POPUP Form'] form.klaviyo-form {
+    flex-direction: column !important;
+  }
+
+  [aria-label='POPUP Form'] form.klaviyo-form > div:first-child {
+    width: 100% !important;
+    min-height: 0 !important;
+    height: 200px !important;
+  }
+
+  [aria-label='POPUP Form'] form.klaviyo-form > div:nth-child(2) {
+    min-height: 0 !important;
+    padding: 28px 24px 24px !important;
+  }
+
+  [aria-label='POPUP Form'] .klaviyo-form-image {
+    margin-bottom: 20px !important;
+  }
+
+  [aria-label='POPUP Form'] .klaviyo-form-richtext {
+    margin-bottom: 24px !important;
+  }
+
+  [aria-label='POPUP Form'] .klaviyo-form-richtext span {
+    font-size: 26px !important;
+  }
+}
