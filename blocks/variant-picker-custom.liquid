@@ -1,0 +1,1122 @@
+{% liquid
+  assign product_resource = closest.product
+  if request.visual_preview_mode and product_resource == blank
+    assign product_resource = collections.all.products.first
+  endif
+-%}
+
+{% unless product_resource == blank %}
+  <style>
+    /* High Contrast Cart Override */
+    .color-custom-drawer, 
+    .color-custom-drawer .text-block {
+      --color: #000000 !important;
+      --color-foreground: #000000 !important;
+      --color-foreground-rgb: 0, 0, 0 !important;
+    }
+
+    /* Hide Default Appstle Widget */
+    .appstle_sub_widget, 
+    .appstle_subscription_wrapper {
+      display: none !important;
+    }
+
+    .custom-variant-picker-wrapper {
+      padding-top: {{ block.settings.padding-block-start }}px;
+      padding-bottom: {{ block.settings.padding-block-end }}px;
+      padding-left: {{ block.settings.padding-inline-start }}px;
+      padding-right: {{ block.settings.padding-inline-end }}px;
+      box-sizing: border-box;
+      width: 100%;
+    }
+
+    .custom-variant-picker-wrapper * {
+      box-sizing: border-box;
+    }
+
+    .custom-variant-selector {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      margin-bottom: 24px;
+      width: 100%;
+    }
+    
+    .custom-variant-item {
+      position: relative;
+      width: 100%;
+    }
+
+    .custom-variant-radio {
+      position: absolute;
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    .custom-variant-label-click {
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      cursor: pointer;
+      z-index: 1;
+    }
+
+    .custom-variant-card {
+      border: 2px solid #e5e7eb;
+      border-radius: 12px;
+      background: #f9fafb;
+      transition: all 0.2s ease;
+      overflow: hidden;
+      position: relative;
+      width: 100%;
+    }
+
+    .custom-variant-radio:checked + .custom-variant-card {
+      border-color: #2b4c2b;
+      background: #ffffff;
+    }
+
+    .variant-badge {
+      text-align: center;
+      color: #fff;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      padding: 8px 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+    .variant-badge.popular { background-color: #000; }
+    .variant-badge.value { background-color: #2b4c2b; }
+    .badge-star { color: #4ade80; }
+    .variant-badge.value .badge-star { color: #facc15; }
+
+    .variant-card-body {
+      display: flex;
+      padding: 24px;
+      gap: 24px;
+      align-items: flex-start;
+    }
+
+    .radio-indicator {
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      border: 2px solid #9ca3af;
+      flex-shrink: 0;
+      position: relative;
+      margin-top: 4px;
+      background: #fff;
+    }
+    
+    .custom-variant-radio:checked + .custom-variant-card .radio-indicator {
+      border-color: #2b4c2b;
+      border-width: 2px;
+    }
+    
+    .custom-variant-radio:checked + .custom-variant-card .radio-indicator::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 14px;
+      height: 14px;
+      background-color: #2b4c2b;
+      border-radius: 50%;
+    }
+
+    .variant-image-wrapper {
+      width: 100px; 
+      flex-shrink: 0;
+    }
+    
+    .variant-image-wrapper img {
+      width: 100%;
+      height: auto;
+      display: block;
+      object-fit: contain;
+    }
+
+    .variant-content {
+      flex-grow: 1;
+      min-width: 0;
+    }
+    
+    .variant-title {
+      font-size: 22px;
+      font-weight: 700;
+      margin: 0 0 4px 0;
+      color: #000;
+    }
+    
+    .variant-subtitle {
+      font-size: 14px;
+      color: #4b5563;
+      margin: 0 0 16px 0;
+    }
+    
+    .variant-price-block {
+      display: flex;
+      align-items: baseline;
+      gap: 8px;
+      margin-bottom: 4px;
+      flex-wrap: wrap;
+    }
+    
+    .variant-price-main {
+      font-size: 32px;
+      font-weight: 800;
+      color: #000;
+    }
+    
+    .variant-price-suffix {
+      font-size: 12px;
+      color: #6b7280;
+      text-transform: uppercase;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+    }
+    
+    .variant-price-subtext {
+      font-size: 13px;
+      color: #4b5563;
+      margin-bottom: 16px;
+    }
+
+    .variant-divider {
+      height: 1px;
+      background: #e5e7eb;
+      margin: 16px 0;
+      border: none;
+    }
+
+    .variant-features {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+    .variant-features li {
+      font-size: 12px;
+      color: #1f2937;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .variant-features li svg {
+      width: 16px;
+      height: 16px;
+      flex-shrink: 0;
+      stroke: #2b4c2b;
+    }
+
+    /* Flavour Selector Styles */
+    .variant-flavour-picker {
+      margin: 16px 0 20px 0;
+      padding: 0 24px;
+      text-align: left;
+      position: relative;
+      z-index: 2;
+    }
+    .flavour-picker-label {
+      display: block;
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: #000;
+      margin-bottom: 8px;
+    }
+    .flavour-options-grid {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .flavour-pill-label {
+      cursor: pointer;
+    }
+    .flavour-pill-input {
+      position: absolute;
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+    .flavour-pill {
+      display: inline-block;
+      padding: 8px 16px;
+      font-size: 12px;
+      font-weight: 600;
+      border: 1.5px solid #d1d5db;
+      border-radius: 20px;
+      background: #ffffff;
+      color: #374151;
+      transition: all 0.2s ease;
+    }
+    .flavour-pill-input:checked + .flavour-pill {
+      border-color: #2b4c2b;
+      background: #2b4c2b;
+      color: #ffffff;
+    }
+
+    /* Active CTA Button Section */
+    .variant-active-cta-wrapper {
+      display: none;
+      padding: 0 24px 24px;
+      text-align: center;
+      position: relative;
+      z-index: 2;
+    }
+    
+    .custom-variant-radio:checked + .custom-variant-card .variant-active-cta-wrapper {
+      display: block;
+    }
+    
+    .variant-cta-group {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin: 0 auto 12px auto;
+      max-width: 400px;
+    }
+
+    .variant-active-cta-btn {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      line-height: 1.3;
+      padding: 12px;
+      margin: 0 auto;
+      width: 100%;
+      max-width: 400px;
+      border-radius: 30px;
+      font-weight: 700;
+      font-size: 14px;
+      border: none;
+      cursor: pointer;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      transition: background 0.2s ease;
+    }
+    
+    .variant-active-cta-btn.subscribe {
+      background: #2b4c2b;
+      color: #fff;
+    }
+    .variant-active-cta-btn.subscribe:hover {
+      background: #1e361e;
+    }
+    .variant-active-cta-btn.onetime {
+      background: #ffffff;
+      color: #000;
+      border: 2px solid #000;
+    }
+    .variant-active-cta-btn.onetime:hover {
+      background: #f9fafb;
+    }
+    
+    .btn-subtext {
+      font-size: 10px;
+      text-transform: none;
+      letter-spacing: 0;
+      opacity: 0.8;
+      margin-top: 2px;
+    }
+
+    .variant-cta-subtext {
+      font-size: 12px;
+      color: #6b7280;
+      margin: 12px auto 0;
+      text-align: center;
+    }
+
+    /* Persistent Summary Bar Styles */
+    .variant-summary-bar {
+      border: 1px solid #e5e7eb;
+      border-radius: 12px;
+      background: #ffffff;
+      margin-top: 32px;
+      overflow: hidden;
+    }
+
+    .summary-bar-main {
+      display: flex;
+      align-items: center;
+      padding: 24px;
+      gap: 24px;
+    }
+
+    .summary-col {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .summary-selection {
+      flex: 1;
+    }
+
+    .summary-label {
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: #000;
+      margin-bottom: 4px;
+    }
+
+    .summary-title {
+      font-size: 18px;
+      font-weight: 700;
+      color: #2b4c2b;
+      margin: 0 0 2px 0;
+    }
+
+    .summary-subtitle, .summary-price-sub {
+      font-size: 13px;
+      color: #6b7280;
+      margin: 0;
+    }
+
+    .summary-divider {
+      width: 1px;
+      height: 48px;
+      background: #e5e7eb;
+    }
+
+    .summary-price-col {
+      min-width: 120px;
+    }
+
+    .summary-price-main {
+      font-size: 24px;
+      font-weight: 800;
+      color: #000;
+      line-height: 1.1;
+      margin-bottom: 2px;
+    }
+
+    .summary-actions {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .summary-qty-wrapper {
+      display: flex;
+      align-items: center;
+      border: 1px solid #e5e7eb;
+      border-radius: 8px;
+      background: #fff;
+      height: 44px;
+    }
+
+    .summary-qty-btn {
+      background: transparent;
+      border: none;
+      width: 36px;
+      height: 100%;
+      font-size: 18px;
+      color: #000;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .summary-qty-input {
+      width: 32px;
+      text-align: center;
+      border: none;
+      font-size: 15px;
+      font-weight: 600;
+      color: #000;
+      pointer-events: none;
+      padding: 0;
+    }
+
+    .summary-submit-btn {
+      background: #000;
+      color: #fff;
+      border-radius: 30px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      padding: 0 24px;
+      height: 44px;
+      font-weight: 700;
+      font-size: 13px;
+      border: none;
+      cursor: pointer;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      transition: background 0.2s ease;
+    }
+
+    .summary-submit-btn:hover {
+      background: #333;
+    }
+
+    .summary-benefits {
+      display: flex;
+      background: #f9fafb;
+      padding: 16px 24px;
+      border-top: 1px solid #e5e7eb;
+      gap: 16px;
+    }
+
+    .summary-benefit-item {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      position: relative;
+    }
+    
+    .summary-benefit-item:not(:last-child)::after {
+      content: '';
+      position: absolute;
+      right: -8px;
+      top: 15%;
+      height: 70%;
+      width: 1px;
+      background: #e5e7eb;
+    }
+
+    .summary-benefit-item svg {
+      width: 24px;
+      height: 24px;
+      stroke: #2b4c2b;
+      fill: none;
+    }
+
+    .summary-benefit-text strong {
+      display: block;
+      font-size: 11px;
+      text-transform: uppercase;
+      color: #000;
+      margin-bottom: 2px;
+    }
+
+    .summary-benefit-text span {
+      display: block;
+      font-size: 11px;
+      color: #6b7280;
+    }
+
+    @media (max-width: 1024px) {
+      .variant-features {
+        grid-template-columns: 1fr;
+      }
+      .variant-card-body {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+      }
+      .summary-bar-main {
+        flex-direction: column;
+        align-items: stretch;
+        text-align: center;
+        gap: 16px;
+      }
+      .summary-divider {
+        width: 100%;
+        height: 1px;
+      }
+      .summary-actions {
+        flex-direction: column;
+      }
+      .summary-submit-btn, .summary-qty-wrapper {
+        width: 100%;
+      }
+      .summary-benefits {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      .summary-benefit-item:not(:last-child)::after {
+        display: none;
+      }
+    }
+  </style>
+
+  <div class="custom-variant-picker-wrapper">
+    <div class="custom-variant-selector">
+      
+      {%- assign processed_packs = '' -%}
+      {%- assign pack_index = 0 -%}
+      
+      {%- for variant in product_resource.variants -%}
+        {%- assign pack_name = variant.option1 -%}
+        
+        {%- unless processed_packs contains pack_name -%}
+          {%- assign processed_packs = processed_packs | append: pack_name | append: ',' -%}
+          {%- assign pack_index = pack_index | plus: 1 -%}
+          
+          {%- comment -%} Dynamically Assign Data Based on Pack Rules {%- endcomment -%}
+          {%- assign shot_count = 12 -%}
+          {%- if pack_name contains '36' -%}{%- assign shot_count = 36 -%}
+          {%- elsif pack_name contains '24' -%}{%- assign shot_count = 24 -%}
+          {%- endif -%}
+
+          {%- assign per_shot = "£3.00 per shot" -%}
+          {%- assign delivery_txt = "+ £3.50 delivery" -%}
+          {%- assign has_free_delivery = false -%}
+          {%- assign badge_text = "" -%}
+          {%- assign badge_class = "" -%}
+          
+          {%- comment -%} Fetch Dynamic Appstle Subscription Price for Main Pack Variant {%- endcomment -%}
+          {%- assign sub_price = variant.price -%}
+          {%- if variant.selling_plan_allocations.size > 0 -%}
+            {%- for allocation in variant.selling_plan_allocations -%}
+              {%- if allocation.price < sub_price -%}
+                {%- assign sub_price = allocation.price -%}
+              {%- endif -%}
+            {%- endfor -%}
+          {%- endif -%}
+
+          {%- if shot_count == 36 -%}
+            {%- assign per_shot = "£2.50 per shot" -%}
+            {%- assign has_free_delivery = true -%}
+            {%- assign delivery_txt = "FREE delivery" -%}
+            {%- assign badge_text = "BEST VALUE" -%}
+            {%- assign badge_class = "value" -%}
+          {%- elsif shot_count == 24 -%}
+            {%- assign per_shot = "£2.75 per shot" -%}
+            {%- assign badge_text = "MOST POPULAR" -%}
+            {%- assign badge_class = "popular" -%}
+          {%- endif -%}
+
+          <div class="custom-variant-item">
+            <input 
+              type="radio" 
+              id="variant-base-{{ pack_index }}" 
+              class="custom-variant-radio"
+              name="custom-ui-variant" 
+              value="{{ variant.id }}"
+              data-ui-title="{{ pack_name | escape }}"
+              data-ui-price="{{ variant.price | money }}"
+              data-has-free-delivery="{% if has_free_delivery %}true{% else %}false{% endif %}"
+              data-variant-img="{% if variant.image %}{{ variant.image | img_url: '400x' }}{% else %}{{ product_resource.featured_image | img_url: '400x' }}{% endif %}"
+              {% if pack_index == 1 %}checked{% endif %}
+            >
+            
+            <div class="custom-variant-card">
+              <label for="variant-base-{{ pack_index }}" class="custom-variant-label-click"></label>
+
+              {%- if badge_text != "" -%}
+                <div class="variant-badge {{ badge_class }}"><span class="badge-star">★</span> {{ badge_text }}</div>
+              {%- endif -%}
+                
+              <div class="variant-card-body">
+                <div class="radio-indicator"></div>
+                
+                <div class="variant-image-wrapper" style="width: 100px;">
+                  {%- if variant.image -%}
+                    <img id="image-{{ pack_index }}" src="{{ variant.image | img_url: '400x' }}" alt="{{ pack_name | escape }}">
+                  {%- elsif product_resource.featured_image -%}
+                    <img id="image-{{ pack_index }}" src="{{ product_resource.featured_image | img_url: '400x' }}" alt="{{ product_resource.title | escape }}">
+                  {%- endif -%}
+                </div>
+
+                <div class="variant-content">
+                  <h3 class="variant-title" id="title-{{ pack_index }}">{{ pack_name }}</h3>
+                  <p class="variant-subtitle">Stock up and save.</p>
+                  
+                  <div class="variant-price-block">
+                    <span class="variant-price-main" id="price-{{ pack_index }}">{{ variant.price | money }}</span>
+                    <span class="variant-price-suffix">UPFRONT</span>
+                  </div>
+                  
+                  <p class="variant-price-subtext">{{ per_shot }}</p>
+
+                  <hr class="variant-divider">
+
+                  <ul class="variant-features">
+                    <li><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><path d="M8 12l3 3 5-5"></path></svg> Choose your favourite flavour</li>
+                    <li><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><path d="M8 12l3 3 5-5"></path></svg> {{ delivery_txt }}</li>
+                    {%- if shot_count == 24 or shot_count == 36 -%}
+                      <li><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><path d="M8 12l3 3 5-5"></path></svg> Optional Subscribe & Save available</li>
+                    {%- endif -%}
+                  </ul>
+                </div>
+              </div>
+
+              {%- if variant.option2 != blank -%}
+                <div class="variant-flavour-picker">
+                  <span class="flavour-picker-label">Flavour</span>
+                  <div class="flavour-options-grid">
+                    {%- assign first_flavour_checked = false -%}
+                    {%- for v in product_resource.variants -%}
+                      {%- if v.option1 == pack_name and v.option2 != blank -%}
+                        {%- assign variant_img = product_resource.featured_image -%}
+                        {%- if v.image -%}{%- assign variant_img = v.image -%}{%- endif -%}
+                        
+                        {%- comment -%} Fetch Dynamic Appstle Subscription Price for Flavour Variant {%- endcomment -%}
+                        {%- assign v_sub_price = v.price -%}
+                        {%- if v.selling_plan_allocations.size > 0 -%}
+                          {%- for allocation in v.selling_plan_allocations -%}
+                            {%- if allocation.price < v_sub_price -%}
+                              {%- assign v_sub_price = allocation.price -%}
+                            {%- endif -%}
+                          {%- endfor -%}
+                        {%- endif -%}
+
+                        <label class="flavour-pill-label">
+                          <input 
+                            type="radio" 
+                            name="flavour-group-{{ pack_index }}" 
+                            class="flavour-pill-input card-flavour-radio"
+                            value="{{ v.id }}"
+                            data-card-index="{{ pack_index }}"
+                            data-variant-price="{{ v.price | money }}"
+                            data-variant-sub-price="{{ v_sub_price | money }}"
+                            data-variant-title="{{ pack_name | escape }} / {{ v.option2 | escape }}"
+                            data-variant-img="{{ variant_img | img_url: '400x' }}"
+                            {% if first_flavour_checked == false %}checked{% assign first_flavour_checked = true %}{% endif %}
+                          >
+                          <span class="flavour-pill">{{ v.option2 }}</span>
+                        </label>
+                      {%- endif -%}
+                    {%- endfor -%}
+                  </div>
+                </div>
+              {%- endif -%}
+
+              <div class="variant-active-cta-wrapper">
+                {%- if shot_count == 24 or shot_count == 36 -%}
+                  <div class="variant-cta-group">
+                    <button 
+                      type="button" 
+                      class="variant-active-cta-btn js-proxy-btn subscribe" 
+                      data-variant-id="{{ variant.id }}"
+                      data-is-sub="true"
+                    >
+                      SUBSCRIBE & SAVE — <span class="btn-price">{{ sub_price | money }}</span>
+                      <span class="btn-subtext">Free Delivery</span>
+                    </button>
+                    <button 
+                      type="button" 
+                      class="variant-active-cta-btn js-proxy-btn onetime" 
+                      data-variant-id="{{ variant.id }}"
+                      data-is-sub="false"
+                    >
+                      BUY NOW — <span class="btn-price-base">{{ variant.price | money }}</span>
+                      <span class="btn-subtext">{% if shot_count == 24 %}+ £3.50 Delivery{% else %}Free Delivery{% endif %}</span>
+                    </button>
+                  </div>
+                  <p class="variant-cta-subtext">Cancel or change anytime. No commitment.</p>
+                {%- else -%}
+                  <button 
+                    type="button" 
+                    class="variant-active-cta-btn js-proxy-btn onetime" 
+                    data-variant-id="{{ variant.id }}"
+                    data-is-sub="false"
+                  >
+                    ADD TO CART — <span class="btn-price-base">{{ variant.price | money }}</span>
+                    <span class="btn-subtext">+ £3.50 Delivery</span>
+                  </button>
+                {%- endif -%}
+              </div>
+
+            </div>
+          </div>
+        {%- endunless -%}
+      {%- endfor -%}
+    </div>
+
+    <!-- Persistent Summary Bar -->
+    <div class="variant-summary-bar">
+      <div class="summary-bar-main">
+        <div class="summary-col summary-selection">
+          <span class="summary-label">YOUR SELECTION</span>
+          <h4 class="summary-title" id="DynSummaryTitle">Select a variant</h4>
+          <p class="summary-subtitle" id="DynSummarySub">One-time purchase</p>
+        </div>
+        
+        <div class="summary-divider"></div>
+        
+        <div class="summary-col summary-price-col">
+          <span class="summary-label">TOTAL TODAY</span>
+          <div class="summary-price-main" id="DynSummaryPrice">£0.00</div>
+        </div>
+        
+        <div class="summary-actions">
+          <div class="summary-qty-wrapper">
+            <button type="button" class="summary-qty-btn" id="DynQtyMinus">−</button>
+            <input type="number" class="summary-qty-input" id="DynQtyInput" value="1" min="1" readonly>
+            <button type="button" class="summary-qty-btn" id="DynQtyPlus">+</button>
+          </div>
+        </div>
+      </div>
+      
+      <div class="summary-benefits">
+        <div class="summary-benefit-item">
+          <svg viewBox="0 0 24 24"><path d="M19 8h-3V5a2 2 0 00-2-2H4a2 2 0 00-2 2v10h2a3 3 0 006 0h4a3 3 0 006 0h2v-4l-3-3zm-14 9a1 1 0 110-2 1 1 0 010 2zm12 0a1 1 0 110-2 1 1 0 010 2z" fill="#2b4c2b" stroke="none"/></svg>
+          <div class="summary-benefit-text">
+            <strong id="DynSummaryDeliveryTitle">DELIVERY OPTIONS</strong>
+            <span id="DynSummaryDeliverySub">Calculated at checkout</span>
+          </div>
+        </div>
+        <div class="summary-benefit-item">
+          <svg viewBox="0 0 24 24"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>
+          <div class="summary-benefit-text">
+            <strong>DISPATCHED WITHIN 1-2 DAYS</strong>
+            <span>Fast and reliable</span>
+          </div>
+        </div>
+        <div class="summary-benefit-item">
+          <svg viewBox="0 0 24 24"><path d="M12 4V1L8 5l4 4V6c3.31 0 6 2.69 6 6 0 1.01-.25 1.97-.7 2.8l1.46 1.46A7.93 7.93 0 0020 12c0-4.42-3.58-8-8-8zm0 14c-3.31 0-6-2.69-6-6 0-1.01.25-1.97.7-2.8L5.24 7.74A7.93 7.93 0 004 12c0 4.42 3.58 8 8 8v3l4-4-4-4v3z" fill="#2b4c2b" stroke="none"/></svg>
+          <div class="summary-benefit-text">
+            <strong>SKIP, PAUSE OR CANCEL</strong>
+            <span>Any time, hassle free</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const variantRadios = document.querySelectorAll('.custom-variant-radio');
+      const flavourInputs = document.querySelectorAll('.card-flavour-radio');
+      const proxyButtons = document.querySelectorAll('.js-proxy-btn');
+      const qtyInput = document.getElementById('DynQtyInput');
+      
+      const uiTitle = document.getElementById('DynSummaryTitle');
+      const uiPrice = document.getElementById('DynSummaryPrice');
+
+      const syncWithMainForm = (variantId) => {
+        const mainForm = document.querySelector('form[action*="/cart/add"]');
+        if (mainForm) {
+          let mainIdInput = mainForm.querySelector('[name="id"]');
+          if (!mainIdInput) {
+            mainIdInput = document.createElement('input');
+            mainIdInput.type = 'hidden';
+            mainIdInput.name = 'id';
+            mainForm.appendChild(mainIdInput);
+          }
+          mainIdInput.value = variantId;
+          mainIdInput.dispatchEvent(new Event('input', { bubbles: true }));
+          mainIdInput.dispatchEvent(new Event('change', { bubbles: true }));
+        }
+        const url = new URL(window.location);
+        url.searchParams.set('variant', variantId);
+        window.history.replaceState({}, '', url);
+      };
+
+      const syncQuantity = (val) => {
+        const mainForm = document.querySelector('form[action*="/cart/add"]');
+        if (mainForm) {
+          let mainFormQty = mainForm.querySelector('input[name="quantity"]');
+          if (!mainFormQty) {
+            mainFormQty = document.createElement('input');
+            mainFormQty.type = 'hidden';
+            mainFormQty.name = 'quantity';
+            mainForm.appendChild(mainFormQty);
+          }
+          mainFormQty.value = val;
+          mainFormQty.dispatchEvent(new Event('change', { bubbles: true }));
+        }
+      };
+
+      const updateCalculatedTotals = () => {
+        const activeRadio = document.querySelector('.custom-variant-radio:checked');
+        if (!activeRadio || !qtyInput) return;
+
+        const basePriceString = activeRadio.getAttribute('data-ui-price') || '£0.00';
+        const currencySymbol = basePriceString.replace(/[0-9.,\s]/g, '');
+        const basePrice = parseFloat(basePriceString.replace(/[^0-9.]/g, ''));
+        
+        const qty = parseInt(qtyInput.value, 10) || 1;
+        const newTotal = (basePrice * qty).toFixed(2);
+        const formattedTotal = `${currencySymbol}${newTotal}`;
+
+        if (uiPrice) uiPrice.textContent = formattedTotal;
+      };
+
+      const updateSummaryUI = (radio) => {
+        if (!radio) return;
+        if (uiTitle) uiTitle.textContent = radio.getAttribute('data-ui-title') || '';
+
+        const hasFreeDelivery = radio.getAttribute('data-has-free-delivery') === 'true';
+        const delTitle = document.getElementById('DynSummaryDeliveryTitle');
+        const delSub = document.getElementById('DynSummaryDeliverySub');
+        
+        if (delTitle && delSub) {
+          if (hasFreeDelivery) {
+            delTitle.textContent = 'FREE DELIVERY';
+            delSub.textContent = 'On every order';
+          } else {
+            delTitle.textContent = 'DELIVERY OPTIONS';
+            delSub.textContent = '+ £3.50 shipping';
+          }
+        }
+
+        updateCalculatedTotals();
+      };
+
+      // Helper to trigger the theme's native media gallery
+      const updateMainMediaGallery = (imgUrl) => {
+        if (!imgUrl) return;
+        
+        let cleanUrl = imgUrl.split('?')[0];
+        let filename = cleanUrl.split('/').pop();
+        filename = filename.replace(/_[a-zA-Z0-9]+(\.[a-zA-Z0-9]+)$/, '$1');
+
+        const thumbnails = document.querySelectorAll('.slideshow-controls__thumbnail');
+
+        for (let thumb of thumbnails) {
+          const img = thumb.querySelector('img');
+          if (img && img.src.includes(filename)) {
+            thumb.click();
+            break;
+          }
+        }
+      };
+
+      // Handle Flavour Pill Selection
+      flavourInputs.forEach(fRadio => {
+        fRadio.addEventListener('change', (e) => {
+          e.stopPropagation();
+          const targetVariantId = fRadio.value;
+          const cardIndex = fRadio.getAttribute('data-card-index');
+          
+          const newPrice = fRadio.getAttribute('data-variant-price');
+          const newSubPrice = fRadio.getAttribute('data-variant-sub-price');
+          const newTitle = fRadio.getAttribute('data-variant-title');
+          const newImg = fRadio.getAttribute('data-variant-img');
+
+          const priceEl = document.getElementById(`price-${cardIndex}`);
+          const btnPriceBaseEls = document.querySelectorAll(`#variant-base-${cardIndex} ~ .custom-variant-card .btn-price-base`);
+          const btnPriceSubEls = document.querySelectorAll(`#variant-base-${cardIndex} ~ .custom-variant-card .btn-price`);
+          const titleEl = document.getElementById(`title-${cardIndex}`);
+          const parentRadio = document.getElementById(`variant-base-${cardIndex}`);
+          const imgEl = document.getElementById(`image-${cardIndex}`);
+
+          if (priceEl) priceEl.textContent = newPrice;
+          btnPriceBaseEls.forEach(el => el.textContent = newPrice);
+          if (newSubPrice) btnPriceSubEls.forEach(el => el.textContent = newSubPrice);
+          if (titleEl) titleEl.textContent = newTitle;
+          if (imgEl && newImg) imgEl.src = newImg;
+
+          // Sync variant ID to all CTA buttons inside this card
+          const parentCard = document.getElementById(`variant-base-${cardIndex}`).closest('.custom-variant-item');
+          if (parentCard) {
+            const cardCtas = parentCard.querySelectorAll('.js-proxy-btn');
+            cardCtas.forEach(btn => btn.setAttribute('data-variant-id', targetVariantId));
+          }
+
+          if (parentRadio) {
+            parentRadio.value = targetVariantId;
+            parentRadio.setAttribute('data-ui-price', newPrice);
+            parentRadio.setAttribute('data-ui-title', newTitle);
+            
+            if (newImg) parentRadio.setAttribute('data-variant-img', newImg);
+            parentRadio.checked = true;
+            
+            syncWithMainForm(targetVariantId);
+            updateSummaryUI(parentRadio);
+          }
+          
+          if (newImg) updateMainMediaGallery(newImg);
+        });
+      });
+
+      // Handle Card Selection
+      const variantLabels = document.querySelectorAll('.custom-variant-label-click');
+      variantLabels.forEach(label => {
+        label.addEventListener('click', () => {
+          const inputId = label.getAttribute('for');
+          const associatedRadio = document.getElementById(inputId);
+          
+          if (associatedRadio && !associatedRadio.checked) {
+            associatedRadio.checked = true; 
+            syncWithMainForm(associatedRadio.value);
+            updateSummaryUI(associatedRadio);
+            
+            const mainImgUrl = associatedRadio.getAttribute('data-variant-img');
+            updateMainMediaGallery(mainImgUrl);
+          }
+        });
+      });
+
+      variantRadios.forEach(radio => {
+        radio.addEventListener('change', function() {
+          if (this.checked) {
+            syncWithMainForm(this.value);
+            updateSummaryUI(this);
+            
+            const mainImgUrl = this.getAttribute('data-variant-img');
+            updateMainMediaGallery(mainImgUrl);
+          }
+        });
+      });
+
+      // Handle Quantity
+      const btnPlus = document.getElementById('DynQtyPlus');
+      const btnMinus = document.getElementById('DynQtyMinus');
+      
+      if (btnPlus && qtyInput) {
+        btnPlus.addEventListener('click', () => {
+          qtyInput.value = parseInt(qtyInput.value) + 1;
+          syncQuantity(qtyInput.value);
+          updateCalculatedTotals();
+        });
+      }
+      
+      if (btnMinus && qtyInput) {
+        btnMinus.addEventListener('click', () => {
+          if (parseInt(qtyInput.value) > 1) {
+            qtyInput.value = parseInt(qtyInput.value) - 1;
+            syncQuantity(qtyInput.value);
+            updateCalculatedTotals();
+          }
+        });
+      }
+
+      // Handle CTA Buttons -> Redirect to Checkout
+      proxyButtons.forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          e.preventDefault();
+          
+          const variantId = btn.getAttribute('data-variant-id');
+          syncWithMainForm(variantId);
+          if (qtyInput) syncQuantity(qtyInput.value);
+          
+          const mainForm = document.querySelector('form[action*="/cart/add"]');
+          
+          if (mainForm) {
+            // Read subscription intent directly from the clicked button
+            const isSubscription = btn.getAttribute('data-is-sub') === 'true';
+
+            if (!isSubscription) {
+              const appstleInputs = mainForm.querySelectorAll('input[name="selling_plan"], input[name^="properties[_appstle"]');
+              appstleInputs.forEach(input => input.remove());
+            }
+
+            let returnTo = mainForm.querySelector('input[name="return_to"]');
+            if (!returnTo) {
+              returnTo = document.createElement('input');
+              returnTo.type = 'hidden';
+              returnTo.name = 'return_to';
+              mainForm.appendChild(returnTo);
+            }
+            returnTo.value = '/checkout';
+            mainForm.submit(); 
+          }
+        });
+      });
+
+      // Initial Load Sync
+      const urlParams = new URLSearchParams(window.location.search);
+      const urlVariantId = urlParams.get('variant');
+      let initialSelectionHandled = false;
+
+      if (urlVariantId) {
+        const matchingFlavour = document.querySelector(`.card-flavour-radio[value="${urlVariantId}"]`);
+        const matchingBase = document.querySelector(`.custom-variant-radio[value="${urlVariantId}"]`);
+
+        let targetElementToScroll = null;
+
+        if (matchingFlavour) {
+          matchingFlavour.checked = true;
+          matchingFlavour.dispatchEvent(new Event('change'));
+          targetElementToScroll = matchingFlavour.closest('.custom-variant-item');
+          initialSelectionHandled = true;
+        } else if (matchingBase) {
+          matchingBase.checked = true;
+          matchingBase.dispatchEvent(new Event('change'));
+          targetElementToScroll = matchingBase.closest('.custom-variant-item');
+          initialSelectionHandled = true;
+        }
+
+        // Smooth scroll to the selected option
+        if (targetElementToScroll) {
+          setTimeout(() => {
+            targetElementToScroll.scrollIntoView({ 
+              behavior: 'smooth', 
+              block: 'center' // Centers the selected card in the viewport
+            });
+          }, 100);
+        }
+      }
+
+      // Fallback to Liquid's default checked item if no URL param or invalid ID
+      if (!initialSelectionHandled) {
+        const preSelected = document.querySelector('.custom-variant-radio:checked');
+        if (preSelected) {
+          syncWithMainForm(preSelected.value);
+          updateSummaryUI(preSelected);
+        }
+      }
+      
+      if (qtyInput) {
+        syncQuantity(qtyInput.value); 
+      }
+    });
+  </script>
+{% endunless %}
+
+{% schema %}
+{
+  "name": "Custom Variant Picker",
+  "tag": null,
+  "settings": [
+    {
+      "type": "header",
+      "content": "t:content.padding"
+    },
+    {
+      "type": "range",
+      "id": "padding-block-start",
+      "label": "t:settings.top",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "padding-block-end",
+      "label": "t:settings.bottom",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "padding-inline-start",
+      "label": "t:settings.left",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding-inline-end",
+      "label": "t:settings.right",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    }
+  ],
+  "presets": [
+    {
+      "name": "Custom Variant Picker",
+      "category": "t:categories.product"
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,105 @@
+{{ 'trust-bar.css' | asset_url | stylesheet_tag }}
+
+<section
+  class="trust-bar"
+  style="
+    --trust-bar-bg: {{ section.settings.bar_background }};
+    --trust-bar-text: {{ section.settings.bar_text_color }};
+  "
+>
+  <div class="trust-bar__inner">
+    {% for block in section.blocks %}
+      {% if block.type == 'trust_item' %}
+        <div class="trust-bar__item" {{ block.shopify_attributes }}>
+          {% if block.settings.icon != blank or block.settings.icon_svg != blank %}
+            <div class="trust-bar__icon">
+              {% if block.settings.icon != blank %}
+                <img
+                  src="{{ block.settings.icon | image_url: width: 80 }}"
+                  alt="{{ block.settings.line_1 | escape }}"
+                  loading="lazy"
+                  width="24"
+                  height="24"
+                >
+              {% elsif block.settings.icon_svg != blank %}
+                {{ block.settings.icon_svg }}
+              {% endif %}
+            </div>
+          {% endif %}
+          <div class="trust-bar__text">
+            {% if block.settings.line_1 != blank %}
+              <span class="trust-bar__line-1">{{ block.settings.line_1 }}</span>
+            {% endif %}
+            {% if block.settings.line_2 != blank %}
+              <span class="trust-bar__line-2">{{ block.settings.line_2 }}</span>
+            {% endif %}
+          </div>
+        </div>
+      {% endif %}
+    {% endfor %}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Trust bar",
+  "settings": [
+    {
+      "type": "color",
+      "id": "bar_background",
+      "label": "Bar background",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "bar_text_color",
+      "label": "Bar text color",
+      "default": "#ffffff"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "trust_item",
+      "name": "Trust item",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "icon",
+          "label": "Icon image (optional)",
+          "info": "Use this OR the SVG code field below, not both."
+        },
+        {
+          "type": "html",
+          "id": "icon_svg",
+          "label": "Icon SVG code (optional)",
+          "info": "Paste raw SVG markup here if you'd rather not upload an image."
+        },
+        {
+          "type": "text",
+          "id": "line_1",
+          "label": "Line 1",
+          "default": "4.6 / 5"
+        },
+        {
+          "type": "text",
+          "id": "line_2",
+          "label": "Line 2",
+          "default": "REVIEWS"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Trust bar",
+      "blocks": [
+        { "type": "trust_item", "settings": { "line_1": "4.6 / 5", "line_2": "REVIEWS" } },
+        { "type": "trust_item", "settings": { "line_1": "INFORMED SPORT", "line_2": "CERTIFIED" } },
+        { "type": "trust_item", "settings": { "line_1": "TRUSTED BY", "line_2": "HARRODS" } },
+        { "type": "trust_item", "settings": { "line_1": "MADE IN", "line_2": "BRITAIN" } },
+        { "type": "trust_item", "settings": { "line_1": "FREE UK DELIVERY", "line_2": "OVER £50" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

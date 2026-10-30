@@ -1,0 +1,164 @@
+{{ 'about-story.css' | asset_url | stylesheet_tag }}
+
+<section class="about-story">
+
+  <div
+    class="about-story__strip"
+    style="--about-story-strip-bg: {{ section.settings.strip_background }};"
+  >
+    {% if section.settings.strip_eyebrow != blank %}
+      <p class="about-story__strip-eyebrow">
+        {{ section.settings.strip_eyebrow }}
+        <span class="about-story__strip-rule"></span>
+      </p>
+    {% endif %}
+
+    <div class="about-story__points">
+      {% for block in section.blocks %}
+        {% if block.type == 'story_point' %}
+          <div class="about-story__point" {{ block.shopify_attributes }}>
+            <div class="about-story__point-icon">
+              {% if block.settings.icon != blank %}
+                <img src="{{ block.settings.icon | image_url: width: 60 }}" alt="" loading="lazy" width="26" height="26">
+              {% elsif block.settings.icon_svg != blank %}
+                {{ block.settings.icon_svg }}
+              {% endif %}
+            </div>
+            <h3 class="about-story__point-title">{{ block.settings.title }}</h3>
+            <p class="about-story__point-desc">{{ block.settings.description }}</p>
+          </div>
+        {% endif %}
+      {% endfor %}
+    </div>
+  </div>
+
+  <div
+    class="about-story__quote"
+    style="--about-story-quote-bg: {{ section.settings.quote_background }};"
+  >
+    <div class="about-story__quote-inner">
+      <div class="about-story__quote-media">
+        {% if section.settings.founder_image != blank %}
+          <img
+            src="{{ section.settings.founder_image | image_url: width: 800 }}"
+            alt="{{ section.settings.founder_name | escape }}"
+            loading="lazy"
+            width="800"
+            height="{{ 800 | divided_by: section.settings.founder_image.aspect_ratio }}"
+          >
+        {% else %}
+          <div class="about-story__quote-media-placeholder"></div>
+        {% endif %}
+      </div>
+
+      <div class="about-story__quote-content">
+        <span class="about-story__quote-mark">&#8220;</span>
+        {% if section.settings.quote_text != blank %}
+          <p class="about-story__quote-text">{{ section.settings.quote_text }}</p>
+        {% endif %}
+        {% if section.settings.quote_subtext != blank %}
+          <p class="about-story__quote-subtext">{{ section.settings.quote_subtext }}</p>
+        {% endif %}
+
+        <div class="about-story__signature">
+          {% if section.settings.signature_image != blank %}
+            <img
+              src="{{ section.settings.signature_image | image_url: width: 300 }}"
+              alt="{{ section.settings.founder_name | escape }} signature"
+              loading="lazy"
+              width="160"
+              height="{{ 160 | divided_by: section.settings.signature_image.aspect_ratio }}"
+              class="about-story__signature-img"
+            >
+          {% endif %}
+          {% if section.settings.founder_name != blank %}
+            <p class="about-story__founder-name">{{ section.settings.founder_name }}</p>
+          {% endif %}
+          {% if section.settings.founder_title != blank %}
+            <p class="about-story__founder-title">{{ section.settings.founder_title }}</p>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+
+</section>
+
+{% schema %}
+{
+  "name": "About Story",
+  "settings": [
+    { "type": "header", "content": "Story strip (top)" },
+    { "type": "text", "id": "strip_eyebrow", "label": "Eyebrow", "default": "THE NEU+ STORY" },
+    { "type": "color", "id": "strip_background", "label": "Strip background", "default": "#0a0a0a" },
+
+    { "type": "header", "content": "Founder quote (bottom)" },
+    { "type": "image_picker", "id": "founder_image", "label": "Founder photo" },
+    { "type": "textarea", "id": "quote_text", "label": "Quote text", "default": "I created NEU+ because I needed something that worked with my life, not against it." },
+    { "type": "text", "id": "quote_subtext", "label": "Quote subtext", "default": "No caffeine. No nonsense. Just science-backed support for real life." },
+    { "type": "image_picker", "id": "signature_image", "label": "Signature image (optional)" },
+    { "type": "text", "id": "founder_name", "label": "Founder name", "default": "Shane Davey" },
+    { "type": "text", "id": "founder_title", "label": "Founder title", "default": "Founder, NEU+" },
+    { "type": "color", "id": "quote_background", "label": "Quote background", "default": "#f2f0ec" }
+  ],
+  "blocks": [
+    {
+      "type": "story_point",
+      "name": "Story point",
+      "settings": [
+        { "type": "image_picker", "id": "icon", "label": "Icon image (optional)" },
+        { "type": "html", "id": "icon_svg", "label": "Icon SVG code (optional)", "info": "Use this OR the image above." },
+        { "type": "text", "id": "title", "label": "Title", "default": "THE PROBLEM" },
+        { "type": "textarea", "id": "description", "label": "Description", "default": "Modern life drains us. Stress, poor sleep, and overtraining leave our cells struggling to keep up." }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "About Story",
+      "blocks": [
+        {
+          "type": "story_point",
+          "settings": {
+            "title": "THE PROBLEM",
+            "description": "Modern life drains us. Stress, poor sleep, and overtraining leave our cells struggling to keep up.",
+            "icon_svg": "<svg viewBox=\"0 0 24 24\" fill=\"none\"><circle cx=\"11\" cy=\"11\" r=\"7\" stroke=\"currentColor\" stroke-width=\"1.5\"/><path d=\"M21 21l-4.35-4.35\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\"/></svg>"
+          }
+        },
+        {
+          "type": "story_point",
+          "settings": {
+            "title": "THE RESEARCH",
+            "description": "We spent years studying NAD+ and its role in energy, focus and recovery.",
+            "icon_svg": "<svg viewBox=\"0 0 24 24\" fill=\"none\"><path d=\"M9 2v6L4 20a1 1 0 001 2h14a1 1 0 001-2L15 8V2M9 2h6\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linejoin=\"round\"/></svg>"
+          }
+        },
+        {
+          "type": "story_point",
+          "settings": {
+            "title": "THE SOLUTION",
+            "description": "We developed NEU+ — a bioavailable, great-tasting daily shot with clinically studied ingredients.",
+            "icon_svg": "<svg viewBox=\"0 0 24 24\" fill=\"none\"><circle cx=\"12\" cy=\"12\" r=\"9\" stroke=\"currentColor\" stroke-width=\"1.5\"/><path d=\"M12 8v8M8 12h8\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\"/></svg>"
+          }
+        },
+        {
+          "type": "story_point",
+          "settings": {
+            "title": "MADE IN BRITAIN",
+            "description": "Manufactured to the highest standards in the UK, in Informed Sport certified facilities.",
+            "icon_svg": "<svg viewBox=\"0 0 24 24\" fill=\"none\"><path d=\"M4 21V9l8-5 8 5v12M4 21h16M9 21v-6h6v6\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linejoin=\"round\"/></svg>"
+          }
+        },
+        {
+          "type": "story_point",
+          "settings": {
+            "title": "OUR COMMUNITY",
+            "description": "Thousands of people trust NEU+ to support their energy, focus and recovery every day.",
+            "icon_svg": "<svg viewBox=\"0 0 24 24\" fill=\"none\"><circle cx=\"12\" cy=\"8\" r=\"4\" stroke=\"currentColor\" stroke-width=\"1.5\"/><path d=\"M4 21c0-4 4-6 8-6s8 2 8 6\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\"/></svg>"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

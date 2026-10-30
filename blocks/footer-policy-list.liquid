@@ -1,7 +1,6 @@
 
 {% if shop.policies.size > 0 %}
   <anchored-popover-component
-    class="footer-utilities__policy-list footer-utilities__text"
     data-hover-triggered="true"
   >
     <button
@@ -9,13 +8,16 @@
       popovertarget="terms-policies-popover"
       popovertargetaction="toggle"
       ref="trigger"
-      style="{% render 'typography-style', preset: 'custom', settings: block.settings %}"
+      style="
+        {% render 'typography-style', preset: 'custom', settings: block.settings %}
+        {% if block.settings.text_color != blank %}--color-utilities: {{ block.settings.text_color }};{% endif %}
+      "
       {{ block.shopify_attributes }}
     >
       {{ 'content.terms_and_policies' | t }}
     </button>
     <div
-      class="terms-policies-popover color-{{ settings.popover_color_scheme }}"
+      class="terms-policies-popover color-custom-popover"
       id="terms-policies-popover"
       popover="auto"
       ref="popover"
@@ -89,7 +91,7 @@
     opacity: 0;
     scale: 0.94;
     translate: 0 6px;
-    transform-origin: 6ch 100%;
+    transform-origin: 3.9em 100%;
   }
 
   .terms-policies-popover.\:popover-open,
@@ -99,7 +101,7 @@
     scale: 1;
   }
 
-  @media screen and (max-width: 750px) {
+  @media screen and (max-width: 749px) {
     .terms-policies-popover {
       left: anchor(center);
       transform: translate(-50%, 0);
@@ -114,13 +116,15 @@
       left: calc(var(--anchor-left) * 1px);
       transform: translate(0, calc(-100% - 1.25rem));
     }
-    @media screen and (max-width: 750px) {
+
+    @media screen and (max-width: 749px) {
       .terms-policies-popover {
         left: calc((var(--anchor-left) + (var(--anchor-width) / 2)) * 1px);
         transform: translate(-50%, calc(-100% - 1.25rem));
       }
     }
   }
+
   @media (prefers-reduced-motion: no-preference) {
     .terms-policies-popover {
       transition-property: display, overlay, opacity, scale, translate;
@@ -128,6 +132,7 @@
       transition-duration: 0.3s;
       transition-timing-function: var(--ease-out-quad);
     }
+
     @starting-style {
       .terms-policies-popover.\:popover-open,
       .terms-policies-popover:popover-open {
@@ -147,6 +152,16 @@
     {
       "type": "paragraph",
       "content": "t:content.manage_policies"
+    },
+    {
+      "type": "header",
+      "content": "t:content.appearance"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "t:settings.text_color",
+      "placeholder": "t:settings.default"
     },
     {
       "type": "select",

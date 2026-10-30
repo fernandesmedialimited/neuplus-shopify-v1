@@ -1,0 +1,134 @@
+.trust-bar {
+  width: 100%;
+}
+
+.trust-bar__inner {
+  background: var(--trust-bar-bg, #000000);
+  color: var(--trust-bar-text, #ffffff);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  padding: 14px 24px;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.trust-bar__inner::-webkit-scrollbar {
+  display: none;
+}
+
+.trust-bar__item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 0 24px;
+  flex: 0 0 auto;
+  white-space: nowrap;
+}
+
+.trust-bar__item + .trust-bar__item {
+  border-left: 1px solid rgba(255, 255, 255, 0.25);
+}
+
+.trust-bar__icon {
+  flex: 0 0 auto;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.trust-bar__icon img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+}
+
+.trust-bar__icon svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+  fill: currentColor;
+  stroke: currentColor;
+}
+
+.trust-bar__text {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.25;
+}
+
+.trust-bar__line-1 {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+
+.trust-bar__line-2 {
+  font-size: 11px;
+  font-weight: 400;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  opacity: 0.85;
+}
+
+/* ---- Responsive ---- */
+@media screen and (max-width: 749px) {
+  .trust-bar__inner {
+    flex-wrap: nowrap;
+    overflow-x: visible;
+    justify-content: space-between;
+    padding: 12px 8px;
+  }
+
+  .trust-bar__item {
+    flex: 1 1 0;
+    min-width: 0;
+    justify-content: center;
+    padding: 0 4px;
+    gap: 0;
+    white-space: normal;
+    text-align: center;
+  }
+
+  .trust-bar__item + .trust-bar__item {
+    border-left: 1px solid rgba(255, 255, 255, 0.2);
+  }
+
+  .trust-bar__icon {
+    width: 16px;
+    height: 16px;
+  }
+
+  .trust-bar__text {
+    align-items: center;
+  }
+
+  .trust-bar__line-1 {
+    font-size: 9px;
+    letter-spacing: 0.01em;
+  }
+
+  .trust-bar__line-2 {
+    font-size: 8px;
+  }
+}
+
+@media screen and (max-width: 360px) {
+  .trust-bar__line-1 {
+    font-size: 8px;
+  }
+
+  .trust-bar__line-2 {
+    font-size: 7px;
+  }
+
+  .trust-bar__item {
+    padding: 0 2px;
+  }
+}

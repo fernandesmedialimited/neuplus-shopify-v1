@@ -1,4 +1,4 @@
-import { CartAddEvent, CartErrorEvent } from '@theme/events';
+import { CartLinesUpdateEvent, CartErrorEvent } from '@shopify/events';
 
 const VARIANT_EVENT = 'neu:variant-change';
 const STATE_EVENT = 'neu:buy-state';
@@ -288,6 +288,15 @@ class NeuBuyBox extends HTMLElement {
     element.hidden = !text;
   }
 
+  async fetchCart() {
+    const response = await fetch(`${window.Theme?.routes?.cart_url || '/cart'}.js`, {
+      headers: { Accept: 'application/json' },
+      credentials: 'same-origin',
+    });
+    if (!response.ok) throw new Error(`Failed to fetch cart: ${response.status}`);
+    return response.json();
+  }
+
   async onSubmit(event) {
     event.preventDefault();
     if (this.addButton.disabled) return;
@@ -303,6 +312,25 @@ class NeuBuyBox extends HTMLElement {
     this.addButton.setAttribute('aria-busy', 'true');
     this.error.textContent = '';
 
+    const variantId = String(formData.get('id'));
+    const itemCount = Number(formData.get('quantity')) || this.quantity;
+    const deferredEventPromise = CartLinesUpdateEvent.createPromise();
+
+    this.dispatchEvent(
+      new CartLinesUpdateEvent({
+        action: 'add',
+        context: 'product',
+        lines: [{ merchandiseId: variantId, quantity: itemCount }],
+        promise: deferredEventPromise.promise,
+      })
+    );
+
+    const eventDetail = {
+      source: 'neu-buy-box',
+      itemCount,
+      productId: this.closest('[data-product-id]')?.getAttribute('data-product-id') || undefined,
+    };
+
     try {
       const response = await fetch(window.Theme?.routes?.cart_add_url || '/cart/add.js', {
         method: 'POST',
@@ -310,28 +338,35 @@ class NeuBuyBox extends HTMLElement {
         body: formData,
       });
       const body = await response.json();
+      const failed = !response.ok || Boolean(body.status);
 
-      if (!response.ok || body.status) {
+      if (failed) {
         this.error.textContent = body.description || body.message || 'Could not add to cart';
-        this.dispatchEvent(new CartErrorEvent(this.form.id, body.message, body.description, body.errors));
-        return;
+        this.dispatchEvent(
+          new CartErrorEvent({
+            error: body.message || 'Add to cart failed',
+            code: 'INVALID',
+            detail: { description: body.description, errors: body.errors },
+          })
+        );
       }
 
-      this.dispatchEvent(
-        new CartAddEvent({}, String(formData.get('id')), {
-          source: 'neu-buy-box',
-          itemCount: this.quantity,
-          productId: this.closest('[data-product-id]')?.getAttribute('data-product-id') || undefined,
-          sections: body.sections,
-        })
-      );
+      const cart = await this.fetchCart();
+      deferredEventPromise.resolve({
+        cart: CartLinesUpdateEvent.createCartFromAjaxResponse(cart),
+        detail: { ...eventDetail, items: cart.items, sections: failed ? undefined : body.sections, didError: failed },
+      });
 
-      if (!document.querySelector('cart-drawer-component')) {
+      if (!failed && !document.querySelector('cart-drawer-component')) {
         window.location.href = window.Theme?.routes?.cart_url || '/cart';
       }
     } catch (error) {
       console.error(error);
+      deferredEventPromise.reject(error);
       this.error.textContent = 'Could not add to cart';
+      this.dispatchEvent(
+        new CartErrorEvent({ error: error?.message || 'Network error during add to cart', code: 'SERVICE_UNAVAILABLE' })
+      );
     } finally {
       this.addButton.removeAttribute('aria-busy');
     }

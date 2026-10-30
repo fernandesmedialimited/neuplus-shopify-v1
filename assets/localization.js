@@ -26,7 +26,9 @@ class LocalizationFormComponent extends Component {
     this.refs.countryList && this.refs.countryList.addEventListener('keydown', this.#onContainerKeyDown);
     this.refs.countryList && this.refs.countryList.addEventListener('scroll', this.#onCountryListScroll);
 
-    this.resizeLanguageInput();
+    // Resizing the language input can be expensive for browsers that don't support field-sizing: content.
+    // Spliting it into separate tasks at least helps when there are multiple localization forms on the page.
+    setTimeout(() => this.resizeLanguageInput(), 0);
   }
 
   disconnectedCallback() {
@@ -116,7 +118,7 @@ class LocalizationFormComponent extends Component {
   resizeLanguageInput() {
     const { languageInput } = this.refs;
 
-    if (!languageInput) return;
+    if (!languageInput || CSS.supports('field-sizing', 'content')) return;
 
     // Hide all options except the selected option
     for (const option of languageInput.options) {

@@ -18,12 +18,24 @@
   %}
 {%- enddoc -%}
 
+{% style %}
+  {% if request.visual_preview_mode %}
+    .collection-card {
+      min-width: 250px;
+    }
+  {% endif %}
+{% endstyle %}
+
 {% liquid
   assign onboarding = false
   assign block_settings = block.settings
 
   if collection == blank
     assign onboarding = true
+  endif
+
+  if block_settings.background_color != blank
+    render 'contrast-override', background_color: block_settings.background_color, section_id: block.id
   endif
 %}
 
@@ -34,7 +46,7 @@
     {% if block_settings.placement == 'on_image' %}collection-card--image-bg{% endif %}
     {% if section.settings.layout_type == 'bento' %}collection-card--image-height-fixed{% endif %}
     {% if section.settings.layout_type == 'editorial' %}collection-card--flexible-aspect-ratio{% endif %}
-    {% if block_settings.inherit_color_scheme == false %} color-{{ block_settings.color_scheme }}{% endif %}
+    {% if block_settings.background_color != blank %} color-custom-{{ block.id }}{% endif %}
   "
   data-block-id="{{ block.id }}"
   {% if onboarding %}
@@ -45,7 +57,7 @@
     --horizontal-alignment: {{ block_settings.horizontal_alignment }};
     --vertical-alignment: {{ block_settings.vertical_alignment }};
     --background-overlay-color: {{ block_settings.overlay_color }};
-    --collection-card-gap: {{ block_settings.collection_card_gap }}px;
+    --gap: {{ block_settings.collection_card_gap }}px;
   "
   {{- block.shopify_attributes -}}
 >
@@ -68,9 +80,11 @@
 {% stylesheet %}
   .collection-card {
     --fixed-card-height: var(--height-small);
-    flex: 1 1 var(--card-width-small);
+
     width: 100%;
     position: relative;
+    height: 100%;
+    flex: 1 1 var(--card-width-small);
   }
 
   .collection-card > svg {
@@ -79,45 +93,8 @@
     aspect-ratio: var(--ratio);
   }
 
-  .collection-card__inner {
-    width: 100%;
-    overflow: hidden;
-    position: relative;
-    gap: var(--collection-card-gap);
-    display: flex;
-    flex-direction: column;
-  }
-
   .collection-card--image-bg .collection-card__inner {
     height: 100%;
-  }
-
-  .collection-card__inner {
-    z-index: var(--layer-flat);
-    pointer-events: none;
-
-    a,
-    button {
-      /* only allow interactive elements to be clickable separate from .collection-card__link */
-      pointer-events: auto;
-    }
-  }
-
-  /* allow all blocks to be selectable in editor preview */
-  .shopify-design-mode .collection-card__content * {
-    pointer-events: auto;
-  }
-
-  .collection-card__content {
-    position: relative;
-    display: flex;
-    height: 100%;
-    width: 100%;
-    max-width: 100%;
-    gap: var(--collection-card-gap);
-    flex-direction: column;
-    align-items: var(--horizontal-alignment);
-    justify-content: var(--vertical-alignment);
   }
 
   .collection-card__link {
@@ -128,6 +105,38 @@
     border-radius: var(--border-radius);
   }
 
+  .collection-card__inner {
+    width: 100%;
+    overflow: hidden;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    z-index: var(--layer-flat);
+    pointer-events: none;
+    gap: var(--gap);
+
+    a,
+    button {
+      pointer-events: auto;
+    }
+  }
+
+  /* allow all blocks to be selectable in editor preview */
+  .shopify-design-mode .collection-card__content * {
+    pointer-events: auto;
+  }
+
+  .collection-card__content {
+    --flex-wrap: wrap;
+
+    display: flex;
+    position: relative;
+    height: 100%;
+    width: 100%;
+    max-width: 100%;
+    gap: var(--gap);
+  }
+
   /* Nested image block rules */
 
   .collection-card.collection-card--image-bg {
@@ -136,6 +145,10 @@
 
   .collection-card.collection-card--image-bg .collection-card__content {
     padding: var(--padding-lg);
+  }
+
+  .collection-card--image-height-fixed {
+    height: 100%;
   }
 
   /* Bento layout rules */
@@ -149,7 +162,7 @@
     aspect-ratio: unset;
   }
 
-  .collection-card__image .image-block__image {
+  .collection-card__image .resource-image__image {
     object-fit: cover;
     width: 100%;
     height: 100%;
@@ -167,12 +180,8 @@
     width: 100%;
   }
 
+  /* Editorial layout */
   .resource-list:not(.hidden--desktop) .collection-card--flexible-aspect-ratio {
-    &.collection-card.collection-card--image-bg,
-    &.collection-card .placeholder-svg {
-      aspect-ratio: 99;
-    }
-
     .collection-card__image {
       aspect-ratio: 99;
       height: 100%;
@@ -190,6 +199,11 @@
 
     &:not(.collection-card--image-bg) .collection-card__content {
       height: auto;
+    }
+
+    &.collection-card.collection-card--image-bg,
+    &.collection-card .placeholder-svg {
+      aspect-ratio: 99;
     }
   }
 {% endstylesheet %}

@@ -2,7 +2,8 @@
 
 {%- liquid
   assign block_settings = block.settings
-  assign property_name = 'properties[custom-property]' | replace: 'custom-property', block_settings.property_key
+  assign property_key = block_settings.property_key | default: block_settings.property_heading | default: block.id
+  assign property_name = 'properties[custom-property]' | replace: 'custom-property', property_key
 
   assign product_id = closest.product.id
   assign element_id = 'CustomProperty-product_id-block_id' | replace: 'product_id', product_id | replace: 'block_id', block.id
@@ -130,7 +131,7 @@
 
   product-custom-property-component .__description {
     font-size: min(0.85em, var(--font-paragraph--size));
-    color: rgb(var(--color-foreground-rgb) / var(--opacity-subdued-text));
+    color: rgb(var(--color-rgb, var(--color-foreground-rgb)) / var(--opacity-subdued-text));
     margin-inline: 0;
     margin-block: 0 var(--padding-md);
   }

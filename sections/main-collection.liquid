@@ -23,132 +23,72 @@
 {% endjavascript %}
 
 {% comment %} We always render this full-width, as the child blocks have width: page/full settings {% endcomment %}
-<div class="section-background color-{{ section.settings.color_scheme }}"></div>
-<results-list
-  class="section product-grid-container color-{{ section.settings.color_scheme }}"
-  style="--padding-block-start: {{ section.settings.padding-block-start }}px; --padding-block-end: {{ section.settings.padding-block-end }}px;"
-  section-id="{{ section.id }}"
-  infinite-scroll="{{ section.settings.enable_infinite_scroll }}"
->
-  {% render 'skip-to-content-link', href: '#ResultsList', text: 'accessibility.skip_to_results_list' %}
+{% liquid
+  if section.settings.background_color != blank
+    render 'contrast-override', background_color: section.settings.background_color, section_id: section.id
+  endif
+%}
 
-  <div
-    class="collection-wrapper grid gap-style"
+<div
+  class="section-background{% if section.settings.background_color != blank %} color-custom-{{ section.id }}{% endif %}"
+></div>
+{% # theme-check-disable-next-line UnknownFilter %}
+<collection-component view-event-payload="{{ collection | standard_event_data: 'view' | escape }}">
+  <results-list
+    class="section product-grid-container{% if section.settings.background_color != blank %} color-custom-{{ section.id }}{% endif %}"
+    style="--padding-block-start: {{ section.settings.padding-block-start }}px; --padding-block-end: {{ section.settings.padding-block-end }}px;"
+    section-id="{{ section.id }}"
+    infinite-scroll="{{ section.settings.enable_infinite_scroll }}"
   >
-    {% content_for 'block',
-      type: 'filters',
-      id: 'filters',
-      results: collection,
-      results_size: collection.products_count
-    %}
+    {% render 'skip-to-content-link', href: '#ResultsList', text: 'accessibility.skip_to_results_list' %}
 
-    {% assign products_per_page = 24 %}
-
-    {% if section.settings.enable_infinite_scroll == false %}
-      {% assign products_per_page = section.settings.products_per_page %}
-    {% endif %}
-
-    {% paginate collection.products by products_per_page %}
-      {% capture children %}
-        {% for product in collection.products %}
-          <li
-            id="{{ section.id }}-{{ product.id }}"
-            class="product-grid__item product-grid__item--{{ forloop.index0 }}"
-            data-page="{{ paginate.current_page }}"
-            data-product-id="{{ product.id }}"
-            ref="cards[]"
-          >
-            {% # theme-check-disable %}
-            {% content_for 'block', type: '_product-card', id: 'product-card', closest.product: product %}
-            {% # theme-check-enable %}
-          </li>
-        {% endfor %}
-      {% endcapture %}
-
-      {% render 'product-grid',
-        section: section,
-        children: children,
-        products: collection.products,
-        paginate: paginate,
-        enable_infinite_scroll: section.settings.enable_infinite_scroll
+    <div
+      class="collection-wrapper grid gap-style{% if section.settings.product_grid_width == 'full-width' %} collection-wrapper--grid-full-width{% endif %}"
+    >
+      {% content_for 'block',
+        type: 'filters',
+        id: 'filters',
+        results: collection,
+        results_size: collection.products_count
       %}
-    {% endpaginate %}
-  </div>
-</results-list>
 
-{% stylesheet %}
-  .main-collection-grid {
-    grid-column: var(--grid-column--mobile);
+      {% assign products_per_page = 24 %}
 
-    @media screen and (min-width: 750px) {
-      grid-column: var(--grid-column--desktop);
-    }
-  }
+      {% if section.settings.enable_infinite_scroll == false %}
+        {% assign products_per_page = section.settings.products_per_page %}
+      {% endif %}
 
-  .collection-wrapper {
-    @media screen and (min-width: 750px) {
-      grid-template-columns:
-        1fr repeat(
-          var(--centered-column-number),
-          minmax(0, calc((var(--page-width) - var(--page-margin) * 2) / var(--centered-column-number)))
-        )
-        1fr;
-    }
-  }
+      {% paginate collection.products by products_per_page %}
+        {% capture children %}
+          {% for product in collection.products %}
+            <li
+              id="{{ section.id }}-{{ product.id }}"
+              class="product-grid__item product-grid__item--{{ forloop.index0 }}"
+              data-page="{{ paginate.current_page }}"
+              data-product-id="{{ product.id }}"
+              ref="cards[]"
+            >
+              {% content_for 'block',
+                type: '_product-card',
+                id: 'product-card',
+                closest.product: product,
+                product_view_context: 'collection'
+              %}
+            </li>
+          {% endfor %}
+        {% endcapture %}
 
-  .collection-wrapper:has(.facets-block-wrapper--full-width),
-  .collection-wrapper:has(.collection-wrapper--full-width) {
-    @media screen and (min-width: 750px) {
-      grid-column: 1 / -1;
-      grid-template-columns:
-        minmax(var(--page-margin), 1fr) repeat(
-          var(--centered-column-number),
-          minmax(0, calc((var(--page-width) - var(--page-margin) * 2) / var(--centered-column-number)))
-        )
-        minmax(var(--page-margin), 1fr);
-    }
-  }
-
-  .collection-wrapper:has(.facets--vertical) .facets-block-wrapper--vertical:not(.hidden) ~ .main-collection-grid {
-    @media screen and (min-width: 750px) {
-      grid-column: var(--facets-vertical-col-width) / var(--full-width-column-number);
-    }
-  }
-
-  .collection-wrapper:has(.facets-block-wrapper--vertical:not(#filters-drawer)):has(.collection-wrapper--full-width) {
-    @media screen and (min-width: 750px) {
-      grid-column: 1 / -1;
-      grid-template-columns: 0fr repeat(var(--centered-column-number), minmax(0, 1fr)) 0fr;
-    }
-  }
-
-  :is(.collection-wrapper--full-width, .collection-wrapper--full-width-on-mobile)
-    [product-grid-view='default']
-    .product-grid__card {
-    @media screen and (max-width: 749px) {
-      padding-inline-start: max(var(--padding-xs), var(--padding-inline-start));
-      padding-inline-end: max(var(--padding-xs), var(--padding-inline-end));
-    }
-  }
-
-  :is(.collection-wrapper--full-width, .collection-wrapper--full-width-on-mobile)
-    [product-grid-view='mobile-single']
-    .product-grid__card {
-    @media screen and (max-width: 749px) {
-      padding-inline-start: max(var(--padding-xs), var(--padding-inline-start));
-      padding-inline-end: max(var(--padding-xs), var(--padding-inline-end));
-    }
-  }
-
-  /* Make product media go edge-to-edge by using negative margins */
-  :is(.collection-wrapper--full-width) .card-gallery,
-  :is(.collection-wrapper--full-width-on-mobile) .card-gallery {
-    @media screen and (max-width: 749px) {
-      margin-inline-start: calc(-1 * max(var(--padding-xs), var(--padding-inline-start)));
-      margin-inline-end: calc(-1 * max(var(--padding-xs), var(--padding-inline-end)));
-    }
-  }
-{% endstylesheet %}
+        {% render 'product-grid',
+          section: section,
+          children: children,
+          products: collection.products,
+          paginate: paginate,
+          enable_infinite_scroll: section.settings.enable_infinite_scroll
+        %}
+      {% endpaginate %}
+    </div>
+  </results-list>
+</collection-component>
 
 {% schema %}
 {
@@ -302,10 +242,10 @@
       "content": "t:content.section_layout"
     },
     {
-      "type": "color_scheme",
-      "id": "color_scheme",
-      "label": "t:settings.color_scheme",
-      "default": "scheme-1"
+      "type": "color",
+      "id": "background_color",
+      "label": "t:settings.background_color",
+      "placeholder": "t:settings.default"
     },
     {
       "type": "range",

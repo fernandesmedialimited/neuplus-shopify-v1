@@ -1,6 +1,8 @@
 <!doctype html>
 <html
-  class="no-js{% if request.design_mode %} shopify-design-mode{% endif %}"
+  {% if request.design_mode %}
+    class="shopify-design-mode"
+  {% endif %}
   lang="{{ request.locale.iso_code }}"
 >
   <head>
@@ -20,19 +22,21 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     {%- endif -%}
 
     {% comment %} This a way to wait for main content to load when navigating to a new page so that the view transitions can work consistently {% endcomment %}
-    <link
-      rel="expect"
-      href="#MainContent"
-      blocking="render"
-      id="view-transition-render-blocker"
-    >
+    {% if settings.transition_to_main_product or settings.page_transition_enabled %}
+      <link
+        rel="expect"
+        href="#MainContent"
+        blocking="render"
+        id="view-transition-render-blocker"
+      >
+    {% endif %}
 
     {%- render 'meta-tags' -%}
     {%- render 'stylesheets' -%}
     {%- render 'fonts' -%}
     {%- render 'scripts' -%}
     {%- render 'theme-styles-variables' -%}
-    {%- render 'color-schemes' -%}
+    {%- render 'color-palette' -%}
 
     {% if request.design_mode %}
       {%- render 'theme-editor' -%}
@@ -46,29 +50,100 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <!-- End Google Tag Manager (noscript) -->
     {% render 'skip-to-content-link', href: '#MainContent', text: 'accessibility.skip_to_text' %}
-    <div id="header-group">
-      {% sections 'header-group' %}
+
+    {% render 'chat-drawer' %}
+
+    <div class="page-wrapper">
+      <div id="header-group">
+        {% sections 'header-group' %}
+      </div>
+
+      <script>
+        // Inline header height and menu style calculations to prevent layout shift
+        // Note: Updates in calculateHeaderGroupHeight(), updateTransparentHeaderOffset() and setHeaderMenuStyle() utilities.js should be kept in sync with this function
+        (function setHeaderHeighCustomProperties() {
+          /*
+           * Header calculation functions for maintaining CSS variables
+           * Mimic calculateHeaderGroupHeight() in utilities.js
+           */
+          const header = document.querySelector('header-component');
+          const headerGroup = document.querySelector('#header-group');
+          const hasHeaderSection = headerGroup?.querySelector('.header-section');
+
+          if (!header || !headerGroup) return;
+
+          const headerTopRow = header.querySelector('.header__row--top');
+          const headerHeight = header.offsetHeight;
+
+          // Calculate the total height of the header group
+          let headerGroupHeight = 0;
+          const children = headerGroup.children;
+          for (let i = 0; i < children.length; i++) {
+            const element = children[i];
+            if (element === header || !(element instanceof HTMLElement)) continue;
+            headerGroupHeight += element.offsetHeight;
+          }
+
+          // Check for transparent header special case
+          if (header.hasAttribute('transparent') && header.parentElement?.nextElementSibling) {
+            headerGroupHeight += headerHeight;
+          }
+
+          // Set CSS variables
+          document.body.style.setProperty('--header-height', `${headerHeight}px`);
+          document.body.style.setProperty('--header-group-height', `${headerGroupHeight}px`);
+
+          if (headerTopRow) {
+            window.requestAnimationFrame(function () {
+              document.body.style.setProperty('--top-row-height', `${headerTopRow.offsetHeight}px`);
+            });
+          }
+
+          /**
+           * Updates CSS custom properties for transparent header offset calculation
+           * Mimic updateTransparentHeaderOffset() in utilities.js
+           */
+
+          if (!hasHeaderSection || !header?.hasAttribute('transparent')) {
+            document.body.style.setProperty('--transparent-header-offset-boolean', '0');
+            return;
+          }
+
+          const hasImmediateSection = hasHeaderSection.nextElementSibling?.classList.contains('shopify-section');
+
+          const shouldApplyOffset = !hasImmediateSection ? '1' : '0';
+          document.body.style.setProperty('--transparent-header-offset-boolean', shouldApplyOffset);
+        })();
+
+        (function setHeaderMenuStyle() {
+          const headerComponent = document.querySelector('#header-component');
+          if (headerComponent) {
+            const isTouchDevice = 'ontouchstart' in window && navigator.maxTouchPoints > 0;
+            const overflowList = headerComponent?.querySelector('overflow-list');
+            const hasReachedMinimum = overflowList && overflowList.hasAttribute('minimum-reached');
+            headerComponent.dataset.menuStyle = isTouchDevice || hasReachedMinimum ? 'drawer' : 'menu';
+          }
+        })();
+      </script>
+
+      <main
+        id="MainContent"
+        class="content-for-layout"
+        role="main"
+        data-page-transition-enabled="{{ settings.page_transition_enabled }}"
+        data-product-transition="{{ settings.transition_to_main_product }}"
+        data-template="{{ template }}"
+      >
+        {{ content_for_layout }}
+      </main>
+
+      <footer>
+        {% sections 'footer-group' %}
+      </footer>
     </div>
 
-    <script
-      src="{{ 'critical.js' | asset_url }}"
-      type="module"
-      async
-      blocking="render"
-    ></script>
-
-    <main
-      id="MainContent"
-      class="content-for-layout"
-      role="main"
-      data-page-transition-enabled="{{ settings.page_transition_enabled }}"
-      data-product-transition="{{ settings.transition_to_main_product }}"
-      data-template="{{ template }}"
-    >
-      {{ content_for_layout }}
-    </main>
-
-    {% sections 'footer-group' %}
+    {% render 'cart-drawer', render_wrapper: true %}
+    {% render 'theme-drawer' %}
 
     {% render 'search-modal' %}
 

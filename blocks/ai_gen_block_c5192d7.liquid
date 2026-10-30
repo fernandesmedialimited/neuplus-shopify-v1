@@ -1,0 +1,526 @@
+{% doc %}
+  @prompt
+    Meet the team - Horizontal carousel with scroll.
+    
+    Image, Name, Description.
+    
+    6 team members total, Add title - NEU+ Ambassadors
+{% enddoc %}
+{% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
+
+{% style %}
+  .ai-team-carousel-{{ ai_gen_id }} {
+    width: {{ block.settings.desktop_width_percent }}%;
+    max-width: 100%;
+    display: block;
+  }
+
+  .ai-team-carousel-header-{{ ai_gen_id }} {
+    margin-bottom: {{ block.settings.title_spacing }}px;
+  }
+
+  .ai-team-carousel-title-{{ ai_gen_id }} {
+    font-size: {{ block.settings.title_size }}px;
+    font-weight: 700;
+    color: {{ block.settings.title_color }};
+    margin: 0;
+    text-align: {{ block.settings.title_alignment }};
+  }
+
+  .ai-team-carousel-container-{{ ai_gen_id }} {
+    overflow-x: auto;
+    overflow-y: hidden;
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: thin;
+    scrollbar-color: {{ block.settings.scrollbar_color }} transparent;
+  }
+
+  .ai-team-carousel-container-{{ ai_gen_id }}::-webkit-scrollbar {
+    height: 8px;
+  }
+
+  .ai-team-carousel-container-{{ ai_gen_id }}::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .ai-team-carousel-container-{{ ai_gen_id }}::-webkit-scrollbar-thumb {
+    background-color: {{ block.settings.scrollbar_color }};
+    border-radius: 4px;
+  }
+
+  .ai-team-carousel-wrapper-{{ ai_gen_id }} {
+    display: flex;
+    gap: {{ block.settings.gap }}px;
+    padding: {{ block.settings.padding }}px 0;
+  }
+
+  .ai-team-member-{{ ai_gen_id }} {
+    flex: 0 0 {{ block.settings.card_width }}px;
+    display: flex;
+    flex-direction: column;
+    gap: {{ block.settings.content_gap }}px;
+  }
+
+  .ai-team-member-image-wrapper-{{ ai_gen_id }} {
+    width: 100%;
+    aspect-ratio: 1;
+    overflow: hidden;
+    border-radius: {{ block.settings.image_border_radius }}px;
+    background-color: {{ block.settings.placeholder_bg_color }};
+  }
+
+  .ai-team-member-image-{{ ai_gen_id }} {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .ai-team-member-image-placeholder-{{ ai_gen_id }} {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .ai-team-member-image-placeholder-{{ ai_gen_id }} svg {
+    width: 60%;
+    height: 60%;
+    opacity: 0.3;
+  }
+
+  .ai-team-member-content-{{ ai_gen_id }} {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .ai-team-member-name-{{ ai_gen_id }} {
+    font-size: {{ block.settings.name_size }}px;
+    font-weight: 700;
+    color: {{ block.settings.name_color }};
+    margin: 0;
+  }
+
+  .ai-team-member-description-{{ ai_gen_id }} {
+    font-size: {{ block.settings.description_size }}px;
+    color: {{ block.settings.description_color }};
+    line-height: 1.5;
+  }
+
+  @media screen and (max-width: 749px) {
+    .ai-team-member-{{ ai_gen_id }} {
+      flex: 0 0 {{ block.settings.card_width_mobile }}px;
+    }
+
+    .ai-team-carousel-title-{{ ai_gen_id }} {
+      font-size: {{ block.settings.title_size_mobile }}px;
+    }
+  }
+{% endstyle %}
+
+<team-carousel-{{ ai_gen_id }} class="ai-team-carousel-{{ ai_gen_id }}" {{ block.shopify_attributes }}>
+  {% if block.settings.title != blank %}
+    <div class="ai-team-carousel-header-{{ ai_gen_id }}">
+      <h2 class="ai-team-carousel-title-{{ ai_gen_id }}">{{ block.settings.title }}</h2>
+    </div>
+  {% endif %}
+
+  <div class="ai-team-carousel-container-{{ ai_gen_id }}">
+    <div class="ai-team-carousel-wrapper-{{ ai_gen_id }}">
+      {% for i in (1..6) %}
+        {% liquid
+          assign image_key = 'member_' | append: i | append: '_image'
+          assign name_key = 'member_' | append: i | append: '_name'
+          assign description_key = 'member_' | append: i | append: '_description'
+
+          assign member_image = block.settings[image_key]
+          assign member_name = block.settings[name_key]
+          assign member_description = block.settings[description_key]
+        %}
+
+        <div class="ai-team-member-{{ ai_gen_id }}">
+          <div class="ai-team-member-image-wrapper-{{ ai_gen_id }}">
+            {% if member_image %}
+              <img
+                src="{{ member_image | image_url: width: 600 }}"
+                alt="{{ member_image.alt | escape }}"
+                loading="lazy"
+                width="600"
+                height="600"
+                class="ai-team-member-image-{{ ai_gen_id }}"
+              >
+            {% else %}
+              <div class="ai-team-member-image-placeholder-{{ ai_gen_id }}">
+                {{ 'image' | placeholder_svg_tag }}
+              </div>
+            {% endif %}
+          </div>
+
+          <div class="ai-team-member-content-{{ ai_gen_id }}">
+            {% if member_name != blank %}
+              <h3 class="ai-team-member-name-{{ ai_gen_id }}">{{ member_name }}</h3>
+            {% endif %}
+
+            {% if member_description != blank %}
+              <div class="ai-team-member-description-{{ ai_gen_id }}">{{ member_description }}</div>
+            {% endif %}
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+</team-carousel-{{ ai_gen_id }}>
+
+<script>
+  (function() {
+    class TeamCarousel{{ ai_gen_id }} extends HTMLElement {
+      constructor() {
+        super();
+      }
+
+      connectedCallback() {
+        this.container = this.querySelector('.ai-team-carousel-container-{{ ai_gen_id }}');
+      }
+    }
+
+    customElements.define('team-carousel-{{ ai_gen_id }}', TeamCarousel{{ ai_gen_id }});
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Meet the team",
+  "tag": null,
+  "settings": [
+    {
+      "type": "header",
+      "content": "Title"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Title",
+      "default": "NEU+ Ambassadors"
+    },
+    {
+      "type": "range",
+      "id": "title_size",
+      "label": "Title size (desktop)",
+      "min": 16,
+      "max": 72,
+      "step": 2,
+      "unit": "px",
+      "default": 32
+    },
+    {
+      "type": "range",
+      "id": "title_size_mobile",
+      "label": "Title size (mobile)",
+      "min": 14,
+      "max": 48,
+      "step": 2,
+      "unit": "px",
+      "default": 24
+    },
+    {
+      "type": "color",
+      "id": "title_color",
+      "label": "Title color",
+      "default": "#000000"
+    },
+    {
+      "type": "select",
+      "id": "title_alignment",
+      "label": "Title alignment",
+      "options": [
+        {
+          "value": "left",
+          "label": "Left"
+        },
+        {
+          "value": "center",
+          "label": "Center"
+        },
+        {
+          "value": "right",
+          "label": "Right"
+        }
+      ],
+      "default": "left"
+    },
+    {
+      "type": "range",
+      "id": "title_spacing",
+      "label": "Spacing below title",
+      "min": 10,
+      "max": 60,
+      "step": 5,
+      "unit": "px",
+      "default": 30
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "range",
+      "id": "desktop_width_percent",
+      "label": "Desktop width",
+      "min": 50,
+      "max": 100,
+      "step": 5,
+      "unit": "%",
+      "default": 100
+    },
+    {
+      "type": "range",
+      "id": "card_width",
+      "label": "Card width (desktop)",
+      "min": 200,
+      "max": 400,
+      "step": 20,
+      "unit": "px",
+      "default": 280
+    },
+    {
+      "type": "range",
+      "id": "card_width_mobile",
+      "label": "Card width (mobile)",
+      "min": 150,
+      "max": 300,
+      "step": 10,
+      "unit": "px",
+      "default": 220
+    },
+    {
+      "type": "range",
+      "id": "gap",
+      "label": "Gap between cards",
+      "min": 10,
+      "max": 50,
+      "step": 5,
+      "unit": "px",
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "padding",
+      "label": "Vertical padding",
+      "min": 0,
+      "max": 50,
+      "step": 5,
+      "unit": "px",
+      "default": 10
+    },
+    {
+      "type": "range",
+      "id": "content_gap",
+      "label": "Gap between image and text",
+      "min": 5,
+      "max": 30,
+      "step": 5,
+      "unit": "px",
+      "default": 15
+    },
+    {
+      "type": "header",
+      "content": "Image style"
+    },
+    {
+      "type": "range",
+      "id": "image_border_radius",
+      "label": "Border radius",
+      "min": 0,
+      "max": 200,
+      "step": 5,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "color",
+      "id": "placeholder_bg_color",
+      "label": "Placeholder background",
+      "default": "#f4f4f4"
+    },
+    {
+      "type": "header",
+      "content": "Text style"
+    },
+    {
+      "type": "range",
+      "id": "name_size",
+      "label": "Name size",
+      "min": 12,
+      "max": 32,
+      "step": 2,
+      "unit": "px",
+      "default": 18
+    },
+    {
+      "type": "color",
+      "id": "name_color",
+      "label": "Name color",
+      "default": "#000000"
+    },
+    {
+      "type": "range",
+      "id": "description_size",
+      "label": "Description size",
+      "min": 10,
+      "max": 24,
+      "step": 2,
+      "unit": "px",
+      "default": 14
+    },
+    {
+      "type": "color",
+      "id": "description_color",
+      "label": "Description color",
+      "default": "#666666"
+    },
+    {
+      "type": "header",
+      "content": "Scrollbar"
+    },
+    {
+      "type": "color",
+      "id": "scrollbar_color",
+      "label": "Scrollbar color",
+      "default": "#cccccc"
+    },
+    {
+      "type": "header",
+      "content": "Team member 1"
+    },
+    {
+      "type": "image_picker",
+      "id": "member_1_image",
+      "label": "Image"
+    },
+    {
+      "type": "text",
+      "id": "member_1_name",
+      "label": "Name",
+      "default": "Team Member 1"
+    },
+    {
+      "type": "textarea",
+      "id": "member_1_description",
+      "label": "Description",
+      "default": "Role or description"
+    },
+    {
+      "type": "header",
+      "content": "Team member 2"
+    },
+    {
+      "type": "image_picker",
+      "id": "member_2_image",
+      "label": "Image"
+    },
+    {
+      "type": "text",
+      "id": "member_2_name",
+      "label": "Name",
+      "default": "Team Member 2"
+    },
+    {
+      "type": "textarea",
+      "id": "member_2_description",
+      "label": "Description",
+      "default": "Role or description"
+    },
+    {
+      "type": "header",
+      "content": "Team member 3"
+    },
+    {
+      "type": "image_picker",
+      "id": "member_3_image",
+      "label": "Image"
+    },
+    {
+      "type": "text",
+      "id": "member_3_name",
+      "label": "Name",
+      "default": "Team Member 3"
+    },
+    {
+      "type": "textarea",
+      "id": "member_3_description",
+      "label": "Description",
+      "default": "Role or description"
+    },
+    {
+      "type": "header",
+      "content": "Team member 4"
+    },
+    {
+      "type": "image_picker",
+      "id": "member_4_image",
+      "label": "Image"
+    },
+    {
+      "type": "text",
+      "id": "member_4_name",
+      "label": "Name",
+      "default": "Team Member 4"
+    },
+    {
+      "type": "textarea",
+      "id": "member_4_description",
+      "label": "Description",
+      "default": "Role or description"
+    },
+    {
+      "type": "header",
+      "content": "Team member 5"
+    },
+    {
+      "type": "image_picker",
+      "id": "member_5_image",
+      "label": "Image"
+    },
+    {
+      "type": "text",
+      "id": "member_5_name",
+      "label": "Name",
+      "default": "Team Member 5"
+    },
+    {
+      "type": "textarea",
+      "id": "member_5_description",
+      "label": "Description",
+      "default": "Role or description"
+    },
+    {
+      "type": "header",
+      "content": "Team member 6"
+    },
+    {
+      "type": "image_picker",
+      "id": "member_6_image",
+      "label": "Image"
+    },
+    {
+      "type": "text",
+      "id": "member_6_name",
+      "label": "Name",
+      "default": "Team Member 6"
+    },
+    {
+      "type": "textarea",
+      "id": "member_6_description",
+      "label": "Description",
+      "default": "Role or description"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Meet the team"
+    }
+  ]
+}
+{% endschema %}

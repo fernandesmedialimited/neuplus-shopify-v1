@@ -1,4 +1,3 @@
-
 {% render 'button', link: block.settings.link %}
 
 {% schema %}
@@ -6,6 +5,31 @@
   "name": "t:names.button",
   "tag": null,
   "settings": [
+    {
+      "type": "header",
+      "content": "Subscription Settings"
+    },
+    {
+      "type": "checkbox",
+      "id": "is_subscribe_button",
+      "label": "Enable Subscribe Button",
+      "default": false
+    },
+    {
+      "type": "product",
+      "id": "subscription_product",
+      "label": "Subscription Product"
+    },
+    {
+      "type": "text",
+      "id": "selling_plan_id",
+      "label": "Selling Plan ID",
+      "info": "Enter the specific Appstle selling plan ID (e.g., 123456789). You can find this in your Appstle dashboard or by inspecting the subscription radio button on the live product page."
+    },
+    {
+      "type": "header",
+      "content": "General Settings"
+    },
     {
       "type": "text",
       "id": "label",
@@ -37,11 +61,52 @@
           "label": "t:options.secondary"
         },
         {
-          "value": "link",
+          "value": "button-unstyled",
           "label": "t:options.link"
+        },
+        {
+          "value": "button-custom",
+          "label": "t:options.custom"
         }
       ],
-      "default": "button"
+      "default": "button",
+      "info": "t:info.edit_button_style_in_theme_settings"
+    },
+    {
+      "type": "header",
+      "content": "t:content.button_colors",
+      "visible_if": "{{ block.settings.style_class == \"button-custom\" }}"
+    },
+    {
+      "type": "color",
+      "id": "custom_button_background",
+      "label": "t:settings.background",
+      "default": "{{ settings.color_palette.foreground }}",
+      "alpha": true,
+      "visible_if": "{{ block.settings.style_class == 'button-custom' }}"
+    },
+    {
+      "type": "color",
+      "id": "custom_button_text",
+      "label": "t:settings.text",
+      "default": "{{ settings.color_palette.background }}",
+      "alpha": true,
+      "visible_if": "{{ block.settings.style_class == 'button-custom' }}"
+    },
+    {
+      "type": "color",
+      "id": "custom_button_border",
+      "label": "t:settings.borders",
+      "default": "{{ settings.color_palette.background }}",
+      "alpha": true,
+      "visible_if": "{{ block.settings.style_class == 'button-custom' }}"
+    },
+    {
+      "type": "color",
+      "id": "link_text_color",
+      "label": "t:settings.link_text_color",
+      "placeholder": "t:settings.default",
+      "visible_if": "{{ block.settings.style_class == 'button-unstyled' }}"
     },
     {
       "type": "header",

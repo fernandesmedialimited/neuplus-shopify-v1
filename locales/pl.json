@@ -16,7 +16,8 @@
       "comment": "Komentarz",
       "post_success": "Dziękujemy za skontaktowanie się z nami. Odpowiemy tak szybko, jak to możliwe.",
       "error_heading": "Dostosuj następujące dane:"
-    }
+    },
+    "slider_label": "Suwak"
   },
   "accessibility": {
     "play_model": "Odtwórz model 3D",
@@ -62,7 +63,20 @@
     "increase_quantity": "Zwiększ ilość",
     "rating": "Ocena tego produktu to: {{ rating }} na 5",
     "quantity": "Ilość",
-    "nested_product": "{{ product_title }}: {{ parent_title }}"
+    "nested_product": "{{ product_title }}: {{ parent_title }}",
+    "remove": "Usuń",
+    "view_pricing_info": "Wyświetl informacje o cenach",
+    "slideshow": "Pokaz slajdów",
+    "header_navigation_label": "Główna",
+    "home_logo_alt": "{{ store_name }} - Strona główna",
+    "active_filters": "Aktywne filtry:",
+    "product_details": "Szczegóły produktu",
+    "show_product_details": "Pokaż szczegóły produktu dla {{ product_name }}",
+    "featured_product": "Polecany produkt",
+    "search_suggestions_available": "Dla „{{ query }}” dostępne są podpowiedzi wyszukiwania",
+    "price_filter_low": "Niska cena",
+    "price_filter_high": "Wysoka cena",
+    "view_disclosure_information_for_product": "Wyświetl dodatkowe informacje dla produktu {{ product_title }}"
   },
   "actions": {
     "add_to_cart": "Dodaj do koszyka",
@@ -75,9 +89,9 @@
     "log_in_html": "Masz już konto? <a href=\"{{ link }}\">Zaloguj się</a>, aby szybciej realizować zakupy.",
     "see_items": {
       "one": "Zobacz {{ count }} pozycję",
-      "other": "Zobacz {{ count }} pozycje(-i)",
-      "few": "Zobacz {{ count }} pozycje(-i)",
-      "many": "Zobacz {{ count }} pozycje(-i)"
+      "other": "Zobacz {{ count }} poz.",
+      "few": "Zobacz {{ count }} poz.",
+      "many": "Zobacz {{ count }} poz."
     },
     "view_all": "Wyświetl wszystko",
     "add": "Dodaj",
@@ -87,7 +101,7 @@
     "show_more": "Pokaż więcej",
     "close": "Zamknij",
     "more": "Więcej",
-    "reset": "Zresetuj",
+    "reset": "Resetuj",
     "zoom": "Powiększenie",
     "close_dialog": "Zamknij okno dialogowe",
     "back": "Powrót",
@@ -104,7 +118,9 @@
     "sign_up": "Zarejestruj się",
     "sort": "Sortuj",
     "show_all_options": "Pokaż wszystkie opcje",
-    "open": "Otwórz"
+    "open": "Otwórz",
+    "back_to": "Powrót do {{ title }}",
+    "zoom_media": "Powiększenie multimediów {{ index }}"
   },
   "content": {
     "reviews": "recenzje",
@@ -118,7 +134,7 @@
     "quantity": "Ilość",
     "product_total": "Produkt łącznie",
     "cart_estimated_total": "Przewidywana suma",
-    "seller_note": "Specjalne instrukcje",
+    "seller_note": "Instrukcje specjalne",
     "cart_subtotal": "Suma częściowa",
     "discounts": "Rabaty",
     "discount": "Rabat",
@@ -239,11 +255,38 @@
     "product_custom_property_character_count": "Użyte znaki: {{ used_chars }}/{{ max_chars }}",
     "terms_and_policies": "Warunki i polityki",
     "pagination": {
-      "nav_label": "Nawigacja po paginacji",
+      "nav_label": "Paginacja",
       "previous": "Wstecz",
       "next": "Dalej",
       "page": "Strona {{ page }}"
-    }
+    },
+    "volume_pricing_available": "Ceny zależne od wolumenu są dostępne",
+    "volume_pricing": "Ceny zależne od wolumenu",
+    "at_price_each": "za {{ price }}/szt.",
+    "each": "{{ price }}/szt.",
+    "each_abbreviation": "szt.",
+    "price_at": "za",
+    "price_range": "Przedział cenowy",
+    "cancel": "Anuluj",
+    "product_subtotal": "Suma częściowa dla produktu",
+    "quantity_per_item": "/szt.",
+    "remove_all": "Usuń wszystko",
+    "remove_all_items_confirmation": "Usunąć z koszyka wszystkie pozycje ({{ count }})?",
+    "remove_one_item_confirmation": "Usunąć 1 pozycję z koszyka?",
+    "total_items": "Pozycje łącznie",
+    "variant": "Wariant",
+    "variant_total": "Suma wariantów",
+    "view_cart": "Wyświetl koszyk",
+    "your_cart": "Twój koszyk",
+    "items_added_to_cart": {
+      "one": "Dodano 1 pozycję do koszyka",
+      "other": "Dodano {{ count }} pozycje(-i) do koszyka",
+      "few": "Dodano {{ count }} pozycje(-i) do koszyka",
+      "many": "Dodano {{ count }} pozycje(-i) do koszyka"
+    },
+    "item_count_cutoff": "Więcej niż {{ count }} pozycje(-i)",
+    "quick_order_list": "Lista do szybkiego zamawiania",
+    "product_disclosures": "Dodatkowe informacje o produkcie"
   },
   "gift_cards": {
     "issued": {
@@ -258,36 +301,6 @@
       "copy_code_success": "Kod został skopiowany",
       "expired": "Ważność wygasła"
     }
-  },
-  "products": {
-    "product": {
-      "add_to_cart": "Dodaj do koszyka",
-      "adding_to_cart": "Trwa dodawanie...",
-      "added_to_cart": "Dodano do koszyka",
-      "add_to_cart_error": "Błąd podczas dodawania do koszyka",
-      "sold_out": "Wyprzedane",
-      "unavailable": "Niedostępny",
-      "quantity_error_max": "Ten produkt ma maksimum {{ maximum }}",
-      "quantity": "Ilość",
-      "quantity_increments": "Przyrosty o {{ increment }}",
-      "quantity_minimum": "Minimum {{ minimum }}",
-      "quantity_maximum": "Maksimum {{ maximum }}",
-      "in_cart": "w koszyku"
-    }
-  },
-  "placeholders": {
-    "password": "Hasło",
-    "search": "Szukaj",
-    "product_title": "Tytuł produktu",
-    "collection_title": "Tytuł kolekcji",
-    "blog_posts": "Posty na blogu",
-    "blog_post_title": "Tytuł",
-    "blog_post_author": "Autor",
-    "blog_post_date": "Data",
-    "blog_post_description": "Fragment Twojego posta na blogu"
-  },
-  "fields": {
-    "separator": "do"
   },
   "blogs": {
     "article": {
@@ -309,6 +322,38 @@
       "post": "Opublikuj komentarz",
       "success_moderated": "Komentarz został opublikowany i oczekuje na moderację",
       "success": "Opublikowano komentarz"
+    }
+  },
+  "fields": {
+    "separator": "do"
+  },
+  "placeholders": {
+    "password": "Hasło",
+    "search": "Szukaj",
+    "product_title": "Tytuł produktu",
+    "collection_title": "Tytuł kolekcji",
+    "blog_posts": "Posty na blogu",
+    "blog_post_title": "Tytuł",
+    "blog_post_author": "Autor",
+    "blog_post_date": "Data",
+    "blog_post_description": "Fragment Twojego posta na blogu"
+  },
+  "products": {
+    "product": {
+      "add_to_cart": "Dodaj do koszyka",
+      "adding_to_cart": "Trwa dodawanie...",
+      "added_to_cart": "Dodano do koszyka",
+      "add_to_cart_error": "Błąd podczas dodawania do koszyka",
+      "quantity_error_max": "Pozycja ma maksymalny limit {{ maximum }}",
+      "sold_out": "Wyprzedane",
+      "unavailable": "Niedostępny",
+      "quantity": "Ilość",
+      "quantity_increments": "Przyrost o {{ increment }}",
+      "quantity_minimum": "Minimum {{ minimum }}",
+      "quantity_maximum": "Maksimum {{ maximum }}",
+      "in_cart": "w koszyku",
+      "default_title": "Tytuł domyślny",
+      "sticky_add_to_cart": "Pasek szybkiego dodawania do koszyka"
     }
   }
 }

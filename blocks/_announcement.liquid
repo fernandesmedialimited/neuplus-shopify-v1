@@ -19,6 +19,7 @@
     "
     style="
       {% render 'typography-style', settings: block_settings, preset: 'custom' %}
+      {% if block_settings.text_color != blank %}--color: {{ block_settings.text_color }}; --color-rgb: {{ block_settings.text_color.rgb }};{% endif %}
       --width: 100%;
       --text-align: center;
       --line-height: 1;
@@ -44,17 +45,6 @@
 {%- endunless -%}
 
 {% stylesheet %}
-  .text-block {
-    width: var(--width);
-    max-width: 100%;
-  }
-
-  .text-block > * {
-    width: var(--width);
-    max-width: var(--max-width, 100%);
-    text-align: var(--text-align);
-  }
-
   .text-block:not(.text-block--full-width).rte,
   .text-block:not(.text-block--full-width).paragraph {
     /* Safari doesn't support pretty, so fallback to balance */
@@ -320,11 +310,25 @@
         }
       ],
       "default": "none"
+    },
+    {
+      "type": "header",
+      "content": "t:content.appearance"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "t:settings.text_color",
+      "placeholder": "t:settings.default"
     }
   ],
   "presets": [
     {
-      "name": "t:names.announcement"
+      "name": "t:names.announcement",
+      "settings": {
+        "font": "var(--font-subheading--family)",
+        "font_size": "0.75rem"
+      }
     }
   ]
 }

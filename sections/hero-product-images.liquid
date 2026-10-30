@@ -1,0 +1,211 @@
+<div class="custom-split-hero-{{ section.id }}">
+  
+  <!-- Left Product Block -->
+  <a href="{{ section.settings.link_left | default: '#' }}" class="split-block-{{ section.id }}">
+    {% if section.settings.image_left %}
+      {{ section.settings.image_left | image_url: width: 1500 | image_tag: class: 'split-image' }}
+    {% else %}
+      {{ 'collection-1' | placeholder_svg_tag: 'split-placeholder' }}
+    {% endif %}
+    
+    <!-- Left SVG Arrow + Text Box -->
+    <div class="split-arrow-box-{{ section.id }} left-box">
+      {% if section.settings.text_left != blank %}
+        <span class="split-button-text">{{ section.settings.text_left }}</span>
+      {% endif %}
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="square" stroke-linejoin="miter">
+        <line x1="7" y1="17" x2="17" y2="7"/>
+        <polyline points="7 7 17 7 17 17"/>
+      </svg>
+    </div>
+  </a>
+
+  <!-- Right Product Block -->
+  <a href="{{ section.settings.link_right | default: '#' }}" class="split-block-{{ section.id }}">
+    {% if section.settings.image_right %}
+      {{ section.settings.image_right | image_url: width: 1500 | image_tag: class: 'split-image' }}
+    {% else %}
+      {{ 'collection-2' | placeholder_svg_tag: 'split-placeholder' }}
+    {% endif %}
+    
+    <!-- Right SVG Arrow + Text Box -->
+    <div class="split-arrow-box-{{ section.id }} right-box">
+      {% if section.settings.text_right != blank %}
+        <span class="split-button-text">{{ section.settings.text_right }}</span>
+      {% endif %}
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="square" stroke-linejoin="miter">
+        <line x1="7" y1="17" x2="17" y2="7"/>
+        <polyline points="7 7 17 7 17 17"/>
+      </svg>
+    </div>
+  </a>
+
+</div>
+
+<style>
+  .custom-split-hero-{{ section.id }} {
+    display: flex;
+    width: 100%;
+    height: 800px; 
+  }
+
+  .split-block-{{ section.id }} {
+    position: relative;
+    width: 50%;
+    height: 100%;
+    display: block;
+    background-color: #000000; 
+    overflow: hidden;
+    text-decoration: none;
+  }
+
+  .split-block-{{ section.id }} img.split-image,
+  .split-block-{{ section.id }} svg.split-placeholder {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: opacity 0.3s ease;
+  }
+
+  .split-block-{{ section.id }}:hover img.split-image,
+  .split-block-{{ section.id }}:hover svg.split-placeholder {
+    opacity: 0.6;
+  }
+
+  /* The expandable button box */
+  .split-arrow-box-{{ section.id }} {
+    position: absolute;
+    top: 24px;
+    right: 24px;
+    background-color: {{ section.settings.button_bg_color }};
+    border: 1px solid {{ section.settings.button_border_color }};
+    color: {{ section.settings.text_color }};
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px; /* Space between text and arrow */
+    padding: 10px 16px; /* Replaces fixed width/height */
+    z-index: 5;
+    transition: transform 0.3s ease;
+  }
+
+  /* Optional: Tiny lift effect on the button when hovering the whole image block */
+  .split-block-{{ section.id }}:hover .split-arrow-box-{{ section.id }} {
+    transform: translateY(-2px);
+  }
+
+  .split-button-text {
+    font-size: {{ section.settings.font_size }}px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    white-space: nowrap;
+  }
+
+  .split-arrow-box-{{ section.id }} svg {
+    width: 20px;
+    height: 20px;
+  }
+
+  @media screen and (max-width: 768px) {
+    .custom-split-hero-{{ section.id }} {
+      flex-direction: column;
+      height: auto;
+    }
+    .split-block-{{ section.id }} {
+      width: 100%;
+      height: 500px; 
+    }
+    .split-arrow-box-{{ section.id }} {
+      top: 16px;
+      right: 16px;
+    }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Split Image Hover Hero",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Global Button Formatting"
+    },
+    {
+      "type": "range",
+      "id": "font_size",
+      "min": 10,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "label": "Text Size",
+      "default": 14
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text & Arrow Color",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "button_bg_color",
+      "label": "Button Background Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "button_border_color",
+      "label": "Button Border Color",
+      "default": "#000000"
+    },
+    {
+      "type": "header",
+      "content": "Left Side"
+    },
+    {
+      "type": "image_picker",
+      "id": "image_left",
+      "label": "Left Image"
+    },
+    {
+      "type": "text",
+      "id": "text_left",
+      "label": "Left Button Text",
+      "default": "Shop Mixed Berry"
+    },
+    {
+      "type": "url",
+      "id": "link_left",
+      "label": "Left Link Destination"
+    },
+    {
+      "type": "header",
+      "content": "Right Side"
+    },
+    {
+      "type": "image_picker",
+      "id": "image_right",
+      "label": "Right Image"
+    },
+    {
+      "type": "text",
+      "id": "text_right",
+      "label": "Right Button Text",
+      "default": "Shop Lemon & Ginger"
+    },
+    {
+      "type": "url",
+      "id": "link_right",
+      "label": "Right Link Destination"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Split Image Hover Hero",
+      "category": "Image"
+    }
+  ]
+}
+{% endschema %}

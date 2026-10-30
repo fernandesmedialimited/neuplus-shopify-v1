@@ -1,18 +1,20 @@
-{%- comment -%}
-  Intended for blocks and sections that provide values for all the referenced settings.
+{%- doc -%}
+  Sets inline CSS variables for typography styles, including color, font size, weight, family, line height, and letter spacing.
+  Intended for use on the style attribute of an element.
 
-  <div class="spacing-style" style="{%  render 'spacing-style', settings: section.settings %}">
+  @param {object} settings - The block or section settings object containing typography values
+  @param {string} [type] - The type of text element to inherit styles from, options: display, heading, body
+  @param {string} [preset] - The type preset from the global settings.type_preset
 
-   Accepts:
-      settings: {settings || section.settings}
-{%- endcomment -%}
+  @example
+  <div style="{% render 'typography-style', settings: section.settings %}">
+    ...
+  </div>
+{%- enddoc -%}
 
 {% assign preset = preset | default: settings.type_preset %}
 
 {%- capture variables -%}
-  {%- if preset != 'rte' and settings.color != "" -%}
-    --color: {{ settings.color }};
-  {%- endif -%}
   {%- if preset == 'custom' -%}
     {% liquid
       unless type
@@ -61,7 +63,7 @@
     {%- endif -%}
     --font-family: {{ settings.font }};
     --text-transform: {{ settings.case }};
-    --text-wrap: {{ settings.wrap }};
+    --text-wrap: {{ settings.wrap | default: 'pretty' }};
     {% if settings.type_preset == 'custom' and settings.font_size == blank %}
       --line-height--display: var(--line-height--display-{{ settings.line_height }});
       --line-height--heading: var(--line-height--heading-{{ settings.line_height }});

@@ -1,36 +1,49 @@
 
 
-{% liquid
-  assign has_applied_colour_filter = false
-  assign filters_to_check = collection.filters | default: search.filters
-
-  for filter in filters_to_check
-    if filter.type == 'list' and filter.param_name contains 'color' and filter.active_values.size > 0
-      assign has_applied_colour_filter = true
-      break
-    endif
-  endfor
-%}
+{% assign product = closest.product %}
 
 {% capture children %}
-  {% unless closest.product == blank %}
-    {% render 'product-card-badges', product: closest.product, settings: settings %}
+  {% unless product == blank %}
+    <div
+      class="product-badges product-badges--{{ settings.badge_position }}"
+      style="
+        --badge-border-radius: {{ settings.badge_corner_radius }}px;
+        --badge-font-family: var(--font-{{ settings.badge_font_family }}--family); --badge-font-weight: var(--font-{{ settings.badge_font_family }}--weight); --badge-text-transform: {{ settings.badge_text_transform }};
+      "
+    >
+      {%- if product.available == false or product.compare_at_price > product.price -%}
+        <div
+          class="
+            product-badges__badge product-badges__badge--rectangle
+            {% if product.available == false %} color-custom-badge-sold-out{% elsif product.compare_at_price > product.price %} color-custom-badge-sale{% endif %}
+          "
+        >
+          {%- if product.available == false -%}
+            {{ 'content.product_badge_sold_out' | t }}
+          {%- elsif product.compare_at_price > product.price -%}
+            {{ 'content.product_badge_sale' | t }}
+          {%- endif -%}
+        </div>
+      {%- endif -%}
+    </div>
     {%  if settings.quick_add or settings.mobile_quick_add %}
-      {% render 'quick-add', product: closest.product, section_id: section.id %}
+      {% render 'quick-add', product: product, section_id: section.id %}
     {% endif %}
   {% endunless %}
 {% endcapture %}
 
-{% render 'card-gallery', children: children, has_applied_colour_filter: has_applied_colour_filter %}
+{% render 'card-gallery', children: children %}
 
 {% # Title and price for the zoomed out grid view %}
 <div class="product-grid-view-zoom-out--details">
-  {% if closest.product == blank %}
+  {% if product == blank %}
     <h3 class="h4">{{ 'content.product_card_placeholder' | t }}</h3>
   {% else %}
-    <h3 class="h4">{{ closest.product.title }}</h3>
+    <h3 class="h4">{{ product.title }}</h3>
   {% endif %}
 </div>
+
+{% render 'product-badges-styles' %}
 
 {% schema %}
 {
@@ -90,7 +103,7 @@
       "type": "range",
       "id": "border_width",
       "min": 0,
-      "max": 100,
+      "max": 4,
       "step": 1,
       "unit": "px",
       "label": "t:settings.thickness",
@@ -109,11 +122,18 @@
       "visible_if": "{{ block.settings.border != 'none' }}"
     },
     {
+      "type": "color",
+      "id": "border_color",
+      "label": "t:settings.color",
+      "placeholder": "t:settings.default",
+      "visible_if": "{{ block.settings.border != 'none' }}"
+    },
+    {
       "type": "range",
       "id": "border_radius",
       "label": "t:settings.border_radius",
       "min": 0,
-      "max": 32,
+      "max": 100,
       "step": 1,
       "unit": "px",
       "default": 0

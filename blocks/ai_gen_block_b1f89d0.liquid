@@ -1,0 +1,729 @@
+{% doc %}
+  @prompt
+    Create a two-column "Ingredients with Purpose" section. Left column: small uppercase eyebrow label, large bold heading, grey subheading paragraph, then a repeating list of ingredients — each row has a circular image (64px), ingredient name in bold, a dosage value aligned right in an accent olive-green color, and a grey description line below the name. Rows are separated by thin horizontal dividers. Right column: a single large rounded-corner product image, sticky on scroll on desktop. Stack into one column on mobile, with the image moving above the text.
+{% enddoc %}
+{% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
+
+{% style %}
+  .ai-ingredients-section-{{ ai_gen_id }} {
+    display: block;
+    width: {{ block.settings.desktop_width_percent }}%;
+    max-width: 100%;
+    padding: {{ block.settings.section_padding }}px 0;
+    background-color: {{ block.settings.background_color }};
+  }
+
+  .ai-ingredients-container-{{ ai_gen_id }} {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: {{ block.settings.column_gap }}px;
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 20px;
+  }
+
+  .ai-ingredients-content-{{ ai_gen_id }} {
+    display: flex;
+    flex-direction: column;
+    gap: {{ block.settings.content_gap }}px;
+  }
+
+  .ai-ingredients-eyebrow-{{ ai_gen_id }} {
+    font-size: {{ block.settings.eyebrow_size }}px;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: {{ block.settings.eyebrow_color }};
+    margin: 0;
+    font-weight: 500;
+  }
+
+  .ai-ingredients-heading-{{ ai_gen_id }} {
+    font-size: {{ block.settings.heading_size }}px;
+    font-weight: 700;
+    color: {{ block.settings.heading_color }};
+    margin: 0;
+    line-height: 1.2;
+  }
+
+  .ai-ingredients-subheading-{{ ai_gen_id }} {
+    font-size: {{ block.settings.subheading_size }}px;
+    color: {{ block.settings.subheading_color }};
+    margin: 0;
+    line-height: 1.6;
+  }
+
+  .ai-ingredients-list-{{ ai_gen_id }} {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .ai-ingredient-item-{{ ai_gen_id }} {
+    display: grid;
+    grid-template-columns: {{ block.settings.image_size }}px 1fr auto;
+    gap: {{ block.settings.item_gap }}px;
+    align-items: center;
+    padding: {{ block.settings.item_padding }}px 0;
+    border-bottom: {{ block.settings.divider_width }}px solid {{ block.settings.divider_color }};
+  }
+
+  .ai-ingredient-item-{{ ai_gen_id }}:last-child {
+    border-bottom: none;
+  }
+
+  .ai-ingredient-image-{{ ai_gen_id }} {
+    width: {{ block.settings.image_size }}px;
+    height: {{ block.settings.image_size }}px;
+    border-radius: 50%;
+    object-fit: cover;
+  }
+
+  .ai-ingredient-image-placeholder-{{ ai_gen_id }} {
+    width: {{ block.settings.image_size }}px;
+    height: {{ block.settings.image_size }}px;
+    border-radius: 50%;
+    background-color: #f4f4f4;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+  }
+
+  .ai-ingredient-image-placeholder-{{ ai_gen_id }} svg {
+    width: 100%;
+    height: 100%;
+    opacity: 0.3;
+  }
+
+  .ai-ingredient-info-{{ ai_gen_id }} {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .ai-ingredient-name-{{ ai_gen_id }} {
+    font-size: {{ block.settings.ingredient_name_size }}px;
+    font-weight: 700;
+    color: {{ block.settings.ingredient_name_color }};
+    margin: 0;
+  }
+
+  .ai-ingredient-description-{{ ai_gen_id }} {
+    font-size: {{ block.settings.ingredient_description_size }}px;
+    color: {{ block.settings.ingredient_description_color }};
+    margin: 0;
+    line-height: 1.5;
+  }
+
+  .ai-ingredient-dosage-{{ ai_gen_id }} {
+    font-size: {{ block.settings.dosage_size }}px;
+    font-weight: 600;
+    color: {{ block.settings.dosage_color }};
+    white-space: nowrap;
+  }
+
+  .ai-ingredients-image-column-{{ ai_gen_id }} {
+    position: relative;
+  }
+
+  .ai-ingredients-image-sticky-{{ ai_gen_id }} {
+    position: sticky;
+    top: 100px;
+  }
+
+  .ai-ingredients-product-image-{{ ai_gen_id }} {
+    width: 100%;
+    height: auto;
+    border-radius: {{ block.settings.product_image_radius }}px;
+    object-fit: cover;
+  }
+
+  .ai-ingredients-product-image-placeholder-{{ ai_gen_id }} {
+    width: 100%;
+    aspect-ratio: 1;
+    border-radius: {{ block.settings.product_image_radius }}px;
+    background-color: #f4f4f4;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+  }
+
+  .ai-ingredients-product-image-placeholder-{{ ai_gen_id }} svg {
+    width: 60%;
+    height: 60%;
+    opacity: 0.3;
+  }
+
+  .ai-ingredients-empty-state-{{ ai_gen_id }} {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 12px 20px;
+    font-size: 14px;
+    color: #666;
+    text-align: center;
+    pointer-events: none;
+  }
+
+  @media screen and (max-width: 989px) {
+    .ai-ingredients-container-{{ ai_gen_id }} {
+      grid-template-columns: 1fr;
+      gap: {{ block.settings.mobile_gap }}px;
+    }
+
+    .ai-ingredients-image-column-{{ ai_gen_id }} {
+      order: -1;
+    }
+
+    .ai-ingredients-image-sticky-{{ ai_gen_id }} {
+      position: static;
+    }
+
+    .ai-ingredients-heading-{{ ai_gen_id }} {
+      font-size: calc({{ block.settings.heading_size }}px * 0.7);
+    }
+
+    .ai-ingredient-item-{{ ai_gen_id }} {
+      grid-template-columns: {{ block.settings.mobile_image_size }}px 1fr auto;
+    }
+
+    .ai-ingredient-image-{{ ai_gen_id }},
+    .ai-ingredient-image-placeholder-{{ ai_gen_id }} {
+      width: {{ block.settings.mobile_image_size }}px;
+      height: {{ block.settings.mobile_image_size }}px;
+    }
+  }
+{% endstyle %}
+
+<ingredients-section-{{ ai_gen_id }}
+  class="ai-ingredients-section-{{ ai_gen_id }}"
+  {{ block.shopify_attributes }}
+>
+  <div class="ai-ingredients-container-{{ ai_gen_id }}">
+    <div class="ai-ingredients-content-{{ ai_gen_id }}">
+      {% if block.settings.eyebrow != blank %}
+        <p class="ai-ingredients-eyebrow-{{ ai_gen_id }}">{{ block.settings.eyebrow }}</p>
+      {% endif %}
+
+      {% if block.settings.heading != blank %}
+        <h2 class="ai-ingredients-heading-{{ ai_gen_id }}">{{ block.settings.heading }}</h2>
+      {% endif %}
+
+      {% if block.settings.subheading != blank %}
+        <p class="ai-ingredients-subheading-{{ ai_gen_id }}">{{ block.settings.subheading }}</p>
+      {% endif %}
+
+      <div class="ai-ingredients-list-{{ ai_gen_id }}">
+        {% for i in (1..6) %}
+          {% liquid
+            assign ingredient_name_key = 'ingredient_' | append: i | append: '_name'
+            assign ingredient_description_key = 'ingredient_' | append: i | append: '_description'
+            assign ingredient_dosage_key = 'ingredient_' | append: i | append: '_dosage'
+            assign ingredient_image_key = 'ingredient_' | append: i | append: '_image'
+
+            assign ingredient_name = block.settings[ingredient_name_key]
+            assign ingredient_description = block.settings[ingredient_description_key]
+            assign ingredient_dosage = block.settings[ingredient_dosage_key]
+            assign ingredient_image = block.settings[ingredient_image_key]
+          %}
+
+          {% if ingredient_name != blank %}
+            <div class="ai-ingredient-item-{{ ai_gen_id }}">
+              <div>
+                {% if ingredient_image %}
+                  <img
+                    src="{{ ingredient_image | image_url: width: 128 }}"
+                    alt="{{ ingredient_name | escape }}"
+                    class="ai-ingredient-image-{{ ai_gen_id }}"
+                    loading="lazy"
+                    width="128"
+                    height="128"
+                  >
+                {% else %}
+                  <div class="ai-ingredient-image-placeholder-{{ ai_gen_id }}">
+                    {{ 'product-1' | placeholder_svg_tag }}
+                  </div>
+                {% endif %}
+              </div>
+
+              <div class="ai-ingredient-info-{{ ai_gen_id }}">
+                <h3 class="ai-ingredient-name-{{ ai_gen_id }}">{{ ingredient_name }}</h3>
+                {% if ingredient_description != blank %}
+                  <p class="ai-ingredient-description-{{ ai_gen_id }}">{{ ingredient_description }}</p>
+                {% endif %}
+              </div>
+
+              {% if ingredient_dosage != blank %}
+                <div class="ai-ingredient-dosage-{{ ai_gen_id }}">{{ ingredient_dosage }}</div>
+              {% endif %}
+            </div>
+          {% endif %}
+        {% endfor %}
+      </div>
+    </div>
+
+    <div class="ai-ingredients-image-column-{{ ai_gen_id }}">
+      <div class="ai-ingredients-image-sticky-{{ ai_gen_id }}">
+        {% if block.settings.product_image %}
+          <img
+            src="{{ block.settings.product_image | image_url: width: 1200 }}"
+            alt="{{ block.settings.product_image.alt | escape }}"
+            class="ai-ingredients-product-image-{{ ai_gen_id }}"
+            loading="lazy"
+            width="{{ block.settings.product_image.width }}"
+            height="{{ block.settings.product_image.height }}"
+          >
+        {% else %}
+          <div class="ai-ingredients-product-image-placeholder-{{ ai_gen_id }}">
+            {{ 'product-1' | placeholder_svg_tag }}
+            <div class="ai-ingredients-empty-state-{{ ai_gen_id }}">
+              Next, add a product image
+            </div>
+          </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</ingredients-section-{{ ai_gen_id }}>
+
+<script>
+  (function() {
+    class IngredientsSection{{ ai_gen_id }} extends HTMLElement {
+      constructor() {
+        super();
+      }
+
+      connectedCallback() {
+        this.style.display = 'block';
+      }
+    }
+
+    customElements.define('ingredients-section-{{ ai_gen_id }}', IngredientsSection{{ ai_gen_id }});
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Ingredients with purpose",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "range",
+      "id": "desktop_width_percent",
+      "label": "Desktop width",
+      "min": 50,
+      "max": 100,
+      "step": 5,
+      "unit": "%",
+      "default": 100
+    },
+    {
+      "type": "range",
+      "id": "section_padding",
+      "label": "Section padding",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "column_gap",
+      "label": "Column gap",
+      "min": 20,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "mobile_gap",
+      "label": "Mobile gap",
+      "min": 20,
+      "max": 80,
+      "step": 5,
+      "unit": "px",
+      "default": 40
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow label",
+      "default": "Science-Backed"
+    },
+    {
+      "type": "range",
+      "id": "eyebrow_size",
+      "label": "Eyebrow size",
+      "min": 10,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "default": 12
+    },
+    {
+      "type": "color",
+      "id": "eyebrow_color",
+      "label": "Eyebrow color",
+      "default": "#666666"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Ingredients with Purpose"
+    },
+    {
+      "type": "range",
+      "id": "heading_size",
+      "label": "Heading size",
+      "min": 24,
+      "max": 72,
+      "step": 2,
+      "unit": "px",
+      "default": 48
+    },
+    {
+      "type": "color",
+      "id": "heading_color",
+      "label": "Heading color",
+      "default": "#000000"
+    },
+    {
+      "type": "textarea",
+      "id": "subheading",
+      "label": "Subheading",
+      "default": "Each ingredient is carefully selected and clinically dosed to deliver real results."
+    },
+    {
+      "type": "range",
+      "id": "subheading_size",
+      "label": "Subheading size",
+      "min": 12,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "color",
+      "id": "subheading_color",
+      "label": "Subheading color",
+      "default": "#666666"
+    },
+    {
+      "type": "range",
+      "id": "content_gap",
+      "label": "Content spacing",
+      "min": 10,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "default": 20
+    },
+    {
+      "type": "header",
+      "content": "Ingredient list style"
+    },
+    {
+      "type": "range",
+      "id": "image_size",
+      "label": "Image size",
+      "min": 40,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "default": 64
+    },
+    {
+      "type": "range",
+      "id": "mobile_image_size",
+      "label": "Mobile image size",
+      "min": 32,
+      "max": 80,
+      "step": 4,
+      "unit": "px",
+      "default": 48
+    },
+    {
+      "type": "range",
+      "id": "item_gap",
+      "label": "Item gap",
+      "min": 8,
+      "max": 32,
+      "step": 2,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "item_padding",
+      "label": "Item padding",
+      "min": 10,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "divider_width",
+      "label": "Divider width",
+      "min": 0,
+      "max": 4,
+      "step": 1,
+      "unit": "px",
+      "default": 1
+    },
+    {
+      "type": "color",
+      "id": "divider_color",
+      "label": "Divider color",
+      "default": "#e6e6e6"
+    },
+    {
+      "type": "range",
+      "id": "ingredient_name_size",
+      "label": "Name size",
+      "min": 12,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "color",
+      "id": "ingredient_name_color",
+      "label": "Name color",
+      "default": "#000000"
+    },
+    {
+      "type": "range",
+      "id": "ingredient_description_size",
+      "label": "Description size",
+      "min": 10,
+      "max": 18,
+      "step": 1,
+      "unit": "px",
+      "default": 14
+    },
+    {
+      "type": "color",
+      "id": "ingredient_description_color",
+      "label": "Description color",
+      "default": "#666666"
+    },
+    {
+      "type": "range",
+      "id": "dosage_size",
+      "label": "Dosage size",
+      "min": 12,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "default": 14
+    },
+    {
+      "type": "color",
+      "id": "dosage_color",
+      "label": "Dosage color",
+      "default": "#6B7A3E"
+    },
+    {
+      "type": "header",
+      "content": "Product image"
+    },
+    {
+      "type": "image_picker",
+      "id": "product_image",
+      "label": "Image"
+    },
+    {
+      "type": "range",
+      "id": "product_image_radius",
+      "label": "Border radius",
+      "min": 0,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "default": 12
+    },
+    {
+      "type": "header",
+      "content": "Ingredient 1"
+    },
+    {
+      "type": "image_picker",
+      "id": "ingredient_1_image",
+      "label": "Image"
+    },
+    {
+      "type": "text",
+      "id": "ingredient_1_name",
+      "label": "Name",
+      "default": "Vitamin D3"
+    },
+    {
+      "type": "text",
+      "id": "ingredient_1_description",
+      "label": "Description",
+      "default": "Supports immune function and bone health"
+    },
+    {
+      "type": "text",
+      "id": "ingredient_1_dosage",
+      "label": "Dosage",
+      "default": "2000 IU"
+    },
+    {
+      "type": "header",
+      "content": "Ingredient 2"
+    },
+    {
+      "type": "image_picker",
+      "id": "ingredient_2_image",
+      "label": "Image"
+    },
+    {
+      "type": "text",
+      "id": "ingredient_2_name",
+      "label": "Name",
+      "default": "Omega-3 Fatty Acids"
+    },
+    {
+      "type": "text",
+      "id": "ingredient_2_description",
+      "label": "Description",
+      "default": "Promotes heart and brain health"
+    },
+    {
+      "type": "text",
+      "id": "ingredient_2_dosage",
+      "label": "Dosage",
+      "default": "1000 mg"
+    },
+    {
+      "type": "header",
+      "content": "Ingredient 3"
+    },
+    {
+      "type": "image_picker",
+      "id": "ingredient_3_image",
+      "label": "Image"
+    },
+    {
+      "type": "text",
+      "id": "ingredient_3_name",
+      "label": "Name",
+      "default": "Magnesium"
+    },
+    {
+      "type": "text",
+      "id": "ingredient_3_description",
+      "label": "Description",
+      "default": "Supports muscle and nerve function"
+    },
+    {
+      "type": "text",
+      "id": "ingredient_3_dosage",
+      "label": "Dosage",
+      "default": "400 mg"
+    },
+    {
+      "type": "header",
+      "content": "Ingredient 4"
+    },
+    {
+      "type": "image_picker",
+      "id": "ingredient_4_image",
+      "label": "Image"
+    },
+    {
+      "type": "text",
+      "id": "ingredient_4_name",
+      "label": "Name"
+    },
+    {
+      "type": "text",
+      "id": "ingredient_4_description",
+      "label": "Description"
+    },
+    {
+      "type": "text",
+      "id": "ingredient_4_dosage",
+      "label": "Dosage"
+    },
+    {
+      "type": "header",
+      "content": "Ingredient 5"
+    },
+    {
+      "type": "image_picker",
+      "id": "ingredient_5_image",
+      "label": "Image"
+    },
+    {
+      "type": "text",
+      "id": "ingredient_5_name",
+      "label": "Name"
+    },
+    {
+      "type": "text",
+      "id": "ingredient_5_description",
+      "label": "Description"
+    },
+    {
+      "type": "text",
+      "id": "ingredient_5_dosage",
+      "label": "Dosage"
+    },
+    {
+      "type": "header",
+      "content": "Ingredient 6"
+    },
+    {
+      "type": "image_picker",
+      "id": "ingredient_6_image",
+      "label": "Image"
+    },
+    {
+      "type": "text",
+      "id": "ingredient_6_name",
+      "label": "Name"
+    },
+    {
+      "type": "text",
+      "id": "ingredient_6_description",
+      "label": "Description"
+    },
+    {
+      "type": "text",
+      "id": "ingredient_6_dosage",
+      "label": "Dosage"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Ingredients with purpose"
+    }
+  ],
+  "tag": null
+}
+{% endschema %}
