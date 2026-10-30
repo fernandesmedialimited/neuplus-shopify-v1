@@ -1,6 +1,10 @@
 {{ 'neu-product.css' | asset_url | stylesheet_tag }}
 <script src="{{ 'neu-product.js' | asset_url }}" type="module"></script>
 
+<script type="application/ld+json">
+  {{ product | structured_data }}
+</script>
+
 {%- liquid
   assign current_variant = product.selected_or_first_available_variant
   # 3D models are not used on this store

@@ -210,7 +210,7 @@
             "subscription_product": "",
             "selling_plan_id": "",
             "label": "Shop NEU+",
-            "link": "https://www.neu-plus.com/products/neu-berry-flavour-60ml?variant=57421942980934&selling_plan=691167494470",
+            "link": "https://www.neu-plus.com/products/neu-plus-nad-shots?variant=57421942980934&selling_plan=691167494470",
             "open_in_new_tab": false,
             "style_class": "button-custom",
             "custom_button_background": "{{ settings.color_palette.color7 }}",
@@ -246,7 +246,7 @@
             "subscription_product": "neu-plus-nad-shots",
             "selling_plan_id": "57421943046470",
             "label": "Subscribe & save 21%",
-            "link": "https://www.neu-plus.com/products/neu-berry-flavour-60ml?variant=57421943046470&selling_plan=694121562438",
+            "link": "https://www.neu-plus.com/products/neu-plus-nad-shots?variant=57421943046470&selling_plan=694121562438",
             "open_in_new_tab": false,
             "style_class": "button-custom",
             "custom_button_background": "{{ settings.color_palette.foreground }}",
@@ -1772,10 +1772,10 @@
         "button_border_color": "#000000",
         "image_left": "shopify://shop_images/Bottle_Ingredients_Mixed_Berry_1920px.jpg",
         "text_left": "Shop Mixed Berry",
-        "link_left": "https://www.neu-plus.com/products/neu-berry-flavour-60ml?variant=57421942980934&selling_plan=691167494470",
+        "link_left": "https://www.neu-plus.com/products/neu-plus-nad-shots?variant=57421942980934&selling_plan=691167494470",
         "image_right": "shopify://shop_images/Bottle_Ingredients_Lemon_Ginger_1920px.jpg",
         "text_right": "Shop Lemon & Ginger",
-        "link_right": "https://www.neu-plus.com/products/neu-berry-flavour-60ml?variant=57421943013702&selling_plan=691167494470"
+        "link_right": "https://www.neu-plus.com/products/neu-plus-nad-shots?variant=57421943013702&selling_plan=691167494470"
       }
     },
     "section_FPiRhb": {
@@ -1893,7 +1893,7 @@
             "border_opacity": 100,
             "border_color": "",
             "border_radius": 0,
-            "link": "https://www.neu-plus.com/products/neu-berry-flavour-60ml?variant=57195880776006&selling_plan=691167494470",
+            "link": "https://www.neu-plus.com/products/neu-plus-nad-shots?variant=57195880776006&selling_plan=691167494470",
             "open_in_new_tab": false,
             "placeholder": "hero-apparel-1",
             "padding-block-start": 40,
