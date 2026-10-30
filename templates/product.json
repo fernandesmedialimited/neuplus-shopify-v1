@@ -585,7 +585,7 @@
           "type": "question",
           "settings": {
             "question": "Delivery and returns",
-            "answer": "<p>Free UK delivery for subscribers. Orders typically dispatched within 1–2 business days. First order not for you? Unopened shots can be returned for a full refund within 30 days.</p>",
+            "answer": "<p>Free UK delivery for subscribers. Orders typically dispatched within 1–2 business days.</p>",
             "open": false
           }
         },
