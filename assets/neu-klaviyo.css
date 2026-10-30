@@ -171,6 +171,8 @@
 [aria-label='POPUP Form'] .klaviyo-close-form svg {
   width: 20px !important;
   height: 20px !important;
+  /* Let the button take every hover and click, so the cursor stays a hand */
+  pointer-events: none !important;
 }
 
 [aria-label='POPUP Form'] .klaviyo-close-form svg :is(circle, rect) {
@@ -233,9 +235,20 @@
   filter: none !important;
 }
 
+/* Klaviyo slides the teaser up from below, which reads as a jump on a side tab */
 [class*='kl-teaser-'] [data-testid='animated-teaser'] {
   height: auto !important;
   width: auto !important;
+  animation: neu-k-tab-in 0.3s ease both !important;
+}
+
+@keyframes neu-k-tab-in {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: none;
+  }
 }
 
 [class*='kl-teaser-'] [role='button'] {
@@ -249,12 +262,12 @@
   background: #0b0b0b !important;
   box-shadow: 0 8px 24px rgba(11, 11, 11, 0.18) !important;
   cursor: pointer !important;
-  transition: padding 0.2s ease !important;
+  transition: background-color 0.2s ease !important;
 }
 
+/* Hover only changes colour, so the tab never moves out from under the pointer */
 [class*='kl-teaser-'] [role='button']:hover {
-  padding-top: 22px !important;
-  padding-bottom: 22px !important;
+  background: #2a2a2a !important;
 }
 
 [class*='kl-teaser-'] [role='button']:focus {
