@@ -1,0 +1,93 @@
+{{ 'why-nad-matters.css' | asset_url | stylesheet_tag }}
+
+<section
+  class="why-nad"
+  style="
+    --why-nad-bg: {{ section.settings.background_color }};
+  "
+>
+  <div class="why-nad__inner">
+
+    {% if section.settings.eyebrow != blank %}
+      <p class="why-nad__eyebrow">{{ section.settings.eyebrow }}</p>
+    {% endif %}
+
+    <div class="why-nad__grid">
+      {% for block in section.blocks %}
+        {% if block.type == 'benefit' %}
+          <div class="why-nad__item" {{ block.shopify_attributes }}>
+            <div class="why-nad__icon">
+              {% if block.settings.icon != blank %}
+                <img
+                  src="{{ block.settings.icon | image_url: width: 80 }}"
+                  alt="{{ block.settings.title | escape }}"
+                  loading="lazy"
+                  width="28"
+                  height="28"
+                >
+              {% elsif block.settings.icon_svg != blank %}
+                {{ block.settings.icon_svg }}
+              {% endif %}
+            </div>
+            <h3 class="why-nad__title">{{ block.settings.title }}</h3>
+            <p class="why-nad__desc">{{ block.settings.description }}</p>
+          </div>
+        {% endif %}
+      {% endfor %}
+    </div>
+
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Why NAD+ Matters",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Heading", "default": "WHY NAD+ MATTERS" },
+    { "type": "color", "id": "background_color", "label": "Background", "default": "#f2f0ec" }
+  ],
+  "blocks": [
+    {
+      "type": "benefit",
+      "name": "Benefit",
+      "settings": [
+        { "type": "image_picker", "id": "icon", "label": "Icon image (optional)" },
+        { "type": "html", "id": "icon_svg", "label": "Icon SVG code (optional)", "info": "Use this OR the image above, not both." },
+        { "type": "text", "id": "title", "label": "Title", "default": "Cellular Energy" },
+        { "type": "textarea", "id": "description", "label": "Description", "default": "NAD+ powers the mitochondria that turn food into energy." }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Why NAD+ Matters",
+      "blocks": [
+        {
+          "type": "benefit",
+          "settings": {
+            "title": "Cellular Energy",
+            "description": "NAD+ powers the mitochondria that turn food into energy.",
+            "icon_svg": "<svg viewBox=\"0 0 24 24\" fill=\"none\"><path d=\"M13 2L4 14h6l-1 8 9-12h-6l1-8z\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linejoin=\"round\"/></svg>"
+          }
+        },
+        {
+          "type": "benefit",
+          "settings": {
+            "title": "DNA Repair",
+            "description": "Supports the body's natural repair processes at a cellular level.",
+            "icon_svg": "<svg viewBox=\"0 0 24 24\" fill=\"none\"><path d=\"M7 3c0 4 10 4 10 8s-10 4-10 8M17 3c0 4-10 4-10 8s10 4 10 8\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\"/></svg>"
+          }
+        },
+        {
+          "type": "benefit",
+          "settings": {
+            "title": "Healthy Ageing",
+            "description": "Plays a key role in healthy ageing and long-term wellbeing.",
+            "icon_svg": "<svg viewBox=\"0 0 24 24\" fill=\"none\"><path d=\"M12 21s-7-4.35-9.5-9A5.5 5.5 0 0112 5.5 5.5 5.5 0 0121.5 12c-2.5 4.65-9.5 9-9.5 9z\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linejoin=\"round\"/></svg>"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

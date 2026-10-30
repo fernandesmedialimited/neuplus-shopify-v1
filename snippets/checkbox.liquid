@@ -15,7 +15,7 @@
   @param {boolean} [autofocus] - whether the input should be autofocused
 {%- enddoc -%}
 <div
-  class="checkbox"
+  class="checkbox{% if disabled %} checkbox--disabled{% endif %}"
   {{ events }}
 >
   <input
@@ -50,7 +50,6 @@
     {% if labelRef != blank %}
       ref="{{ labelRef }}"
     {% endif %}
-    role="checkbox"
   >
     {{ 'icon-checkmark.svg' | inline_asset_content }}
     <span class="checkbox__label-text">{{- label -}}</span>

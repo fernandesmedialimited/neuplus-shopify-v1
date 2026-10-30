@@ -1,0 +1,194 @@
+{{ 'science-chart.css' | asset_url | stylesheet_tag }}
+
+<section class="science-chart">
+  <div class="science-chart__inner">
+
+    <div class="science-chart__header">
+      {% if section.settings.eyebrow != blank %}
+        <p class="science-chart__eyebrow">{{ section.settings.eyebrow }}</p>
+      {% endif %}
+      {% if section.settings.heading != blank %}
+        <h2 class="science-chart__heading">{{ section.settings.heading }}</h2>
+      {% endif %}
+      {% if section.settings.subheading != blank %}
+        <p class="science-chart__subheading">{{ section.settings.subheading }}</p>
+      {% endif %}
+    </div>
+
+    <div class="science-chart__card">
+
+      <div class="science-chart__card-top">
+        <div>
+          <p class="science-chart__label">{{ section.settings.left_label | default: "NAD+ ELEVATION" }}</p>
+          <p class="science-chart__label-value">
+            {{ section.settings.left_value_prefix | default: "NAD+ Levels" }}
+            <span class="is-accent">{{ section.settings.left_value_accent | default: "% Increase" }}</span>
+          </p>
+        </div>
+        <div class="science-chart__card-top-right">
+          <p class="science-chart__label">{{ section.settings.right_label | default: "DURATION" }}</p>
+          <p class="science-chart__label-value">{{ section.settings.right_value | default: "90-Day Clinical Window" }}</p>
+        </div>
+      </div>
+
+      <div class="science-chart__graph">
+        <svg viewBox="0 0 1000 420" preserveAspectRatio="none" class="science-chart__svg" role="img" aria-label="NAD+ elevation chart">
+          <defs>
+            <linearGradient id="scienceChartFill" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="{{ section.settings.line_color | default: '#C9B896' }}" stop-opacity="0.35"/>
+              <stop offset="100%" stop-color="{{ section.settings.line_color | default: '#C9B896' }}" stop-opacity="0"/>
+            </linearGradient>
+            <linearGradient id="scienceChartLine" x1="0" y1="0" x2="1" y2="0">
+              <stop offset="0%" stop-color="{{ section.settings.line_color | default: '#C9B896' }}"/>
+              <stop offset="75%" stop-color="{{ section.settings.line_color | default: '#C9B896' }}"/>
+              <stop offset="100%" stop-color="{{ section.settings.accent_color | default: '#8C7A54' }}"/>
+            </linearGradient>
+          </defs>
+
+          <!-- gridlines -->
+          <g class="science-chart__grid">
+            <line x1="0" y1="20" x2="1000" y2="20"/>
+            <line x1="0" y1="115" x2="1000" y2="115"/>
+            <line x1="0" y1="210" x2="1000" y2="210"/>
+            <line x1="0" y1="305" x2="1000" y2="305"/>
+            <line x1="0" y1="380" x2="1000" y2="380"/>
+          </g>
+
+          <!-- target dashed line -->
+          <line x1="0" y1="60" x2="1000" y2="60" class="science-chart__target-line"/>
+
+          <!-- area fill -->
+          <path
+            d="M20,380 C120,300 180,230 260,190 C340,150 400,145 460,130 C560,105 620,95 700,75 C800,55 900,45 980,40 L980,380 L20,380 Z"
+            fill="url(#scienceChartFill)"
+          />
+
+          <!-- line -->
+          <path
+            d="M20,380 C120,300 180,230 260,190 C340,150 400,145 460,130 C560,105 620,95 700,75 C800,55 900,45 980,40"
+            fill="none"
+            stroke="url(#scienceChartLine)"
+            stroke-width="4"
+            stroke-linecap="round"
+          />
+
+          <!-- start point -->
+          <circle cx="20" cy="380" r="6" fill="{{ section.settings.line_color | default: '#C9B896' }}"/>
+
+          <!-- mid callout point (day 14) -->
+          <circle cx="260" cy="190" r="7" fill="{{ section.settings.line_color | default: '#C9B896' }}" class="science-chart__glow-dot"/>
+
+          <!-- end callout point (day 90) -->
+          <circle cx="980" cy="40" r="7" fill="{{ section.settings.accent_color | default: '#8C7A54' }}" class="science-chart__glow-dot"/>
+        </svg>
+
+        <!-- callout pills, positioned to match svg points above -->
+        <div class="science-chart__pill science-chart__pill--mid">{{ section.settings.mid_callout | default: "+36%" }}</div>
+        <div class="science-chart__pill science-chart__pill--end">{{ section.settings.end_callout | default: "+55% NAD+ Elevation" }}</div>
+
+        <!-- y axis labels -->
+        <div class="science-chart__yaxis">
+          <span>60%</span>
+          <span>45%</span>
+          <span>30%</span>
+          <span>15%</span>
+          <span>0%</span>
+        </div>
+      </div>
+
+      <div class="science-chart__xaxis">
+        <span>DAY 0</span>
+        <span>DAY 14</span>
+        <span class="is-highlight">DAY 30</span>
+        <span>DAY 60</span>
+        <span class="is-accent-text">DAY 90</span>
+      </div>
+
+      <div class="science-chart__phases">
+        {% for block in section.blocks %}
+          {% if block.type == 'phase' %}
+            <div class="science-chart__phase {% if block.settings.highlight %}is-highlight{% endif %}" {{ block.shopify_attributes }}>
+              <div class="science-chart__phase-icon">{{ block.settings.icon | default: "⚡" }}</div>
+              <div>
+                <p class="science-chart__phase-title">{{ block.settings.title }}</p>
+                <p class="science-chart__phase-desc">{{ block.settings.description }}</p>
+              </div>
+            </div>
+          {% endif %}
+        {% endfor %}
+      </div>
+
+      {% if section.settings.study_ref != blank %}
+        <p class="science-chart__ref">{{ section.settings.study_ref }}</p>
+      {% endif %}
+    </div>
+
+    <div class="science-chart__milestones">
+      {% for block in section.blocks %}
+        {% if block.type == 'milestone' %}
+          <div class="science-chart__milestone" {{ block.shopify_attributes }}>
+            <p class="science-chart__milestone-eyebrow">{{ block.settings.weeks }}</p>
+            <h3 class="science-chart__milestone-heading">{{ block.settings.heading }}</h3>
+            <p class="science-chart__milestone-desc">{{ block.settings.description }}</p>
+          </div>
+        {% endif %}
+      {% endfor %}
+    </div>
+
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Science Chart",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "THE SCIENCE" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "The Science Behind Your Daily Energy Reset" },
+    { "type": "text", "id": "subheading", "label": "Subheading", "default": "Clinically studied NAD+ elevation over 12 weeks." },
+    { "type": "text", "id": "left_label", "label": "Left eyebrow (chart)", "default": "NAD+ ELEVATION" },
+    { "type": "text", "id": "left_value_prefix", "label": "Left title (chart)", "default": "NAD+ Levels" },
+    { "type": "text", "id": "left_value_accent", "label": "Left title accent", "default": "% Increase" },
+    { "type": "text", "id": "right_label", "label": "Right eyebrow (chart)", "default": "DURATION" },
+    { "type": "text", "id": "right_value", "label": "Right title (chart)", "default": "90-Day Clinical Window" },
+    { "type": "text", "id": "mid_callout", "label": "Mid callout text", "default": "+36%" },
+    { "type": "text", "id": "end_callout", "label": "End callout text", "default": "+55% NAD+ Elevation" },
+    { "type": "text", "id": "study_ref", "label": "Study reference footer", "default": "CLINICAL STUDY REF: NEU-90-NAD-2024" },
+    { "type": "color", "id": "line_color", "label": "Chart line color", "default": "#C9B896" },
+    { "type": "color", "id": "accent_color", "label": "Chart accent (end) color", "default": "#8C7A54" }
+  ],
+  "blocks": [
+    {
+      "type": "phase",
+      "name": "Phase (under chart)",
+      "settings": [
+        { "type": "text", "id": "icon", "label": "Icon (emoji or short symbol)", "default": "⚡" },
+        { "type": "text", "id": "title", "label": "Title", "default": "ADAPTATION PHASE" },
+        { "type": "textarea", "id": "description", "label": "Description", "default": "Days 0–30: Initial uptake as cellular machinery recalibrates." },
+        { "type": "checkbox", "id": "highlight", "label": "Highlight (pink) style", "default": false }
+      ]
+    },
+    {
+      "type": "milestone",
+      "name": "Milestone card",
+      "settings": [
+        { "type": "text", "id": "weeks", "label": "Weeks label", "default": "2+ WEEKS" },
+        { "type": "text", "id": "heading", "label": "Heading", "default": "More Energy. Sharper Focus." },
+        { "type": "textarea", "id": "description", "label": "Description", "default": "First wave of cellular replenishment. Better performance through the day." }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Science Chart",
+      "blocks": [
+        { "type": "phase" },
+        { "type": "phase" },
+        { "type": "phase", "settings": { "icon": "❤️", "title": "PEAK BIOLOGICAL RESET", "description": "Day 90+: Sustained peak levels. The 3-month power window.", "highlight": true } },
+        { "type": "milestone" },
+        { "type": "milestone", "settings": { "weeks": "4–6 WEEKS", "heading": "Faster Recovery. Stronger Resilience.", "description": "Mitochondrial output stabilises. Bounce-back from stress improves." } },
+        { "type": "milestone", "settings": { "weeks": "9–12+ WEEKS", "heading": "Sustained Energy. Healthy Ageing.", "description": "Compounding benefits across cognition, skin and longevity pathways." } }
+      ]
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,129 @@
+{{ 'science-hero.css' | asset_url | stylesheet_tag }}
+
+<section
+  class="science-hero"
+  style="
+    --science-hero-bg: {{ section.settings.background_color }};
+    --science-hero-eyebrow: {{ section.settings.eyebrow_color }};
+  "
+>
+  <div class="science-hero__inner">
+
+    <div class="science-hero__content">
+      {% if section.settings.eyebrow != blank %}
+        <p class="science-hero__eyebrow">{{ section.settings.eyebrow }}</p>
+      {% endif %}
+
+      {% if section.settings.heading_line1 != blank or section.settings.heading_line2 != blank %}
+        <h1 class="science-hero__heading">
+          {% if section.settings.heading_line1 != blank %}{{ section.settings.heading_line1 }}<br>{% endif %}
+          {{ section.settings.heading_line2 }}
+        </h1>
+      {% endif %}
+
+      {% if section.settings.intro_text != blank %}
+        <div class="science-hero__intro">{{ section.settings.intro_text }}</div>
+      {% endif %}
+
+      {% if section.settings.subtext != blank %}
+        <p class="science-hero__subtext">{{ section.settings.subtext }}</p>
+      {% endif %}
+
+      {% if section.blocks.size > 0 %}
+        <div class="science-hero__buttons">
+          {% for block in section.blocks %}
+            {% if block.type == 'button' %}
+              <a
+                href="{{ block.settings.link | default: '#' }}"
+                class="science-hero__button science-hero__button--{{ block.settings.style }}"
+                {{ block.shopify_attributes }}
+              >
+                <span>{{ block.settings.label }}</span>
+                {% if block.settings.icon == 'arrow' %}
+                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                    <path d="M3 8H13M13 8L9 4M13 8L9 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                {% elsif block.settings.icon == 'download' %}
+                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                    <path d="M8 2V11M8 11L4.5 7.5M8 11L11.5 7.5M2.5 13.5H13.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                {% endif %}
+              </a>
+            {% endif %}
+          {% endfor %}
+        </div>
+      {% endif %}
+    </div>
+
+    <div class="science-hero__media">
+      {% if section.settings.image != blank %}
+        <img
+          src="{{ section.settings.image | image_url: width: 1600 }}"
+          alt="{{ section.settings.heading_line1 | escape }} {{ section.settings.heading_line2 | escape }}"
+          loading="eager"
+          width="1600"
+          height="{{ 1600 | divided_by: section.settings.image.aspect_ratio }}"
+        >
+      {% else %}
+        <div class="science-hero__media-placeholder"></div>
+      {% endif %}
+    </div>
+
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Science Hero",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "THE SCIENCE" },
+    { "type": "text", "id": "heading_line1", "label": "Heading (line 1)", "default": "The Science" },
+    { "type": "text", "id": "heading_line2", "label": "Heading (line 2)", "default": "Behind Your Energy" },
+    { "type": "richtext", "id": "intro_text", "label": "Intro text (supports bold)", "default": "<p>Energy doesn't start with caffeine.<br>It starts <strong>inside your cells</strong>.</p>" },
+    { "type": "text", "id": "subtext", "label": "Subtext line", "default": "Clinically studied Nicotinamide Riboside (NR)." },
+    { "type": "image_picker", "id": "image", "label": "Feature image" },
+    { "type": "color", "id": "background_color", "label": "Background", "default": "#0a0a0a" },
+    { "type": "color", "id": "eyebrow_color", "label": "Eyebrow color", "default": "#7fd9c4" }
+  ],
+  "blocks": [
+    {
+      "type": "button",
+      "name": "Button",
+      "settings": [
+        { "type": "text", "id": "label", "label": "Label", "default": "Button label" },
+        { "type": "url", "id": "link", "label": "Link" },
+        {
+          "type": "select",
+          "id": "style",
+          "label": "Style",
+          "options": [
+            { "value": "primary", "label": "Primary (filled)" },
+            { "value": "secondary", "label": "Secondary (outline)" }
+          ],
+          "default": "primary"
+        },
+        {
+          "type": "select",
+          "id": "icon",
+          "label": "Icon",
+          "options": [
+            { "value": "none", "label": "None" },
+            { "value": "arrow", "label": "Arrow" },
+            { "value": "download", "label": "Download" }
+          ],
+          "default": "none"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Science Hero",
+      "blocks": [
+        { "type": "button", "settings": { "label": "Read the Science Report", "style": "primary", "icon": "arrow" } },
+        { "type": "button", "settings": { "label": "Download Consumer Guide", "style": "secondary", "icon": "download" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

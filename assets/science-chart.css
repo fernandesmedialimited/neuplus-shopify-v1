@@ -1,0 +1,318 @@
+.science-chart {
+  background: #0a0a0a;
+  color: #ffffff;
+  padding: 96px 24px;
+}
+
+.science-chart__inner {
+  max-width: 1180px;
+  margin: 0 auto;
+}
+
+/* ---- Header ---- */
+.science-chart__header {
+  text-align: center;
+  margin-bottom: 48px;
+}
+
+.science-chart__eyebrow {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: #8a8a8a;
+  margin: 0 0 16px;
+}
+
+.science-chart__heading {
+  font-size: 40px;
+  font-weight: 700;
+  line-height: 1.15;
+  margin: 0 0 16px;
+}
+
+.science-chart__subheading {
+  font-size: 16px;
+  color: #9a9a9a;
+  margin: 0;
+}
+
+/* ---- Card ---- */
+.science-chart__card {
+  background: #111111;
+  border: 1px solid #232323;
+  border-radius: 20px;
+  padding: 40px 44px 32px;
+}
+
+.science-chart__card-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 24px;
+}
+
+.science-chart__card-top-right {
+  text-align: right;
+}
+
+.science-chart__label {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: #7a7a7a;
+  margin: 0 0 6px;
+}
+
+.science-chart__label-value {
+  font-size: 19px;
+  font-weight: 600;
+  margin: 0;
+  color: #ffffff;
+}
+
+.science-chart__label-value .is-accent {
+  color: #C9B896;
+}
+
+/* ---- Graph ---- */
+.science-chart__graph {
+  position: relative;
+  padding-left: 44px; /* room for y-axis labels */
+}
+
+.science-chart__svg {
+  width: 100%;
+  height: 340px;
+  display: block;
+  overflow: visible;
+}
+
+.science-chart__grid line {
+  stroke: #202020;
+  stroke-width: 1;
+}
+
+.science-chart__target-line {
+  stroke: #8C7A54;
+  stroke-width: 1;
+  stroke-dasharray: 6 6;
+  opacity: 0.5;
+}
+
+.science-chart__glow-dot {
+  filter: drop-shadow(0 0 6px currentColor);
+}
+
+.science-chart__yaxis {
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 340px;
+  width: 36px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  font-size: 12px;
+  color: #6a6a6a;
+  text-align: right;
+}
+
+.science-chart__pill {
+  position: absolute;
+  transform: translate(-50%, -140%);
+  background: #1c1c1c;
+  color: #ffffff;
+  font-size: 13px;
+  font-weight: 600;
+  padding: 6px 14px;
+  border-radius: 999px;
+  white-space: nowrap;
+}
+
+.science-chart__pill--mid {
+  left: calc(44px + 26%);
+  top: 45.2%;
+}
+
+.science-chart__pill--end {
+  left: calc(44px + 98%);
+  top: 9.5%;
+  background: #8C7A54;
+}
+
+/* ---- X axis ---- */
+.science-chart__xaxis {
+  display: flex;
+  justify-content: space-between;
+  padding-left: 44px;
+  margin-top: 12px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  color: #6a6a6a;
+  border-top: 1px solid #202020;
+  padding-top: 14px;
+}
+
+.science-chart__xaxis .is-highlight {
+  color: #C9B896;
+}
+
+.science-chart__xaxis .is-accent-text {
+  color: #8C7A54;
+}
+
+/* ---- Phases ---- */
+.science-chart__phases {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  margin-top: 40px;
+}
+
+.science-chart__phase {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  background: #161616;
+  border: 1px solid #232323;
+  border-radius: 12px;
+  padding: 18px;
+}
+
+.science-chart__phase.is-highlight {
+  background: rgba(236, 91, 125, 0.08);
+  border-color: rgba(236, 91, 125, 0.35);
+}
+
+.science-chart__phase-icon {
+  flex: 0 0 auto;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: #232323;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+}
+
+.science-chart__phase.is-highlight .science-chart__phase-icon {
+  background: rgba(236, 91, 125, 0.15);
+}
+
+.science-chart__phase-title {
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  margin: 0 0 4px;
+  color: #ffffff;
+}
+
+.science-chart__phase.is-highlight .science-chart__phase-title {
+  color: #8C7A54;
+}
+
+.science-chart__phase-desc {
+  font-size: 13px;
+  line-height: 1.5;
+  color: #9a9a9a;
+  margin: 0;
+}
+
+/* ---- Footer ref ---- */
+.science-chart__ref {
+  text-align: center;
+  font-size: 11px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: #5a5a5a;
+  margin: 28px 0 0;
+}
+
+/* ---- Milestones ---- */
+.science-chart__milestones {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  margin-top: 24px;
+}
+
+.science-chart__milestone {
+  background: #111111;
+  border: 1px solid #232323;
+  border-radius: 16px;
+  padding: 24px;
+}
+
+.science-chart__milestone-eyebrow {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #C9B896;
+  margin: 0 0 10px;
+}
+
+.science-chart__milestone-heading {
+  font-size: 18px;
+  font-weight: 700;
+  margin: 0 0 8px;
+  color: #ffffff;
+}
+
+.science-chart__milestone-desc {
+  font-size: 14px;
+  line-height: 1.55;
+  color: #9a9a9a;
+  margin: 0;
+}
+
+/* ---- Responsive ---- */
+@media screen and (max-width: 989px) {
+  .science-chart__phases,
+  .science-chart__milestones {
+    grid-template-columns: 1fr;
+  }
+
+  .science-chart__heading {
+    font-size: 30px;
+  }
+
+  .science-chart__card {
+    padding: 28px 20px 24px;
+  }
+
+  .science-chart__card-top {
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .science-chart__card-top-right {
+    text-align: left;
+  }
+
+  .science-chart__pill--end {
+    left: calc(44px + 80%);
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .science-chart {
+    padding: 64px 16px;
+  }
+
+  .science-chart__svg {
+    height: 260px;
+  }
+
+  .science-chart__yaxis {
+    height: 260px;
+  }
+
+  .science-chart__xaxis span {
+    font-size: 9px;
+  }
+}

@@ -6,13 +6,22 @@
   @param [children] - Additional content rendered below the card gallery
   @param [section] - The section object the snippet is rendered in
   @param [block] - The block object the snippet is rendered in
-  @param [has_applied_colour_filter] - Whether there's an applied colour filter
 {%- enddoc -%}
 
 {% liquid
   assign product = closest.product
   assign block_settings = block.settings
   assign image_sizes = '(min-width: 750px) 50vw, 100vw'
+
+  # Check if product has badges and determine position
+  assign has_badges = false
+  assign badge_position = null
+  if product != blank
+    if product.available == false or product.compare_at_price > product.price
+      assign has_badges = true
+      assign badge_position = settings.badge_position
+    endif
+  endif
 
   # if the card-gallery has a section.settings.product_card_size:
   # assume grid-template autofill(card-size, 1fr) and calculate the sizes attribute based on the minimum card size
@@ -43,19 +52,8 @@
     when 'square'
       assign ratio = '1'
     when 'adapt'
-      if product != blank
-        assign current_featured_image_for_ratio = product.featured_image
-        if current_featured_image_for_ratio == blank and product.featured_media.preview_image != blank
-          assign current_featured_image_for_ratio = product.featured_media.preview_image
-        endif
-
-        if current_featured_image_for_ratio != blank and current_featured_image_for_ratio.aspect_ratio != null and current_featured_image_for_ratio.aspect_ratio > 0
-          assign ratio = current_featured_image_for_ratio.aspect_ratio
-        endif
-      endif
+      assign ratio = product.featured_media.preview_image.aspect_ratio | default: '1'
   endcase
-
-  assign selected_variant_image = product.selected_or_first_available_variant.image.src
 
   if block_settings.image_ratio == 'adapt' and block_settings.constrain_to_viewport
     if block_settings.constrain_to_viewport != ''
@@ -63,36 +61,11 @@
       assign media_fit = block_settings.constrain_to_viewport
     endif
   endif
-
-  assign all_media = product.media
-
-  # For combined listings: make sure to include the featured media of the color variants so that the swatch picker
-  # works as expected.
-  for product_option in product.options_with_values
-    for product_option_value in product_option.values
-      if product_option_value.swatch
-        assign featured_media = product_option_value.variant.featured_media
-
-        # If the variant has no featured media, and we have a combined listing product, then fall back to using the
-        # featured media of the child product that is linked to this option value.
-
-        if featured_media == blank and product_option_value.product_url
-          assign featured_media = product_option_value.variant.product.featured_media
-        endif
-
-        assign existing_media = all_media | has: 'id', featured_media.id
-        unless existing_media
-          assign variant_featured_media = product_option_value.variant.product.media | where: 'id', featured_media.id
-          assign all_media = all_media | concat: variant_featured_media
-        endunless
-      endif
-    endfor
-  endfor
 %}
 
 <div
   ref="cardGallery"
-  class="card-gallery card-gallery-{{ block.id }} spacing-style border-style"
+  class="card-gallery card-gallery-{{ block.id }} spacing-style border-style{% if has_badges %} card-gallery--badge-{{ badge_position }}{% endif %}"
   style="
     {% render 'border-override', settings: block_settings %}
     {% render 'spacing-style', settings: block_settings %}
@@ -109,24 +82,19 @@
   data-image-ratio="{{ block_settings.image_ratio }}"
   {{ block.shopify_attributes }}
 >
-  {%- if all_media.size > 0 -%}
+  {%- if product.media.size > 0 -%}
     {% liquid
       # Check if there are generic media that are not variant images
       assign variant_images = product.images | where: 'attached_to_variant?', true | map: 'src'
-      assign generic_media_size = all_media.size | minus: variant_images.size
-      assign combined_listing_count = product.options_with_values | map: 'values' | map: 'product_url' | compact | size
+      assign generic_media_size = product.media.size | minus: variant_images.size
 
-      if combined_listing_count > 0 or has_applied_colour_filter
-        # Sort media so selected variant image comes first
-        assign selected_media = all_media | where: 'src', selected_variant_image
-        assign other_media = all_media | reject: 'src', selected_variant_image
-        assign all_media_sorted = selected_media | concat: other_media
-        assign media_list_to_show = all_media_sorted
-      else
-        assign media_list_to_show = all_media
-      endif
+      # Sort media so product.featured_media.preview_image comes first as that is the most relevant image to display
+      # product.featured_media updates based on search context and filters applied
 
-      if all_media.size > 2 and generic_media_size > 0
+      assign other_media = product.media | reject: 'src', product.featured_media
+      assign media_list_to_show = product.featured_media | concat: other_media
+
+      if product.media.size > 2 and generic_media_size > 0
         assign show_arrows = true
       endif
 
@@ -147,18 +115,9 @@
           assign attributes = ''
           if variant_images contains media.src
             assign attributes = 'variant-image'
-            if combined_listing_count > 0
-              # hide all variant images of combined listings unless it's the first image or there are no generic media
-              unless forloop.first and media.src == selected_variant_image or generic_media_size == 0
-                assign hidden = true
-              endunless
-            elsif has_applied_colour_filter
-              # with colour filters, hide all variant images unless the image is the selected_variant
-              unless media.src == selected_variant_image
-                assign hidden = true
-              endunless
-            elsif forloop.first == false
-              # hide all variant images that aren't the first one (when there are no combined listings or colour filters applied)
+
+            if forloop.first == false
+              # hide all variant images that aren't the first one
               assign hidden = true
             endif
           endif
@@ -189,7 +148,7 @@
             render 'product-media', media: media, sizes: sizes, loading: loading, preview_image_only: true
           endcapture
 
-          render 'slideshow-slide', slide_id: media.id, index: forloop.index, hidden: hidden, class: class, attributes: attributes, children: slideshow_children, media_fit: media_fit
+          render 'slideshow-slide', slide_id: media.id, index: forloop.index0, hidden: hidden, class: class, attributes: attributes, children: slideshow_children, media_fit: media_fit
         endfor
       endcapture
 
@@ -201,29 +160,28 @@
     <a
       class="contents"
       ref="cardGalleryLink"
-      href="{% render 'product-card-variant-url', product: product %}"
+      href="{{ product.selected_or_first_available_variant.url }}"
       aria-label="{{- product.title -}}"
     >
       {% render 'slideshow',
         ref: 'slideshow',
         initial_slide: 0,
         slides: slides,
-        slide_count: all_media.size,
+        slide_count: media_list_to_show.size,
         show_arrows: show_arrows,
         attributes: slideshow_attributes
       %}
     </a>
   {% elsif product != blank and product.media.size == 0 %}
-    <product-title class="product-card-gallery__title-placeholder">
+    <div class="product-card-gallery__title-placeholder">
       <a
         class="contents"
-        ref="productTitleLink"
-        href="{% render 'product-card-variant-url', product: product %}"
-        aria-hidden="true"
+        ref="cardGalleryLink"
+        href="{{ product.selected_or_first_available_variant.url }}"
       >
         <span class="title-text">{{- product.title -}}</span>
       </a>
-    </product-title>
+    </div>
   {% elsif product == blank %}
     {% liquid
       capture placeholder_image
@@ -232,7 +190,7 @@
         assign placeholder_index = block_parts.last | default: 0
         assign variant = placeholder_index | modulo: 3 | plus: 1
         assign placeholder_name = 'product-apparel-' | append: variant
-        echo placeholder_name | placeholder_svg_tag: 'placeholder-image'
+        echo placeholder_name | placeholder_svg_tag
       endcapture
       capture placeholder_slide
         render 'slideshow-slide', index: 1, children: placeholder_image, class: 'product-media-container card-gallery__placeholder'
@@ -268,14 +226,20 @@
     background-color: rgb(var(--color-foreground-rgb) / var(--opacity-5));
     aspect-ratio: var(--gallery-aspect-ratio);
     border-radius: var(--product-corner-radius);
-    display: -webkit-box;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-    text-overflow: ellipsis;
+    display: block;
   }
 
-  .product-card-gallery__title-placeholder a {
-    color: var(--color-foreground);
+  .product-card-gallery__title-placeholder .title-text {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 5;
+    line-clamp: 5;
+    overflow: hidden;
+  }
+
+  .card-gallery[data-image-ratio='landscape'] .product-card-gallery__title-placeholder .title-text {
+    -webkit-line-clamp: 3;
+    line-clamp: 3;
   }
 
   @media screen and (min-width: 750px) {
@@ -300,73 +264,73 @@
     }
 
     .product-grid[data-product-card-size='extra-large']
-      .card-gallery:has(.product-badges--top-right .product-badges__badge)
+      .card-gallery.card-gallery--badge-top-right
       .product-card-gallery__title-placeholder {
       padding-right: calc(var(--padding-3xl) + 50px);
     }
 
     .product-grid[data-product-card-size='large']
-      .card-gallery:has(.product-badges--top-right .product-badges__badge)
+      .card-gallery.card-gallery--badge-top-right
       .product-card-gallery__title-placeholder {
       padding-right: calc(var(--padding-2xl) + 50px);
     }
 
     .product-grid[data-product-card-size='medium']
-      .card-gallery:has(.product-badges--top-right .product-badges__badge)
+      .card-gallery.card-gallery--badge-top-right
       .product-card-gallery__title-placeholder {
       padding-right: calc(var(--padding-xl) + 50px);
     }
 
     .product-grid[data-product-card-size='small']
-      .card-gallery:has(.product-badges--top-right .product-badges__badge)
+      .card-gallery.card-gallery--badge-top-right
       .product-card-gallery__title-placeholder {
       padding-right: calc(var(--padding-sm) + 50px);
     }
 
     .product-grid[data-product-card-size='extra-large']
-      .card-gallery:has(.product-badges--top-left .product-badges__badge)
+      .card-gallery.card-gallery--badge-top-left
       .product-card-gallery__title-placeholder {
       padding-top: calc(var(--padding-3xl) + 40px);
     }
 
     .product-grid[data-product-card-size='large']
-      .card-gallery:has(.product-badges--top-left .product-badges__badge)
+      .card-gallery.card-gallery--badge-top-left
       .product-card-gallery__title-placeholder {
       padding-top: calc(var(--padding-2xl) + 40px);
     }
 
     .product-grid[data-product-card-size='medium']
-      .card-gallery:has(.product-badges--top-left .product-badges__badge)
+      .card-gallery.card-gallery--badge-top-left
       .product-card-gallery__title-placeholder {
       padding-top: calc(var(--padding-xl) + 40px);
     }
 
     .product-grid[data-product-card-size='small']
-      .card-gallery:has(.product-badges--top-left .product-badges__badge)
+      .card-gallery.card-gallery--badge-top-left
       .product-card-gallery__title-placeholder {
       padding-top: calc(var(--padding-sm) + 40px);
     }
 
     .product-grid[data-product-card-size='extra-large']
-      .card-gallery:has(.product-badges--bottom-left .product-badges__badge)
+      .card-gallery.card-gallery--badge-bottom-left
       .product-card-gallery__title-placeholder {
       padding-bottom: calc(var(--padding-3xl) + 40px);
     }
 
     .product-grid[data-product-card-size='large']
-      .card-gallery:has(.product-badges--bottom-left .product-badges__badge)
+      .card-gallery.card-gallery--badge-bottom-left
       .product-card-gallery__title-placeholder {
       padding-bottom: calc(var(--padding-2xl) + 40px);
     }
 
     .product-grid[data-product-card-size='medium']
-      .card-gallery:has(.product-badges--bottom-left .product-badges__badge)
+      .card-gallery.card-gallery--badge-bottom-left
       .product-card-gallery__title-placeholder {
       padding-bottom: calc(var(--padding-xl) + 40px);
     }
 
     .product-grid[data-product-card-size='small']
-      .card-gallery:has(.product-badges--bottom-left .product-badges__badge)
+      .card-gallery.card-gallery--badge-bottom-left
       .product-card-gallery__title-placeholder {
       padding-bottom: calc(var(--padding-sm) + 40px);
     }
@@ -379,19 +343,19 @@
     }
 
     .product-grid[data-product-card-size]
-      .card-gallery:has(.product-badges--top-right .product-badges__badge)
+      .card-gallery.card-gallery--badge-top-right
       .product-card-gallery__title-placeholder {
       padding-right: calc(var(--padding-sm) + 50px);
     }
 
     .product-grid[data-product-card-size]
-      .card-gallery:has(.product-badges--top-left .product-badges__badge)
+      .card-gallery.card-gallery--badge-top-left
       .product-card-gallery__title-placeholder {
       padding-top: calc(var(--padding-sm) + 40px);
     }
 
     .product-grid[data-product-card-size]
-      .card-gallery:has(.product-badges--bottom-left .product-badges__badge)
+      .card-gallery.card-gallery--badge-bottom-left
       .product-card-gallery__title-placeholder {
       padding-bottom: calc(var(--padding-sm) + 40px);
     }
@@ -405,5 +369,44 @@
 
   [product-grid-view='zoom-out'] .card-gallery .slideshow-control {
     min-width: auto;
+  }
+
+  ul[product-grid-view='zoom-out'] .product-grid__card .card-gallery {
+    display: block;
+  }
+
+  [product-grid-view='zoom-out']
+    .card-gallery
+    > :is(quick-add-component, .product-badges, slideshow-component > slideshow-controls) {
+    display: none;
+  }
+
+  ul[product-grid-view='zoom-out'] .card-gallery > img {
+    display: block;
+  }
+
+  .card-gallery slideshow-arrows .slideshow-control {
+    /* Align icons with quick-add button */
+    padding-inline: var(--padding-xl);
+
+    @container (max-width: 249px) {
+      padding-inline: 0 var(--padding-sm);
+    }
+  }
+
+  /*
+   * Card galleries preview the next or previous images on 'pointerenter', so we
+   * try to kick load them beforehand (they are lazy loaded otherwise).
+   */
+  .card-gallery
+    :is(
+      slideshow-slide:has(+ slideshow-slide[aria-hidden='false']),
+      slideshow-slide[aria-hidden='false'] + slideshow-slide
+    ) {
+    content-visibility: auto;
+
+    slideshow-component[actioned] & {
+      content-visibility: visible;
+    }
   }
 {% endstylesheet %}

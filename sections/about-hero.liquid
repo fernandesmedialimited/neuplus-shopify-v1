@@ -1,0 +1,132 @@
+{{ 'about-hero.css' | asset_url | stylesheet_tag }}
+
+<section
+  class="about-hero"
+  style="--about-hero-bg: {{ section.settings.background_color }};"
+>
+  <div class="about-hero__inner">
+
+    <div class="about-hero__content">
+      {% if section.settings.eyebrow != blank %}
+        <p class="about-hero__eyebrow">{{ section.settings.eyebrow }}</p>
+      {% endif %}
+
+      {% if section.settings.heading != blank %}
+        <h1 class="about-hero__heading">{{ section.settings.heading }}</h1>
+      {% endif %}
+
+      {% if section.settings.intro_text != blank %}
+        <div class="about-hero__intro">{{ section.settings.intro_text }}</div>
+      {% endif %}
+
+      {% if section.settings.subtext != blank %}
+        <p class="about-hero__subtext">{{ section.settings.subtext }}</p>
+      {% endif %}
+
+      {% if section.blocks.size > 0 %}
+        <div class="about-hero__features">
+          {% for block in section.blocks %}
+            {% if block.type == 'feature' %}
+              <div class="about-hero__feature" {{ block.shopify_attributes }}>
+                <div class="about-hero__feature-icon">
+                  {% if block.settings.icon != blank %}
+                    <img src="{{ block.settings.icon | image_url: width: 60 }}" alt="" loading="lazy" width="22" height="22">
+                  {% elsif block.settings.icon_svg != blank %}
+                    {{ block.settings.icon_svg }}
+                  {% endif %}
+                </div>
+                <p class="about-hero__feature-line1">{{ block.settings.line_1 }}</p>
+                {% if block.settings.line_2 != blank %}
+                  <p class="about-hero__feature-line2">{{ block.settings.line_2 }}</p>
+                {% endif %}
+              </div>
+            {% endif %}
+          {% endfor %}
+        </div>
+      {% endif %}
+
+      {% if section.settings.button_label != blank %}
+        <a href="{{ section.settings.button_link | default: '#' }}" class="about-hero__button">
+          <span>{{ section.settings.button_label }}</span>
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+            <path d="M3 8H13M13 8L9 4M13 8L9 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </a>
+      {% endif %}
+    </div>
+
+    <div class="about-hero__media">
+      {% if section.settings.image != blank %}
+        <img
+          src="{{ section.settings.image | image_url: width: 1600 }}"
+          alt="{{ section.settings.heading | escape }}"
+          loading="eager"
+          width="1600"
+          height="{{ 1600 | divided_by: section.settings.image.aspect_ratio }}"
+        >
+      {% else %}
+        <div class="about-hero__media-placeholder"></div>
+      {% endif %}
+    </div>
+
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "About Hero",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "WHY NEU+ EXISTS" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Modern life asks more from us than ever before." },
+    { "type": "richtext", "id": "intro_text", "label": "Intro text", "default": "<p>Energy. Focus. Recovery.<br>Yet the way we support our bodies hasn't changed.</p>" },
+    { "type": "text", "id": "subtext", "label": "Subtext line", "default": "NEU+ was created to make cellular energy simple." },
+    { "type": "image_picker", "id": "image", "label": "Feature image" },
+    { "type": "text", "id": "button_label", "label": "Button label", "default": "Discover the Science" },
+    { "type": "url", "id": "button_link", "label": "Button link" },
+    { "type": "color", "id": "background_color", "label": "Background", "default": "#0a0a0a" }
+  ],
+  "blocks": [
+    {
+      "type": "feature",
+      "name": "Feature",
+      "settings": [
+        { "type": "image_picker", "id": "icon", "label": "Icon image (optional)" },
+        { "type": "html", "id": "icon_svg", "label": "Icon SVG code (optional)", "info": "Use this OR the image above." },
+        { "type": "text", "id": "line_1", "label": "Line 1", "default": "ONE DAILY RITUAL" },
+        { "type": "text", "id": "line_2", "label": "Line 2", "default": "60ml" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "About Hero",
+      "blocks": [
+        {
+          "type": "feature",
+          "settings": {
+            "line_1": "ONE DAILY RITUAL",
+            "line_2": "60ml",
+            "icon_svg": "<svg viewBox=\"0 0 24 24\" fill=\"none\"><path d=\"M13 2L4 14h6l-1 8 9-12h-6l1-8z\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linejoin=\"round\"/></svg>"
+          }
+        },
+        {
+          "type": "feature",
+          "settings": {
+            "line_1": "BACKED BY SCIENCE",
+            "line_2": "Clinically studied",
+            "icon_svg": "<svg viewBox=\"0 0 24 24\" fill=\"none\"><circle cx=\"12\" cy=\"12\" r=\"9\" stroke=\"currentColor\" stroke-width=\"1.5\"/><path d=\"M12 8v8M8 12h8\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\"/></svg>"
+          }
+        },
+        {
+          "type": "feature",
+          "settings": {
+            "line_1": "MADE FOR REAL LIFE",
+            "line_2": "No caffeine. No added sugar.",
+            "icon_svg": "<svg viewBox=\"0 0 24 24\" fill=\"none\"><path d=\"M12 21s-7-4.35-9.5-9A5.5 5.5 0 0112 5.5 5.5 5.5 0 0121.5 12c-2.5 4.65-9.5 9-9.5 9z\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linejoin=\"round\"/></svg>"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

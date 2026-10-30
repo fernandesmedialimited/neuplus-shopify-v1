@@ -1,10 +1,8 @@
 import { Component } from '@theme/component';
-import { fetchConfig, onAnimationEnd, preloadImage } from '@theme/utilities';
-import { ThemeEvents, CartAddEvent, CartErrorEvent, CartUpdateEvent, VariantUpdateEvent } from '@theme/events';
+import { fetchConfig, preloadImage, onAnimationEnd, yieldToMainThread } from '@theme/utilities';
 import { cartPerformance } from '@theme/performance';
 import { morph } from '@theme/morph';
-
-export const ADD_TO_CART_TEXT_ANIMATION_DURATION = 2000;
+import { CartLinesUpdateEvent, CartErrorEvent, ProductSelectEvent, StandardEvents } from '@shopify/events';
 
 // Error message display duration - gives users time to read the message
 const ERROR_MESSAGE_DISPLAY_DURATION = 10000;
@@ -16,6 +14,14 @@ const ERROR_BUTTON_REENABLE_DELAY = 1000;
 const SUCCESS_MESSAGE_DISPLAY_DURATION = 5000;
 
 /**
+ * @typedef {HTMLElement & {
+ *   source: Element,
+ *   destination: Element,
+ *   useSourceSize: string | boolean
+ * }} FlyToCart
+ */
+
+/**
  * A custom element that manages an add to cart button.
  *
  * @typedef {object} AddToCartRefs
@@ -25,11 +31,8 @@ const SUCCESS_MESSAGE_DISPLAY_DURATION = 5000;
 export class AddToCartComponent extends Component {
   requiredRefs = ['addToCartButton'];
 
-  /** @type {number | undefined} */
-  #animationTimeout;
-
-  /** @type {number | undefined} */
-  #cleanupTimeout;
+  /** @type {number[] | undefined} */
+  #resetTimeouts = /** @type {number[]} */ ([]);
 
   connectedCallback() {
     super.connectedCallback();
@@ -40,8 +43,9 @@ export class AddToCartComponent extends Component {
   disconnectedCallback() {
     super.disconnectedCallback();
 
-    if (this.#animationTimeout) clearTimeout(this.#animationTimeout);
-    if (this.#cleanupTimeout) clearTimeout(this.#cleanupTimeout);
+    if (this.#resetTimeouts) {
+      this.#resetTimeouts.forEach(/** @param {number} timeoutId */ (timeoutId) => clearTimeout(timeoutId));
+    }
     this.removeEventListener('pointerenter', this.#preloadImage);
   }
 
@@ -68,7 +72,8 @@ export class AddToCartComponent extends Component {
     if (!form?.checkValidity()) return;
 
     // Check if adding would exceed max before animating
-    const quantitySelector = /** @type {any} */ (form.querySelector('quantity-selector-component'));
+    const productForm = /** @type {ProductFormComponent | null} */ (this.closest('product-form-component'));
+    const quantitySelector = productForm?.refs.quantitySelector;
     if (quantitySelector?.canAddToCart) {
       const validation = quantitySelector.canAddToCart();
       // Don't animate if it would exceed max
@@ -76,13 +81,12 @@ export class AddToCartComponent extends Component {
         return;
       }
     }
-
-    this.animateAddToCart();
-
-    const animationEnabled = this.dataset.addToCartAnimation === 'true';
-
-    if (animationEnabled && !event.target.closest('.quick-add-modal')) {
-      this.#animateFlyToCart();
+    if (this.refs.addToCartButton.dataset.puppet !== 'true') {
+      const animationEnabled = this.dataset.addToCartAnimation === 'true';
+      if (animationEnabled && !event.target.closest('.quick-add-modal')) {
+        this.#animateFlyToCart();
+      }
+      this.animateAddToCart();
     }
   }
 
@@ -107,7 +111,13 @@ export class AddToCartComponent extends Component {
 
     const flyToCartElement = /** @type {FlyToCart} */ (document.createElement('fly-to-cart'));
 
+    let flyToCartClass = addToCartButton.classList.contains('quick-add__button')
+      ? 'fly-to-cart--quick'
+      : 'fly-to-cart--main';
+
+    flyToCartElement.classList.add(flyToCartClass);
     flyToCartElement.style.setProperty('background-image', `url(${image})`);
+    flyToCartElement.style.setProperty('--start-opacity', '0');
     flyToCartElement.source = addToCartButton;
     flyToCartElement.destination = cartIcon;
 
@@ -117,22 +127,39 @@ export class AddToCartComponent extends Component {
   /**
    * Animates the add to cart button.
    */
-  animateAddToCart() {
+  animateAddToCart = async function () {
     const { addToCartButton } = this.refs;
 
-    if (this.#animationTimeout) clearTimeout(this.#animationTimeout);
-    if (this.#cleanupTimeout) clearTimeout(this.#cleanupTimeout);
-
-    if (!addToCartButton.classList.contains('atc-added')) {
-      addToCartButton.classList.add('atc-added');
+    // Initialize the array if it doesn't exist
+    if (!this.#resetTimeouts) {
+      this.#resetTimeouts = [];
     }
 
-    this.#animationTimeout = setTimeout(() => {
-      this.#cleanupTimeout = setTimeout(() => {
-        this.refs.addToCartButton.classList.remove('atc-added');
-      }, 10);
-    }, ADD_TO_CART_TEXT_ANIMATION_DURATION);
-  }
+    // Clear all existing timeouts
+    this.#resetTimeouts.forEach(/** @param {number} timeoutId */ (timeoutId) => clearTimeout(timeoutId));
+    this.#resetTimeouts = [];
+
+    if (addToCartButton.dataset.added !== 'true') {
+      addToCartButton.dataset.added = 'true';
+    }
+
+    // The onAnimationEnd can trigger a style recalculation so we yield to the main thread first.
+    await yieldToMainThread();
+    await onAnimationEnd(addToCartButton);
+
+    // Create new timeout and store it in the array
+    const timeoutId = setTimeout(() => {
+      addToCartButton.removeAttribute('data-added');
+
+      // Remove this timeout from the array
+      const index = this.#resetTimeouts.indexOf(timeoutId);
+      if (index > -1) {
+        this.#resetTimeouts.splice(index, 1);
+      }
+    }, 800);
+
+    this.#resetTimeouts.push(timeoutId);
+  };
 }
 
 if (!customElements.get('add-to-cart-component')) {
@@ -141,6 +168,8 @@ if (!customElements.get('add-to-cart-component')) {
 
 /**
  * A custom element that manages a product form.
+ *
+ * @typedef {{items: Array<{quantity: number, variant_id: number}>}} Cart
  *
  * @typedef {object} ProductFormRefs
  * @property {HTMLInputElement} variantId - The form input for submitting the variant ID.
@@ -151,6 +180,11 @@ if (!customElements.get('add-to-cart-component')) {
  * @property {HTMLElement | undefined} quantityLabelCartCount - The quantity label cart count element.
  * @property {HTMLElement | undefined} quantityRules - The quantity rules element.
  * @property {HTMLElement | undefined} productFormButtons - The product form buttons container.
+ * @property {HTMLElement | undefined} volumePricing - The volume pricing component.
+ * @property {any | undefined} quantitySelector - The quantity selector component.
+ * @property {HTMLElement | undefined} quantitySelectorWrapper - The quantity selector wrapper element.
+ * @property {HTMLElement | undefined} quantityLabel - The quantity label element.
+ * @property {HTMLElement | undefined} pricePerItem - The price per item component.
  *
  * @extends Component<ProductFormRefs>
  */
@@ -161,16 +195,24 @@ class ProductFormComponent extends Component {
   /** @type {number | undefined} */
   #timeout;
 
+  /** @type {boolean} */
+  #variantChangeInProgress = false;
+
+  /** @type {number} */
+  #variantChangeGeneration = 0;
+
+  /** @type {Array<{variantId: string, quantity: number}>} */
+  #addToCartQueue = [];
+
   connectedCallback() {
     super.connectedCallback();
 
     const { signal } = this.#abortController;
     const target = this.closest('.shopify-section, dialog, product-card');
-    target?.addEventListener(ThemeEvents.variantUpdate, this.#onVariantUpdate, { signal });
-    target?.addEventListener(ThemeEvents.variantSelected, this.#onVariantSelected, { signal });
+    target?.addEventListener(StandardEvents.productSelect, this.#onProductSelect, { signal });
 
     // Listen for cart updates to sync data-cart-quantity
-    document.addEventListener(ThemeEvents.cartUpdate, this.#onCartUpdate, { signal });
+    document.addEventListener(StandardEvents.cartLinesUpdate, this.#onCartUpdate, { signal });
   }
 
   disconnectedCallback() {
@@ -179,80 +221,143 @@ class ProductFormComponent extends Component {
     this.#abortController.abort();
   }
 
-  /**
-   * Fetches cart and updates quantity selector for current variant
-   * @returns {Promise<number>} The cart quantity for the current variant
-   */
-  async #fetchAndUpdateCartQuantity() {
-    const variantIdInput = /** @type {HTMLInputElement | null} */ (this.querySelector('input[name="id"]'));
-    if (!variantIdInput?.value) return 0;
+  #getVariantIdInput() {
+    return /** @type {HTMLInputElement | null} */ (this.querySelector('input[name="id"]'))?.value;
+  }
 
-    try {
-      const response = await fetch('/cart.js');
-      const cart = await response.json();
+  async #refreshCart() {
+    /** @type {import('@theme/component-cart-items').CartItemsComponent | null} */
+    const cartItemsComponent = document.querySelector('cart-items-component');
 
-      const cartItem = cart.items.find(
-        /** @param {any} item */
-        (item) => item.variant_id.toString() === variantIdInput.value.toString()
-      );
-      const cartQty = cartItem ? cartItem.quantity : 0;
-
-      // Use public API to update quantity selector
-      const quantitySelector = /** @type {any} */ (this.querySelector('quantity-selector-component'));
-      if (quantitySelector?.setCartQuantity) {
-        quantitySelector.setCartQuantity(cartQty);
-      }
-
-      // Update quantity label if it exists
-      this.#updateQuantityLabel(cartQty);
-
-      return cartQty;
-    } catch (error) {
-      console.error('Failed to fetch cart quantity:', error);
-      return 0;
+    if (cartItemsComponent) {
+      await customElements.whenDefined('cart-items-component');
+      return cartItemsComponent.fetchCartData();
     }
+
+    // Fallback for pages without cart-items-component (e.g. page-based cart on product pages)
+    return fetch(`${Theme.routes.cart_url}.json`, {
+      headers: { Accept: 'application/json' },
+      credentials: 'same-origin',
+    }).then((response) => {
+      if (!response.ok) throw new Error(`Failed to fetch cart: ${response.status}`);
+      return response.json();
+    });
+  }
+
+  /**
+   * Updates quantity selector with cart data for current variant
+   * @param {Cart} cart - The cart object with items array
+   */
+  #updateCartQuantity(cart) {
+    const variantIdInput = this.#getVariantIdInput();
+    if (!variantIdInput) return;
+
+    const cartItem = cart.items.find(
+      /** @param {any} item */
+      (item) => item.variant_id.toString() === variantIdInput.toString()
+    );
+    const cartQty = cartItem ? cartItem.quantity : 0;
+
+    // Use public API to update quantity selector
+    const quantitySelector =
+      /** @type {import('@theme/component-cart-quantity-selector').CartQuantitySelectorComponent | null} */ (
+        this.querySelector('quantity-selector-component')
+      );
+
+    if (quantitySelector?.setCartQuantity) {
+      quantitySelector.setCartQuantity(cartQty);
+    }
+
+    // Update quantity label if it exists
+    this.#updateQuantityLabel(cartQty);
   }
 
   /**
    * Updates data-cart-quantity when cart is updated from elsewhere
-   * @param {CartUpdateEvent|CartAddEvent} event
+   * @param {CartLinesUpdateEvent} event
    */
   #onCartUpdate = async (event) => {
-    // Skip if this event came from this component
-    if (event.detail?.sourceId === this.id || event.detail?.data?.source === 'product-form-component') return;
+    if (!this.#getVariantIdInput()) return;
 
-    await this.#fetchAndUpdateCartQuantity();
+    event.promise
+      ?.then(({ detail }) => {
+        // Skip if this event came from this component
+        if (detail?.sourceId === this.id || detail?.source === 'product-form-component') return;
+
+        if (detail?.items) {
+          this.#updateCartQuantity(/** @type {Cart} */ ({ items: detail.items }));
+        } else {
+          this.#refreshCart().then((cart) => this.#updateCartQuantity(cart));
+        }
+      })
+      .catch((error) => {
+        if (error?.name !== 'AbortError') console.warn('[product-form] Event promise rejected:', error);
+      });
   };
 
-  /**
-   * Handles the submit event for the product form.
-   *
-   * @param {Event} event - The submit event.
-   */
+  /** @param {Event} event */
   handleSubmit(event) {
-    const { addToCartTextError, addToCartButtonContainer } = this.refs;
-    // Stop default behaviour from the browser
     event.preventDefault();
+
+    if (this.#variantChangeInProgress) {
+      const intendedVariantId = this.#getIntendedVariantId();
+      const quantity = this.#getQuantity();
+
+      if (intendedVariantId) {
+        this.#addToCartQueue.push({ variantId: intendedVariantId, quantity });
+      }
+
+      this.refs.addToCartButtonContainer?.animateAddToCart?.();
+      return;
+    }
+
+    this.#processAddToCart(undefined, undefined, event);
+  }
+
+  /** @returns {string | undefined} */
+  #getIntendedVariantId() {
+    return new URL(window.location.href).searchParams.get('variant') || this.refs.variantId?.value || undefined;
+  }
+
+  /** @returns {number} */
+  #getQuantity() {
+    return Number(this.refs.quantitySelector?.getValue?.()) || Number(this.dataset.quantityDefault) || 1;
+  }
+
+  /**
+   * @param {string} [overrideVariantId]
+   * @param {number} [overrideQuantity]
+   * @param {Event} [event]
+   */
+  #processAddToCart(overrideVariantId, overrideQuantity, event) {
+    const { addToCartTextError } = this.refs;
 
     if (this.#timeout) clearTimeout(this.#timeout);
 
-    // Check if the add to cart button is disabled and do an early return if it is
-    if (addToCartButtonContainer?.refs.addToCartButton?.disabled) return;
+    const allAddToCartContainers = /** @type {NodeListOf<AddToCartComponent>} */ (
+      this.querySelectorAll('add-to-cart-component')
+    );
 
-    // Send the add to cart information to the cart
+    if (!overrideVariantId) {
+      const anyButtonDisabled = Array.from(allAddToCartContainers).some(
+        (container) => container.refs.addToCartButton?.disabled
+      );
+      if (anyButtonDisabled) return;
+    }
+
     const form = this.querySelector('form');
-
     if (!form) throw new Error('Product form element missing');
 
-    const quantitySelector = /** @type {any} */ (this.querySelector('quantity-selector-component'));
-    if (quantitySelector?.canAddToCart) {
-      const validation = quantitySelector.canAddToCart();
+    if (!overrideVariantId && this.refs.quantitySelector?.canAddToCart) {
+      const validation = this.refs.quantitySelector.canAddToCart();
 
       if (!validation.canAdd) {
-        addToCartButtonContainer?.disable();
+        for (const container of allAddToCartContainers) {
+          container.disable();
+        }
 
         const errorTemplate = this.dataset.quantityErrorMax || '';
-        const errorMessage = errorTemplate.replace('{{ maximum }}', validation.maxQuantity.toString());
+        const errorMessage = errorTemplate.replace('{{ maximum }}', validation.maxQuantity?.toString() || '');
         if (addToCartTextError) {
           addToCartTextError.classList.remove('hidden');
 
@@ -275,7 +380,9 @@ class ProductFormComponent extends Component {
         }
 
         setTimeout(() => {
-          addToCartButtonContainer?.enable();
+          for (const container of allAddToCartContainers) {
+            container.enable();
+          }
         }, ERROR_BUTTON_REENABLE_DELAY);
 
         return;
@@ -283,6 +390,13 @@ class ProductFormComponent extends Component {
     }
 
     const formData = new FormData(form);
+
+    if (overrideVariantId) {
+      formData.set('id', overrideVariantId);
+    }
+    if (overrideQuantity !== undefined) {
+      formData.set('quantity', overrideQuantity.toString());
+    }
 
     const cartItemsComponents = document.querySelectorAll('cart-items-component');
     let cartItemComponentsSectionIds = [];
@@ -292,6 +406,23 @@ class ProductFormComponent extends Component {
       }
       formData.append('sections', cartItemComponentsSectionIds.join(','));
     });
+
+    const itemCount = Number(formData.get('quantity')) || Number(this.dataset.quantityDefault);
+    const deferredEventPromise = CartLinesUpdateEvent.createPromise();
+
+    this.dispatchEvent(
+      new CartLinesUpdateEvent({
+        action: 'add',
+        context: 'product',
+        lines: [
+          {
+            merchandiseId: /** @type {string} */ (formData.get('id')),
+            quantity: itemCount,
+          },
+        ],
+        promise: deferredEventPromise.promise,
+      })
+    );
 
     const fetchCfg = fetchConfig('javascript', { body: formData });
 
@@ -303,11 +434,35 @@ class ProductFormComponent extends Component {
       },
     })
       .then((response) => response.json())
-      .then((response) => {
+      .then(async (response) => {
         if (response.status) {
           this.dispatchEvent(
-            new CartErrorEvent(form.getAttribute('id') || '', response.message, response.description, response.errors)
+            new CartErrorEvent({
+              error: response.message || 'Add to cart failed',
+              code: 'INVALID',
+              detail: {
+                description: response.description,
+                errors: response.errors,
+              },
+            })
           );
+
+          // Fetch the updated cart to get the actual total quantity for this variant
+          this.#refreshCart()
+            .then((ajaxCart) =>
+              deferredEventPromise.resolve({
+                cart: CartLinesUpdateEvent.createCartFromAjaxResponse(ajaxCart),
+                detail: {
+                  didError: true,
+                  items: ajaxCart.items,
+                  source: 'product-form-component',
+                  sourceId: this.id.toString(),
+                  itemCount,
+                  productId: this.dataset.productId,
+                },
+              })
+            )
+            .catch(deferredEventPromise.reject);
 
           if (!addToCartTextError) return;
           addToCartTextError.classList.remove('hidden');
@@ -332,17 +487,6 @@ class ProductFormComponent extends Component {
             this.#clearLiveRegionText();
           }, ERROR_MESSAGE_DISPLAY_DURATION);
 
-          // When we add more than the maximum amount of items to the cart, we need to dispatch a cart update event
-          // because our back-end still adds the max allowed amount to the cart.
-          this.dispatchEvent(
-            new CartAddEvent({}, this.id, {
-              didError: true,
-              source: 'product-form-component',
-              itemCount: Number(formData.get('quantity')) || Number(this.dataset.quantityDefault),
-              productId: this.dataset.productId,
-            })
-          );
-
           return;
         } else {
           const id = formData.get('id');
@@ -355,9 +499,10 @@ class ProductFormComponent extends Component {
           if (!id) throw new Error('Form ID is required');
 
           // Add aria-live region to inform screen readers that the item was added
-          if (this.refs.addToCartButtonContainer?.refs.addToCartButton) {
-            const addToCartButton = this.refs.addToCartButtonContainer.refs.addToCartButton;
-            const addedTextElement = addToCartButton.querySelector('.add-to-cart-text--added');
+          // Get the added text from any add-to-cart button
+          const anyAddToCartButton = allAddToCartContainers[0]?.refs.addToCartButton;
+          if (anyAddToCartButton) {
+            const addedTextElement = anyAddToCartButton.querySelector('.add-to-cart-text--added');
             const addedText = addedTextElement?.textContent?.trim() || Theme.translations.added;
 
             this.#setLiveRegionText(addedText);
@@ -368,23 +513,184 @@ class ProductFormComponent extends Component {
           }
 
           // Fetch the updated cart to get the actual total quantity for this variant
-          this.#fetchAndUpdateCartQuantity();
+          const cart = await this.#refreshCart()
+            .then((ajaxCart) => {
+              deferredEventPromise.resolve({
+                cart: CartLinesUpdateEvent.createCartFromAjaxResponse(ajaxCart),
+                detail: {
+                  items: ajaxCart.items,
+                  source: 'product-form-component',
+                  sourceId: this.id.toString(),
+                  itemCount,
+                  productId: this.dataset.productId,
+                  sections: response.sections,
+                  didError: false,
+                },
+              });
 
-          this.dispatchEvent(
-            new CartAddEvent({}, id.toString(), {
-              source: 'product-form-component',
-              itemCount: Number(formData.get('quantity')) || Number(this.dataset.quantityDefault),
-              productId: this.dataset.productId,
-              sections: response.sections,
+              if (this.#getVariantIdInput()) {
+                this.#updateCartQuantity(ajaxCart);
+              }
+
+              return ajaxCart;
             })
-          );
+            .catch(deferredEventPromise.reject);
         }
       })
       .catch((error) => {
         console.error(error);
+        deferredEventPromise.reject(error);
+
+        this.dispatchEvent(
+          new CartErrorEvent({
+            error: error?.message || 'Network error during add to cart',
+            code: 'SERVICE_UNAVAILABLE',
+          })
+        );
       })
       .finally(() => {
-        cartPerformance.measureFromEvent('add:user-action', event);
+        if (event) {
+          cartPerformance.measureFromEvent('add:user-action', event);
+        }
+      });
+  }
+
+  /** @param {Array<{variantId: string, quantity: number}>} items */
+  #processBatchAddToCart(items) {
+    if (items.length === 0) return;
+
+    const { addToCartTextError } = this.refs;
+
+    if (this.#timeout) clearTimeout(this.#timeout);
+
+    const cartItemsComponents = document.querySelectorAll('cart-items-component');
+    const cartItemComponentsSectionIds = [];
+    for (const item of cartItemsComponents) {
+      if (item instanceof HTMLElement && item.dataset.sectionId) {
+        cartItemComponentsSectionIds.push(item.dataset.sectionId);
+      }
+    }
+
+    const totalQuantity = items.reduce((sum, item) => sum + item.quantity, 0);
+    const deferredEventPromise = CartLinesUpdateEvent.createPromise();
+
+    this.dispatchEvent(
+      new CartLinesUpdateEvent({
+        action: 'add',
+        context: 'product',
+        lines: items.map((item) => ({
+          merchandiseId: item.variantId,
+          quantity: item.quantity,
+        })),
+        promise: deferredEventPromise.promise,
+      })
+    );
+
+    const payload = {
+      items: items.map((item) => ({
+        id: Number(item.variantId),
+        quantity: item.quantity,
+      })),
+      sections: cartItemComponentsSectionIds.join(','),
+    };
+
+    fetch(Theme.routes.cart_add_url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Accept: 'application/json',
+      },
+      body: JSON.stringify(payload),
+    })
+      .then((response) => response.json())
+      .then(async (response) => {
+        if (response.status) {
+          this.dispatchEvent(
+            new CartErrorEvent({
+              error: response.message || 'Add to cart failed',
+              code: 'INVALID',
+              detail: {
+                description: response.description,
+                errors: response.errors,
+              },
+            })
+          );
+
+          this.#refreshCart()
+            .then((ajaxCart) =>
+              deferredEventPromise.resolve({
+                cart: CartLinesUpdateEvent.createCartFromAjaxResponse(ajaxCart),
+                detail: {
+                  didError: true,
+                  items: ajaxCart.items,
+                  source: 'product-form-component',
+                  sourceId: this.id.toString(),
+                  itemCount: totalQuantity,
+                  productId: this.dataset.productId,
+                },
+              })
+            )
+            .catch(deferredEventPromise.reject);
+
+          if (!addToCartTextError) return;
+          addToCartTextError.classList.remove('hidden');
+          const textNode = addToCartTextError.childNodes[2];
+          if (textNode) {
+            textNode.textContent = response.message;
+          } else {
+            addToCartTextError.appendChild(document.createTextNode(response.message));
+          }
+          this.#setLiveRegionText(response.message);
+
+          this.#timeout = setTimeout(() => {
+            addToCartTextError.classList.add('hidden');
+            this.#clearLiveRegionText();
+          }, ERROR_MESSAGE_DISPLAY_DURATION);
+
+          return;
+        }
+
+        if (addToCartTextError) {
+          addToCartTextError.classList.add('hidden');
+          addToCartTextError.removeAttribute('aria-live');
+        }
+
+        const allAddToCartContainers = /** @type {NodeListOf<AddToCartComponent>} */ (
+          this.querySelectorAll('add-to-cart-component')
+        );
+        const anyAddToCartButton = allAddToCartContainers[0]?.refs.addToCartButton;
+        if (anyAddToCartButton) {
+          const addedTextElement = anyAddToCartButton.querySelector('.add-to-cart-text--added');
+          const addedText = addedTextElement?.textContent?.trim() || Theme.translations.added;
+          this.#setLiveRegionText(addedText);
+          setTimeout(() => this.#clearLiveRegionText(), SUCCESS_MESSAGE_DISPLAY_DURATION);
+        }
+
+        const cart = await this.#refreshCart();
+        deferredEventPromise.resolve({
+          cart: CartLinesUpdateEvent.createCartFromAjaxResponse(cart),
+          detail: {
+            items: cart.items,
+            source: 'product-form-component',
+            sourceId: this.id.toString(),
+            itemCount: totalQuantity,
+            productId: this.dataset.productId,
+            sections: response.sections,
+            didError: false,
+          },
+        });
+        this.#updateCartQuantity(cart);
+      })
+      .catch((error) => {
+        console.error(error);
+        deferredEventPromise.reject(error);
+
+        this.dispatchEvent(
+          new CartErrorEvent({
+            error: error?.message || 'Network error during add to cart',
+            code: 'SERVICE_UNAVAILABLE',
+          })
+        );
       });
   }
 
@@ -435,233 +741,173 @@ class ProductFormComponent extends Component {
   }
 
   /**
-   * @param {VariantUpdateEvent} event
+   * @param {ProductSelectEvent} event
    */
-  #onVariantUpdate = async (event) => {
-    if (event.detail.data.newProduct) {
-      this.dataset.productId = event.detail.data.newProduct.id;
-    } else if (event.detail.data.productId !== this.dataset.productId) {
-      return;
-    }
+  #onProductSelect = async (event) => {
+    // Skip events from product-cards when this form is at the section level
+    const sourceCard = /** @type {Element | null} */ (event.target)?.closest('product-card');
+    if (sourceCard && !sourceCard.contains(this)) return;
 
-    const { variantId, addToCartButtonContainer } = this.refs;
+    // Track generation to prevent a stale (aborted) call from clearing the flag
+    // while a newer variant selection is still pending.
+    const generation = ++this.#variantChangeGeneration;
+    this.#variantChangeInProgress = true;
 
-    const currentAddToCartButton = addToCartButtonContainer?.refs.addToCartButton;
-    const newAddToCartButton = event.detail.data.html.querySelector('[ref="addToCartButton"]');
+    try {
+      const { detail } = await event.promise;
+      if (!detail?.html) return;
 
-    // Update the variant ID
-    variantId.value = event.detail.resource?.id ?? '';
+      const { html, newProduct, productId, resource } = detail;
 
-    if (!currentAddToCartButton && !this.refs.acceleratedCheckoutButtonContainer) return;
-
-    // Update the button state
-    if (currentAddToCartButton) {
-      if (event.detail.resource == null || event.detail.resource.available == false) {
-        addToCartButtonContainer.disable();
-      } else {
-        addToCartButtonContainer.enable();
+      // Update product context if new product loaded (combined listing)
+      if (newProduct) {
+        this.dataset.productId = newProduct.id;
+      } else if (productId && productId !== this.dataset.productId) {
+        return;
       }
 
-      // Update the add to cart button text and icon
-      if (newAddToCartButton) {
+      const { variantId } = this.refs;
+      variantId.value = resource?.id ?? '';
+
+      const { addToCartButtonContainer: currentAddToCartButtonContainer, acceleratedCheckoutButtonContainer } =
+        this.refs;
+      const currentAddToCartButton = currentAddToCartButtonContainer?.refs.addToCartButton;
+
+      // Update state and text for add-to-cart button
+      if (!currentAddToCartButtonContainer || (!currentAddToCartButton && !acceleratedCheckoutButtonContainer)) return;
+
+      // Update the button state
+      if (resource == null || resource.available == false) {
+        currentAddToCartButtonContainer.disable();
+      } else {
+        currentAddToCartButtonContainer.enable();
+      }
+
+      const newAddToCartButton = html.querySelector('product-form-component [ref="addToCartButton"]');
+      if (newAddToCartButton && currentAddToCartButton) {
         morph(currentAddToCartButton, newAddToCartButton);
       }
-    }
 
-    if (this.refs.acceleratedCheckoutButtonContainer) {
-      if (event.detail.resource == null || event.detail.resource.available == false) {
-        this.refs.acceleratedCheckoutButtonContainer?.setAttribute('hidden', 'true');
-      } else {
-        this.refs.acceleratedCheckoutButtonContainer?.removeAttribute('hidden');
+      if (acceleratedCheckoutButtonContainer) {
+        if (resource == null || resource.available == false) {
+          acceleratedCheckoutButtonContainer?.setAttribute('hidden', 'true');
+        } else {
+          acceleratedCheckoutButtonContainer?.removeAttribute('hidden');
+        }
       }
-    }
 
-    // Set the data attribute for the add to cart button to the product variant media if it exists
-    if (event.detail.resource) {
-      const productVariantMedia = event.detail.resource.featured_media?.preview_image?.src;
-      productVariantMedia &&
-        addToCartButtonContainer?.setAttribute('data-product-variant-media', productVariantMedia + '&width=100');
-    }
-
-    // Update quantity selector's min/max/step attributes and cart quantity for the new variant
-    const quantitySelector = /** @type {any} */ (this.querySelector('quantity-selector-component'));
-    const newQuantityInput = /** @type {HTMLInputElement | null} */ (
-      event.detail.data.html.querySelector('quantity-selector-component input[ref="quantityInput"]')
-    );
-
-    if (quantitySelector?.updateConstraints && newQuantityInput) {
-      quantitySelector.updateConstraints(
-        newQuantityInput.min,
-        newQuantityInput.max || null,
-        newQuantityInput.step
-      );
-    }
-
-    // Check if quantity rules are appearing/disappearing (causes layout shift)
-    const quantityRules = this.refs.quantityRules;
-    const newQuantityRules = event.detail.data.html.querySelector('.quantity-rules');
-    const isQuantityRulesChanging = !!quantityRules !== !!newQuantityRules;
-
-    if (isQuantityRulesChanging && quantitySelector) {
-      // Store quantity value before morphing entire container
-      const currentQuantityValue = quantitySelector.getValue?.();
-
-      const currentProductFormButtons = this.refs.productFormButtons;
-      const newProductFormButtons = event.detail.data.html.querySelector('.product-form-buttons');
-
-      if (currentProductFormButtons && newProductFormButtons) {
-        morph(currentProductFormButtons, newProductFormButtons);
-
-        // Get the NEW quantity selector after morphing and update its constraints
-        const newQuantitySelector = /** @type {any} */ (this.querySelector('quantity-selector-component'));
-        const newQuantityInputElement = /** @type {HTMLInputElement | null} */ (
-          event.detail.data.html.querySelector('quantity-selector-component input[ref="quantityInput"]')
-        );
-
-        if (newQuantitySelector?.updateConstraints && newQuantityInputElement && currentQuantityValue) {
-          // Temporarily set the old value so updateConstraints can snap it properly
-          newQuantitySelector.setValue(currentQuantityValue);
-          // updateConstraints will snap to valid increment if needed
-          newQuantitySelector.updateConstraints(
-            newQuantityInputElement.min,
-            newQuantityInputElement.max || null,
-            newQuantityInputElement.step
+      // Set the data attribute for the product variant media if it exists
+      if (resource) {
+        const productVariantMedia = resource.featured_media?.preview_image?.src;
+        if (productVariantMedia) {
+          this.refs.addToCartButtonContainer?.setAttribute(
+            'data-product-variant-media',
+            productVariantMedia + '&width=100'
           );
         }
       }
-    } else {
-      // Update elements individually when layout isn't changing
-      const quantityLabel = this.querySelector('.quantity-label');
-      const newQuantityLabel = event.detail.data.html.querySelector('.quantity-label');
-      this.#morphOrUpdateElement(quantityLabel, newQuantityLabel, quantitySelector);
 
-      const addToCartButton = this.querySelector('[ref="addToCartButtonContainer"]');
-      this.#morphOrUpdateElement(quantityRules, newQuantityRules, addToCartButton);
+      // Check if quantity rules, price-per-item, or add-to-cart are appearing/disappearing (causes layout shift)
+      const {
+        quantityRules,
+        pricePerItem,
+        quantitySelector,
+        productFormButtons,
+        quantityLabel,
+        quantitySelectorWrapper,
+      } = this.refs;
+
+      // Update quantity selector's min/max/step attributes and cart quantity for the new variant
+      const newQuantityInput = /** @type {HTMLInputElement | null} */ (
+        html.querySelector('quantity-selector-component input[ref="quantityInput"]')
+      );
+
+      if (quantitySelector?.updateConstraints && newQuantityInput) {
+        quantitySelector.updateConstraints(newQuantityInput.min, newQuantityInput.max || null, newQuantityInput.step);
+        // Keep data-quantity-default attribute in sync with new variant's minimum quantity
+        this.dataset.quantityDefault = newQuantityInput.min || '1';
+      }
+
+      const newQuantityRules = html.querySelector('.quantity-rules');
+      const isQuantityRulesChanging = !!quantityRules !== !!newQuantityRules;
+
+      const newPricePerItem = html.querySelector('price-per-item');
+      const isPricePerItemChanging = !!pricePerItem !== !!newPricePerItem;
+
+      if ((isQuantityRulesChanging || isPricePerItemChanging) && quantitySelector) {
+        // Store quantity value before morphing entire container
+        const currentQuantityValue = quantitySelector.getValue?.();
+
+        const newProductFormButtons = html.querySelector('.product-form-buttons');
+
+        if (productFormButtons && newProductFormButtons) {
+          morph(productFormButtons, newProductFormButtons);
+
+          // Get the NEW quantity selector after morphing and update its constraints
+          const newQuantityInputElement = /** @type {HTMLInputElement | null} */ (
+            html.querySelector('quantity-selector-component input[ref="quantityInput"]')
+          );
+
+          if (this.refs.quantitySelector?.updateConstraints && newQuantityInputElement && currentQuantityValue) {
+            // Temporarily set the old value so updateConstraints can snap it properly
+            this.refs.quantitySelector.setValue(currentQuantityValue);
+            // updateConstraints will snap to valid increment if needed
+            this.refs.quantitySelector.updateConstraints(
+              newQuantityInputElement.min,
+              newQuantityInputElement.max || null,
+              newQuantityInputElement.step
+            );
+            // Keep data-quantity-default attribute in sync with new variant's minimum quantity
+            this.dataset.quantityDefault = newQuantityInputElement.min || '1';
+          }
+        }
+      } else {
+        // Update elements individually when layout isn't changing
+        /** @type {Array<[string, HTMLElement | undefined, HTMLElement | undefined]>} */
+        const morphTargets = [
+          ['.quantity-label', quantityLabel, quantitySelector],
+          ['.quantity-rules', quantityRules, this.refs.productFormButtons],
+          ['price-per-item', pricePerItem, quantitySelectorWrapper],
+        ];
+
+        for (const [selector, currentElement, fallback] of morphTargets) {
+          this.#morphOrUpdateElement(currentElement, html.querySelector(selector), fallback);
+        }
+      }
+
+      // Morph volume pricing if it exists
+      const currentVolumePricing = this.refs.volumePricing;
+      const newVolumePricing = html.querySelector('volume-pricing');
+      this.#morphOrUpdateElement(currentVolumePricing, newVolumePricing, this.refs.productFormButtons);
+
+      const hasB2BFeatures =
+        quantityRules ||
+        newQuantityRules ||
+        pricePerItem ||
+        newPricePerItem ||
+        currentVolumePricing ||
+        newVolumePricing;
+
+      if (!hasB2BFeatures) return;
+
+      // Fetch and update cart quantity for the new variant
+      this.#refreshCart().then((cart) => this.#updateCartQuantity(cart));
+    } finally {
+      // Only clear the flag if no newer variant selection has started
+      if (generation === this.#variantChangeGeneration) {
+        this.#variantChangeInProgress = false;
+
+        // Drain any queued add-to-cart requests that accumulated during the variant change
+        if (this.#addToCartQueue.length > 0) {
+          const queuedItems = [...this.#addToCartQueue];
+          this.#addToCartQueue = [];
+          this.#processBatchAddToCart(queuedItems);
+        }
+      }
     }
-
-    // Fetch and update cart quantity for the new variant
-    await this.#fetchAndUpdateCartQuantity();
-  };
-
-  /**
-   * Disable the add to cart button while the UI is updating before #onVariantUpdate is called.
-   * Accelerated checkout button is also disabled via its own event listener not exposed to the theme.
-   */
-  #onVariantSelected = () => {
-    this.refs.addToCartButtonContainer?.disable();
   };
 }
 
 if (!customElements.get('product-form-component')) {
   customElements.define('product-form-component', ProductFormComponent);
-}
-
-class FlyToCart extends HTMLElement {
-  /** @type {Element} */
-  source;
-
-  /** @type {Element} */
-  destination;
-
-  connectedCallback() {
-    this.#animate();
-  }
-
-  #animate() {
-    const rect = this.getBoundingClientRect();
-    const sourceRect = this.source.getBoundingClientRect();
-    const destinationRect = this.destination.getBoundingClientRect();
-
-    //Define bezier curve points
-    // Maybe add half of the size of the flying thingy to the x and y to make it center properly
-    const offset = {
-      x: rect.width / 2,
-      y: rect.height / 2,
-    };
-    const startPoint = {
-      x: sourceRect.left + sourceRect.width / 2 - offset.x,
-      y: sourceRect.top + sourceRect.height / 2 - offset.y,
-    };
-
-    const endPoint = {
-      x: destinationRect.left + destinationRect.width / 2 - offset.x,
-      y: destinationRect.top + destinationRect.height / 2 - offset.y,
-    };
-
-    //Calculate the control points
-    const controlPoint1 = { x: startPoint.x, y: startPoint.y - 200 }; // Go up 200px
-    const controlPoint2 = { x: endPoint.x - 300, y: endPoint.y - 100 }; // Go left 300px and up 100px
-
-    //Animation variables
-    /** @type {number | null} */
-    let startTime = null;
-    const duration = 600; // 600ms
-
-    this.style.opacity = '1';
-
-    /**
-     * Animates the flying thingy along the bezier curve.
-     * @param {number} currentTime - The current time.
-     */
-    const animate = (currentTime) => {
-      if (!startTime) startTime = currentTime;
-      const elapsed = currentTime - startTime;
-      const progress = Math.min(elapsed / duration, 1);
-
-      // Calculate current position along the bezier curve
-      const position = bezierPoint(progress, startPoint, controlPoint1, controlPoint2, endPoint);
-
-      //Update the position of the flying thingy
-      this.style.setProperty('--x', `${position.x}px`);
-      this.style.setProperty('--y', `${position.y}px`);
-
-      // Scale down as it approaches the cart
-      const scale = 1 - progress * 0.5;
-      this.style.setProperty('--scale', `${scale}`);
-
-      //Continue the animation if not finished
-      if (progress < 1) {
-        requestAnimationFrame(animate);
-      } else {
-        //Fade out the flying thingy
-        this.style.opacity = '0';
-        onAnimationEnd(this, () => this.remove());
-      }
-    };
-
-    // Position the flying thingy back to the start point
-    this.style.setProperty('--x', `${startPoint.x}px`);
-    this.style.setProperty('--y', `${startPoint.y}px`);
-
-    //Start the animation
-    requestAnimationFrame(animate);
-  }
-}
-
-/**
- * Calculates a point on a cubic Bézier curve.
- * @param {number} t - The parameter value (0 <= t <= 1).
- * @param {{x: number, y: number}} p0 - The starting point (x, y).
- * @param {{x: number, y: number}} p1 - The first control point (x, y).
- * @param {{x: number, y: number}} p2 - The second control point (x, y).
- * @param {{x: number, y: number}} p3 - The ending point (x, y).
- * @returns {{x: number, y: number}} The point on the curve.
- */
-function bezierPoint(t, p0, p1, p2, p3) {
-  const cX = 3 * (p1.x - p0.x);
-  const bX = 3 * (p2.x - p1.x) - cX;
-  const aX = p3.x - p0.x - cX - bX;
-
-  const cY = 3 * (p1.y - p0.y);
-  const bY = 3 * (p2.y - p1.y) - cY;
-  const aY = p3.y - p0.y - cY - bY;
-
-  const x = aX * Math.pow(t, 3) + bX * Math.pow(t, 2) + cX * t + p0.x;
-  const y = aY * Math.pow(t, 3) + bY * Math.pow(t, 2) + cY * t + p0.y;
-
-  return { x, y };
-}
-
-if (!customElements.get('fly-to-cart')) {
-  customElements.define('fly-to-cart', FlyToCart);
 }

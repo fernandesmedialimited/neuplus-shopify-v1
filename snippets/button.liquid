@@ -9,13 +9,26 @@
 {%- enddoc -%}
 
 {% assign block_settings = block.settings %}
+{% render 'button-custom-styles', block_settings: block_settings, block_id: block.id %}
+
+{%- assign final_link = link -%}
+
+{%- if block_settings.is_subscribe_button and block_settings.subscription_product != blank -%}
+  {%- assign sub_product = block_settings.subscription_product -%}
+  {%- assign variant_id = sub_product.selected_or_first_available_variant.id -%}
+  {%- assign selling_plan_id = block_settings.selling_plan_id | strip -%}
+  
+  {%- if variant_id -%}
+    {%- capture final_link -%}/cart/add?id={{ variant_id }}&quantity=1{% if selling_plan_id != blank %}&selling_plan={{ selling_plan_id }}{% endif %}&return_to=/checkout{%- endcapture -%}
+  {%- endif -%}
+{%- endif -%}
 
 <a
-  {% if link == blank %}
+  {% if final_link == blank %}
     role="link"
     aria-disabled="true"
   {% else %}
-    href="{{ link }}"
+    href="{{ final_link }}"
   {% endif %}
   class="
     size-style
@@ -23,7 +36,7 @@
     {{ block_settings.style_class }}--{{ block.id }}
   "
   style="{% render 'size-style', settings: block_settings %}"
-  {%- if block_settings.open_in_new_tab -%}
+  {%- if block_settings.open_in_new_tab and block_settings.is_subscribe_button == false -%}
     target="_blank"
     rel="noopener noreferrer"
   {%- endif -%}
@@ -31,15 +44,3 @@
 >
   {{ block_settings.label }}
 </a>
-
-{% stylesheet %}
-  .link {
-    text-decoration: none;
-    text-decoration-color: currentcolor;
-
-    &:hover {
-      color: var(--color-primary-hover);
-      text-decoration-color: transparent;
-    }
-  }
-{% endstylesheet %}

@@ -16,7 +16,8 @@
       "comment": "Kommentar",
       "post_success": "Tack för att du kontaktar oss. Vi återkommer till dig så snart som möjligt.",
       "error_heading": "Justera följande:"
-    }
+    },
+    "slider_label": "Bild"
   },
   "accessibility": {
     "play_model": "Spela 3D-modell",
@@ -60,13 +61,26 @@
     "increase_quantity": "Öka kvantitet",
     "quantity": "Kvantitet",
     "rating": "Betyget för den här produkten är {{ rating }} av 5",
-    "nested_product": "{{ product_title }} för {{ parent_title }}"
+    "nested_product": "{{ product_title }} för {{ parent_title }}",
+    "remove": "Ta bort",
+    "view_pricing_info": "Visa prissättningsinformation",
+    "slideshow": "Bildspel",
+    "header_navigation_label": "Primär",
+    "home_logo_alt": "{{ store_name }} – Startsida",
+    "active_filters": "Aktiva filter:",
+    "product_details": "Produktdetaljer",
+    "show_product_details": "Visa produktdetaljer för {{ product_name }}",
+    "featured_product": "Utvald produkt",
+    "search_suggestions_available": "Sökförslag tillgängliga för \"{{ query }}\"",
+    "price_filter_low": "Lågt pris",
+    "price_filter_high": "Högt pris",
+    "view_disclosure_information_for_product": "Visa produktupplysningar för {{ product_title }}"
   },
   "actions": {
     "add_to_cart": "Lägg till i varukorgen",
     "clear_all": "Rensa alla",
     "remove": "Ta bort",
-    "view_in_your_space": "Visa i ditt utrymme",
+    "view_in_your_space": "Visa i din miljö",
     "show_filters": "Filter",
     "clear": "Rensa",
     "continue_shopping": "Fortsätt handla",
@@ -100,7 +114,9 @@
     "sign_up": "Registrera dig",
     "sort": "Sortera",
     "show_all_options": "Visa alla alternativ",
-    "open": "Öppna"
+    "open": "Öppna",
+    "back_to": "Tillbaka till {{ title }}",
+    "zoom_media": "Zooma media {{ index }}"
   },
   "content": {
     "reviews": "recensioner",
@@ -114,7 +130,7 @@
     "quantity": "Kvantitet",
     "product_total": "Produkter totalt",
     "cart_estimated_total": "Beräknad totalsumma",
-    "seller_note": "Särskilda instruktioner",
+    "seller_note": "Särskilda anvisningar",
     "cart_subtotal": "Delsumma",
     "discounts": "Rabatter",
     "discount": "Rabatt",
@@ -198,7 +214,7 @@
     "taxes_at_checkout_shipping_at_checkout_without_policy_without_discounts": "Skatt och frakt beräknas i kassan.",
     "taxes_included_shipping_at_checkout_with_policy_without_discounts_html": "Skatter ingår. Frakt beräknas i kassan.",
     "taxes_included_shipping_at_checkout_without_policy_without_discounts": "Skatter ingår. Frakt beräknas i kassan.",
-    "view_more_details": "Visa fler uppgifter",
+    "view_more_details": "Visa mer information",
     "page_placeholder_title": "Sidrubrik",
     "page_placeholder_content": "Välj en sida om du vill visa dess innehåll.",
     "placeholder_image": "Platshållarbild",
@@ -229,11 +245,36 @@
     "product_custom_property_character_count": "{{ used_chars }}/{{ max_chars }} tecken har använts",
     "terms_and_policies": "Villkor och policyer",
     "pagination": {
-      "nav_label": "Navigering av paginering",
+      "nav_label": "Paginering",
       "previous": "Föregående",
       "next": "Nästa",
       "page": "Sidan {{ page }}"
-    }
+    },
+    "volume_pricing_available": "Volymprissättning är tillgängligt",
+    "volume_pricing": "Volymprissättning",
+    "at_price_each": "för {{ price }}/st",
+    "each": "{{ price }}/st.",
+    "each_abbreviation": "st",
+    "price_at": "för",
+    "price_range": "Prisklass",
+    "cancel": "Avbryt",
+    "product_subtotal": "Delsumma för produkt",
+    "quantity_per_item": "/st",
+    "remove_all": "Ta bort alla",
+    "remove_all_items_confirmation": "Ta bort alla {{ count }} artiklar från din varukorg?",
+    "remove_one_item_confirmation": "Vill du ta bort 1 artikel från varukorgen?",
+    "total_items": "Totalt antal artiklar",
+    "variant": "Variant",
+    "variant_total": "Totalbelopp för variant",
+    "view_cart": "Visa varukorg",
+    "your_cart": "Din varukorg",
+    "items_added_to_cart": {
+      "one": "1 artikel har lagts till i varukorgen",
+      "other": "{{ count }} artiklar har lagts till i varukorgen"
+    },
+    "item_count_cutoff": "Fler än {{ count }} artiklar",
+    "quick_order_list": "Snabborderlista",
+    "product_disclosures": "Produktupplysningar"
   },
   "gift_cards": {
     "issued": {
@@ -248,36 +289,6 @@
       "copy_code_success": "Koden kopierades",
       "expired": "Har utgått"
     }
-  },
-  "placeholders": {
-    "password": "Lösenord",
-    "search": "Sök",
-    "product_title": "Produktnamn",
-    "collection_title": "Produktseriens namn",
-    "blog_posts": "Bloggposter",
-    "blog_post_title": "Titel",
-    "blog_post_author": "Författare",
-    "blog_post_date": "Datum",
-    "blog_post_description": "Ett utdrag ur bloggpostens innehåll"
-  },
-  "products": {
-    "product": {
-      "add_to_cart": "Lägg till i varukorgen",
-      "added_to_cart": "Tillagd i varukorgen",
-      "adding_to_cart": "Lägger till ...",
-      "add_to_cart_error": "Det uppstod ett fel när artikeln skulle läggas till i varukorgen",
-      "sold_out": "Slutsåld",
-      "unavailable": "Inte tillgängliga",
-      "quantity_error_max": "Den här artikeln har max {{ maximum }}",
-      "quantity": "Kvantitet",
-      "quantity_increments": "Ökningar i steg om {{ increment }}",
-      "quantity_minimum": "Minimum {{ minimum }}",
-      "quantity_maximum": "Maximum {{ maximum }}",
-      "in_cart": "i varukorg"
-    }
-  },
-  "fields": {
-    "separator": "till"
   },
   "blogs": {
     "article": {
@@ -297,6 +308,38 @@
       "post": "Publicera kommentar",
       "success_moderated": "Kommentaren har publicerats, väntar på moderering",
       "success": "Kommentaren har publicerats"
+    }
+  },
+  "fields": {
+    "separator": "till"
+  },
+  "placeholders": {
+    "password": "Lösenord",
+    "search": "Sök",
+    "product_title": "Produktnamn",
+    "collection_title": "Produktseriens namn",
+    "blog_posts": "Bloggposter",
+    "blog_post_title": "Titel",
+    "blog_post_author": "Författare",
+    "blog_post_date": "Datum",
+    "blog_post_description": "Ett utdrag ur bloggpostens innehåll"
+  },
+  "products": {
+    "product": {
+      "add_to_cart": "Lägg till i varukorgen",
+      "adding_to_cart": "Lägger till ...",
+      "added_to_cart": "Tillagd i varukorgen",
+      "add_to_cart_error": "Det uppstod ett fel när artikeln skulle läggas till i varukorgen",
+      "quantity_error_max": "Den här artikeln har max {{ maximum }}",
+      "sold_out": "Slutsåld",
+      "unavailable": "Inte tillgängliga",
+      "quantity": "Kvantitet",
+      "quantity_increments": "Ökningar i steg om {{ increment }}",
+      "quantity_minimum": "Minimum {{ minimum }}",
+      "quantity_maximum": "Maximum {{ maximum }}",
+      "in_cart": "i varukorg",
+      "default_title": "Standardtitel",
+      "sticky_add_to_cart": "Fält för att lägga till snabbt i varukorgen"
     }
   }
 }

@@ -16,7 +16,8 @@
       "comment": "Commentaire",
       "post_success": "Merci de nous avoir contactés. Nous vous répondrons dès que possible.",
       "error_heading": "Veuillez ajuster les éléments suivants :"
-    }
+    },
+    "slider_label": "Carrousel"
   },
   "accessibility": {
     "play_model": "Jouer le modèle 3D",
@@ -61,23 +62,36 @@
     "increase_quantity": "Augmenter la quantité",
     "quantity": "Quantité",
     "rating": "La note de ce produit est {{ rating }} sur 5",
-    "nested_product": "{{ product_title }} pour {{ parent_title }}"
+    "nested_product": "{{ product_title }} pour {{ parent_title }}",
+    "remove": "Retirer",
+    "view_pricing_info": "Afficher les informations de tarification",
+    "slideshow": "Diaporama",
+    "header_navigation_label": "Principale",
+    "home_logo_alt": "{{ store_name }} - Accueil",
+    "active_filters": "Activez des filtres :",
+    "product_details": "Détails du produit",
+    "show_product_details": "Afficher les détails du produit pour {{ product_name }}",
+    "featured_product": "Produit en vedette",
+    "search_suggestions_available": "Rechercher des suggestions disponibles pour « {{ query }} »",
+    "price_filter_low": "Prix bas",
+    "price_filter_high": "Prix élevé",
+    "view_disclosure_information_for_product": "Afficher les informations sur le produit {{ product_title }}"
   },
   "actions": {
     "add_to_cart": "Ajouter au panier",
     "clear_all": "Tout effacer",
-    "remove": "Supprimer",
-    "view_in_your_space": "Afficher dans votre espace",
+    "remove": "Retirer",
+    "view_in_your_space": "Voir dans votre espace",
     "show_filters": "Filtrer",
     "clear": "Effacer",
-    "continue_shopping": "Continuer les achats",
+    "continue_shopping": "Continuer vos achats",
     "log_in_html": "Vous possédez un compte ? <a href=\"{{ link }}\">Connectez-vous</a> pour payer plus vite.",
     "see_items": {
       "one": "Voir {{ count }} article",
-      "other": "Voir {{ count }} articles",
-      "many": "Voir {{ count }} articles"
+      "other": "Voir {{ count }} articles",
+      "many": "Voir {{ count }} articles"
     },
-    "view_all": "Voir tout",
+    "view_all": "Tout afficher",
     "add": "Ajouter",
     "choose": "Choisir",
     "added": "Ajouté",
@@ -102,7 +116,9 @@
     "open_image_in_full_screen": "Ouvrir l’image en plein écran",
     "sort": "Trier",
     "show_all_options": "Afficher toutes les options",
-    "open": "Ouvrir"
+    "open": "Ouvrir",
+    "back_to": "Retour à {{ title }}",
+    "zoom_media": "Zoom du support multimédia {{ index }}"
   },
   "content": {
     "reviews": "avis",
@@ -234,11 +250,37 @@
     "product_custom_property_character_count": "{{ used_chars }}/{{ max_chars }} caractères utilisés",
     "terms_and_policies": "Conditions générales et politiques",
     "pagination": {
-      "nav_label": "Navigation par pagination",
+      "nav_label": "Pagination",
       "previous": "Précédent",
       "next": "Suivant",
       "page": "Page {{ page }}"
-    }
+    },
+    "volume_pricing_available": "La tarification basée sur la quantité est disponible",
+    "volume_pricing": "Tarification basée sur la quantité",
+    "at_price_each": "à {{ price }}/pièce",
+    "each": "{{ price }}/pièce",
+    "each_abbreviation": "pièce",
+    "price_at": "à",
+    "price_range": "Fourchette de prix",
+    "item_count_cutoff": "Plus de {{ count }} articles",
+    "cancel": "Annuler",
+    "product_subtotal": "Sous-total des produits",
+    "quantity_per_item": "/pièce",
+    "remove_all": "Tout retirer",
+    "remove_all_items_confirmation": "Retirer les {{ count }} articles de votre panier ?",
+    "remove_one_item_confirmation": "Retirer 1 article de votre panier ?",
+    "total_items": "Total des articles",
+    "variant": "Variante",
+    "variant_total": "Total des variantes",
+    "view_cart": "Voir le panier",
+    "your_cart": "Votre panier",
+    "items_added_to_cart": {
+      "one": "1 article ajouté au panier",
+      "other": "{{ count }} articles ajoutés au panier",
+      "many": "{{ count }} articles ajoutés au panier"
+    },
+    "quick_order_list": "Liste de commande rapide",
+    "product_disclosures": "Informations sur le produit"
   },
   "gift_cards": {
     "issued": {
@@ -278,7 +320,9 @@
       "quantity_increments": "Incréments de {{ increment }}",
       "quantity_minimum": "Minimum de {{ minimum }}",
       "quantity_maximum": "Maximum de {{ maximum }}",
-      "in_cart": "dans le panier"
+      "in_cart": "dans le panier",
+      "default_title": "Titre par défaut",
+      "sticky_add_to_cart": "Barre d’ajout rapide au panier"
     }
   },
   "fields": {

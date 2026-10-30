@@ -22,9 +22,17 @@
   fetchpriority="low"
 ></script>
 
-<div class="section-background color-{{ section.settings.color_scheme }}"></div>
+{% liquid
+  if section.settings.background_color != blank
+    render 'contrast-override', background_color: section.settings.background_color, section_id: section.id
+  endif
+%}
+
 <div
-  class="section section--{{ section.settings.section_width }} color-{{ section.settings.color_scheme }} spacing-style"
+  class="section-background{% if section.settings.background_color != blank %} color-custom-{{ section.id }}{% endif %}"
+></div>
+<div
+  class="section section--{{ section.settings.section_width }}{% if section.settings.background_color != blank %} color-custom-{{ section.id }}{% endif %} spacing-style"
   style="{% render 'spacing-style', settings: section.settings %}"
   data-testid="collection-links-{{ section.id }}"
 >
@@ -70,7 +78,6 @@
           %}
 
           {% capture slide %}
-            {% # theme-check-disable UniqueStaticBlockId %}
             {% content_for 'block',
               type: '_collection-link',
               id: 'link',
@@ -79,7 +86,6 @@
               current: current,
               image_only: true
             %}
-            {% # theme-check-enable UniqueStaticBlockId %}
           {% endcapture %}
 
           {% render 'slideshow-slide', children: slide, index: forloop.index0 %}
@@ -96,7 +102,6 @@
   </collection-links-component>
 </div>
 
-{% # theme-check-disable ValidBlockTarget %}
 {% stylesheet %}
   collection-links-component {
     --alignment: flex-start;
@@ -138,7 +143,7 @@
       grid-template-columns: 1fr var(--template-column-ratio);
       grid-template-areas: 'text image';
 
-      @media (min-width: 749px) {
+      @media screen and (min-width: 750px) {
         &[reverse] {
           grid-template-areas: 'image text';
           grid-template-columns: var(--template-column-ratio) 1fr;
@@ -149,7 +154,7 @@
         align-items: var(--alignment);
       }
 
-      @media (max-width: 749px) {
+      @media screen and (max-width: 749px) {
         grid-template-columns: 1fr;
         grid-template-areas: 'text' 'image';
         grid-gap: var(--gap-2xl);
@@ -184,7 +189,7 @@
     overflow: hidden;
     grid-area: image;
 
-    @media (max-width: 749px) {
+    @media screen and (max-width: 749px) {
       image-block {
         max-width: 100%;
       }
@@ -278,10 +283,10 @@
       "visible_if": "{{ section.settings.layout == \"spotlight\" }}"
     },
     {
-      "type": "color_scheme",
-      "id": "color_scheme",
-      "label": "t:settings.color_scheme",
-      "default": "scheme-1"
+      "type": "color",
+      "id": "background_color",
+      "label": "t:settings.background_color",
+      "placeholder": "t:settings.default"
     },
     {
       "type": "header",
@@ -371,4 +376,3 @@
   ]
 }
 {% endschema %}
-{% # theme-check-enable ValidBlockTarget %}
