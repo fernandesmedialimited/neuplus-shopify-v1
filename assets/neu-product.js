@@ -130,15 +130,25 @@ class NeuBuyBox extends HTMLElement {
     this.querySelectorAll('[data-option-index]').forEach((input) =>
       input.addEventListener('change', () => this.onOptionChange())
     );
-    this.plans.forEach((plan) => plan.querySelector('input')?.addEventListener('change', () => this.update()));
+    this.plans.forEach((plan) => {
+      plan.querySelector('.neu-plan__radio')?.addEventListener('change', () => this.update());
+      plan.querySelectorAll('[data-purchase]').forEach((input) =>
+        input.addEventListener('change', () => this.selectPlan(plan))
+      );
+      // The card is a div (it holds its own Subscribe / Buy once radios), so a click anywhere selects it
+      plan.addEventListener('click', (event) => {
+        if (event.target instanceof Element && event.target.closest('a, button')) return;
+        this.selectPlan(plan);
+      });
+    });
     this.shownVariantId = '';
     this.querySelector('[data-qty-minus]')?.addEventListener('click', () => this.stepQuantity(-1));
     this.querySelector('[data-qty-plus]')?.addEventListener('click', () => this.stepQuantity(1));
     this.qtyInput?.addEventListener('change', () => this.update());
     this.form.addEventListener('submit', (event) => this.onSubmit(event));
 
-    if (this.plans.length && !this.plans.some((plan) => plan.querySelector('input')?.checked)) {
-      const first = this.plans[0].querySelector('input');
+    if (this.plans.length && !this.plans.some((plan) => plan.querySelector('.neu-plan__radio')?.checked)) {
+      const first = this.plans[0].querySelector('.neu-plan__radio');
       if (first) first.checked = true;
     }
 
@@ -149,8 +159,14 @@ class NeuBuyBox extends HTMLElement {
     return (cents) => formatMoney(cents, this.data.moneyFormat);
   }
 
+  selectPlan(plan) {
+    const radio = plan.querySelector('.neu-plan__radio');
+    if (radio && !radio.checked) radio.checked = true;
+    this.update();
+  }
+
   get selectedPlan() {
-    return this.plans.find((plan) => plan.querySelector('input')?.checked);
+    return this.plans.find((plan) => plan.querySelector('.neu-plan__radio')?.checked);
   }
 
   get quantity() {
@@ -235,16 +251,25 @@ class NeuBuyBox extends HTMLElement {
 
     const variant = this.variantFor(plan);
 
-    if (type === 'subscription') {
+    const oneTime = { price: variant.price, planId: '', variantId: String(variant.id), available: variant.available, variant };
+
+    if (type === 'subscription' || type === 'pack') {
       const wanted = plan.dataset.wantedPlanId;
       const position = Number(plan.dataset.planPosition) || 1;
       const planId = wanted && variant.plans[wanted] !== undefined ? wanted : wanted ? '' : variant.planOrder[position - 1];
-      if (planId && variant.plans[planId] !== undefined) {
-        return { price: variant.plans[planId], planId, variantId: String(variant.id), available: variant.available, variant };
+      const subscription =
+        planId && variant.plans[planId] !== undefined
+          ? { ...oneTime, price: variant.plans[planId], planId, subscription: true }
+          : null;
+
+      if (type === 'pack') {
+        const mode = plan.querySelector('[data-purchase]:checked')?.value;
+        return { ...(subscription && mode === 'subscription' ? subscription : oneTime), oneTime, subscriptionOption: subscription };
       }
+      if (subscription) return subscription;
     }
 
-    return { price: variant.price, planId: '', variantId: String(variant.id), available: variant.available, variant };
+    return oneTime;
   }
 
   update() {
@@ -252,17 +277,37 @@ class NeuBuyBox extends HTMLElement {
     const variant = this.variant;
 
     this.plans.forEach((plan) => {
-      const { price, variant: planVariant } = this.priceFor(plan);
+      const resolvedPlan = this.priceFor(plan);
+      const { variant: planVariant } = resolvedPlan;
+      // Pack cards headline the upfront one-time price; their Subscribe / Buy once rows carry both prices
+      const price = resolvedPlan.oneTime ? resolvedPlan.oneTime.price : resolvedPlan.price;
       const months = Number(plan.dataset.months) || 1;
       const servings = Number(plan.dataset.servings) || 1;
       const perMonth = plan.dataset.perMonth === 'true';
+      const perLabel = plan.dataset.perLabel || '/day';
 
       const amount = plan.querySelector('[data-plan-amount]');
       if (amount) amount.textContent = money(perMonth ? Math.round(price / months) : price);
 
       const per = plan.querySelector('[data-plan-per]');
       if (per) {
-        per.textContent = `${money(Math.round(price / servings))}/day${months > 1 ? ` · ${months}mo = ${money(price)}` : ''}`;
+        per.textContent = `${money(Math.round(price / servings))}${perLabel}${months > 1 ? ` · ${months}mo = ${money(price)}` : ''}`;
+      }
+
+      const purchase = plan.querySelector('.neu-purchase');
+      if (purchase) {
+        const option = resolvedPlan.subscriptionOption;
+        purchase.hidden = !option;
+        const subPrice = plan.querySelector('[data-purchase-price="subscription"]');
+        if (subPrice && option) subPrice.textContent = money(option.price);
+        const oneTimePrice = plan.querySelector('[data-purchase-price="one_time"]');
+        if (oneTimePrice) oneTimePrice.textContent = money(resolvedPlan.oneTime.price);
+        const purchaseSave = plan.querySelector('[data-purchase-save]');
+        if (purchaseSave && option) {
+          const percent = this.savePercent(option.price, 1, planVariant);
+          purchaseSave.hidden = percent <= 0;
+          purchaseSave.textContent = `Save ${percent}%`;
+        }
       }
 
       const save = plan.querySelector('[data-plan-save]');
@@ -272,16 +317,15 @@ class NeuBuyBox extends HTMLElement {
         save.textContent = `Save ${percent}%`;
       }
 
-      plan.classList.toggle('is-selected', !!plan.querySelector('input')?.checked);
+      plan.classList.toggle('is-selected', !!plan.querySelector('.neu-plan__radio')?.checked);
     });
 
     const plan = this.selectedPlan;
     const resolved = plan
       ? this.priceFor(plan)
       : { price: variant.price, planId: '', variantId: String(variant.id), available: variant.available, variant };
-    const months = plan && plan.dataset.planType === 'subscription' ? Number(plan.dataset.months) || 1 : 1;
-    const percent =
-      plan && plan.dataset.planType === 'subscription' ? this.savePercent(resolved.price, months, resolved.variant) : 0;
+    const months = resolved.subscription && plan.dataset.planType === 'subscription' ? Number(plan.dataset.months) || 1 : 1;
+    const percent = resolved.subscription ? this.savePercent(resolved.price, months, resolved.variant) : 0;
     const total = resolved.price * this.quantity;
     const compare = resolved.variant.price * months * this.quantity;
 
