@@ -71,9 +71,21 @@
 
   {%- if review_blocks.size > 0 -%}
     <div class="neu-reviews__viewport" aria-label="Customer reviews">
-      <div class="neu-reviews__track">
-        {{ cards }}
-        <div style="display: contents" aria-hidden="true" inert>{{ cards }}</div>
+    {%- liquid
+      # One set is review count x (320px card + 16px gap). Repeat it enough times
+      # that a full set always sits past the right edge of a 3840px-wide screen,
+      # so the loop reset happens off-screen and the tail never shows blank space.
+      assign set_px = review_blocks.size | times: 336
+      assign copies = 3840 | divided_by: set_px | plus: 2
+      if copies > 12
+        assign copies = 12
+      endif
+    -%}
+      <div class="neu-reviews__track" style="--neu-reviews-copies: {{ copies }};">
+        <div class="neu-reviews__set">{{ cards }}</div>
+        {%- for i in (2..copies) -%}
+          <div class="neu-reviews__set" aria-hidden="true" inert>{{ cards }}</div>
+        {%- endfor -%}
       </div>
     </div>
   {%- endif -%}
