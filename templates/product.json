@@ -584,7 +584,7 @@
         "q5": {
           "type": "question",
           "settings": {
-            "question": "Delivery and returns",
+            "question": "How does delivery work?",
             "answer": "<p>Free UK delivery for subscribers. Orders typically dispatched within 1–2 business days.</p>",
             "open": false
           }
