@@ -38,95 +38,123 @@
             "plan_option": "Pack Types"
           },
           "blocks": {
-            "pack_12": {
+            "sub_24": {
               "type": "_neu-plan",
               "settings": {
-                "plan_type": "pack",
+                "plan_type": "subscription",
+                "pack": "24 Shots",
+                "selling_plan_id": "691167494470",
+                "plan_position": 1,
+                "selected": true,
+                "badge": "Most popular",
+                "title": "24 Shots Subscription",
+                "subtitle": "",
+                "subtitle_accent": false,
+                "perks": "24 shots delivered every 3 weeks\nReschedule, skip or cancel any time\nNo commitment",
+                "perks_inline": false,
+                "chips": "Free delivery",
+                "servings": 24,
+                "billing_months": 1,
+                "show_per_month": false,
+                "per_label": " per shot",
+                "price_note": ""
+              }
+            },
+            "sub_36": {
+              "type": "_neu-plan",
+              "settings": {
+                "plan_type": "subscription",
+                "pack": "36 Shots",
+                "selling_plan_id": "694121562438",
+                "plan_position": 1,
+                "selected": false,
+                "badge": "Best value",
+                "title": "36 Shots Subscription",
+                "subtitle": "",
+                "subtitle_accent": false,
+                "perks": "36 shots delivered every 4 weeks\nReschedule, skip or cancel any time\nNo commitment",
+                "perks_inline": false,
+                "chips": "Free delivery",
+                "servings": 36,
+                "billing_months": 1,
+                "show_per_month": false,
+                "per_label": " per shot",
+                "price_note": ""
+              }
+            },
+            "once_12": {
+              "type": "_neu-plan",
+              "settings": {
+                "plan_type": "one_time",
                 "pack": "12 Shots",
                 "selling_plan_id": "",
                 "plan_position": 1,
                 "selected": false,
                 "badge": "",
                 "title": "12 Shots",
-                "subtitle": "Stock up and save.",
+                "subtitle": "One-time purchase",
                 "subtitle_accent": false,
-                "perks": "Choose your favourite flavour\n+ £3.50 delivery",
+                "perks": "",
                 "perks_inline": false,
                 "chips": "",
                 "servings": 12,
                 "billing_months": 1,
                 "show_per_month": false,
                 "per_label": " per shot",
-                "price_note": "Upfront",
-                "subscribe_by_default": true,
-                "subscribe_label": "Subscribe & save",
-                "subscribe_note": "Free delivery",
-                "one_time_label": "Buy once",
-                "one_time_note": "",
-                "subscribe_footnote": "Cancel or change anytime. No commitment."
+                "price_note": "+ £3.50 delivery"
               }
             },
-            "pack_24": {
+            "once_24": {
               "type": "_neu-plan",
               "settings": {
-                "plan_type": "pack",
+                "plan_type": "one_time",
                 "pack": "24 Shots",
-                "selling_plan_id": "691167494470",
+                "selling_plan_id": "",
                 "plan_position": 1,
-                "selected": true,
-                "badge": "Most popular",
+                "selected": false,
+                "badge": "",
                 "title": "24 Shots",
-                "subtitle": "Stock up and save.",
+                "subtitle": "One-time purchase",
                 "subtitle_accent": false,
-                "perks": "Choose your favourite flavour\n+ £3.50 delivery\nOptional Subscribe & Save available",
+                "perks": "",
                 "perks_inline": false,
                 "chips": "",
                 "servings": 24,
                 "billing_months": 1,
                 "show_per_month": false,
                 "per_label": " per shot",
-                "price_note": "Upfront",
-                "subscribe_by_default": true,
-                "subscribe_label": "Subscribe & save",
-                "subscribe_note": "Free delivery",
-                "one_time_label": "Buy once",
-                "one_time_note": "+ £3.50 delivery",
-                "subscribe_footnote": "Cancel or change anytime. No commitment."
+                "price_note": "+ £3.50 delivery"
               }
             },
-            "pack_36": {
+            "once_36": {
               "type": "_neu-plan",
               "settings": {
-                "plan_type": "pack",
+                "plan_type": "one_time",
                 "pack": "36 Shots",
-                "selling_plan_id": "694121562438",
+                "selling_plan_id": "",
                 "plan_position": 1,
                 "selected": false,
-                "badge": "Best value",
+                "badge": "",
                 "title": "36 Shots",
-                "subtitle": "Stock up and save.",
+                "subtitle": "One-time purchase",
                 "subtitle_accent": false,
-                "perks": "Choose your favourite flavour\nFREE delivery\nOptional Subscribe & Save available",
+                "perks": "",
                 "perks_inline": false,
-                "chips": "",
+                "chips": "Free delivery",
                 "servings": 36,
                 "billing_months": 1,
                 "show_per_month": false,
                 "per_label": " per shot",
-                "price_note": "Upfront",
-                "subscribe_by_default": true,
-                "subscribe_label": "Subscribe & save",
-                "subscribe_note": "Free delivery",
-                "one_time_label": "Buy once",
-                "one_time_note": "Free delivery",
-                "subscribe_footnote": "Cancel or change anytime. No commitment."
+                "price_note": ""
               }
             }
           },
           "block_order": [
-            "pack_12",
-            "pack_24",
-            "pack_36"
+            "sub_24",
+            "sub_36",
+            "once_12",
+            "once_24",
+            "once_36"
           ]
         },
         "delivery": {
