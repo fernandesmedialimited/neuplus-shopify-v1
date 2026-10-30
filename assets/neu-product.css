@@ -910,14 +910,20 @@
 }
 
 .neu-qty input {
+  flex: 1 1 32px;
   width: 32px;
+  min-width: 32px;
+  margin: 0;
+  padding: 0;
   border: 0;
   background: none;
   color: var(--neu-ink);
   font: inherit;
   font-weight: 500;
   text-align: center;
+  -webkit-appearance: none;
   -moz-appearance: textfield;
+  appearance: textfield;
 }
 
 .neu-qty input::-webkit-inner-spin-button,
@@ -1088,6 +1094,11 @@
 
 .neu-sticky.is-visible {
   transform: none;
+}
+
+/* Keep the footer clear of the always-visible bar */
+body:has(.neu-sticky.is-visible) {
+  padding-bottom: 72px;
 }
 
 .neu-sticky__info {
