@@ -1096,6 +1096,11 @@
   transform: none;
 }
 
+/* Step aside while the cart drawer, menu or any other drawer or dialog is open */
+body:has(theme-drawer[open], dialog[open]) .neu-sticky.is-visible {
+  transform: translateY(110%);
+}
+
 /* Keep the footer clear of the always-visible bar */
 body:has(.neu-sticky.is-visible) {
   padding-bottom: 72px;
