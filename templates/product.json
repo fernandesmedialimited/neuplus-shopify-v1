@@ -162,7 +162,7 @@
           "settings": {
             "style": "tint",
             "icon": "truck",
-            "title": "Spend £50 to get free delivery within 2 working days",
+            "title": "Free delivery for subscribers, dispatched within 1–2 working days",
             "link_label": "Delivery information",
             "link_url": "/policies/shipping-policy",
             "image": ""
@@ -585,7 +585,7 @@
           "type": "question",
           "settings": {
             "question": "Delivery and returns",
-            "answer": "<p>Free UK delivery on orders over £45. Orders typically dispatched within 1–2 business days. 30-day money-back guarantee on first orders.</p>",
+            "answer": "<p>Free UK delivery for subscribers. Orders typically dispatched within 1–2 business days. 30-day money-back guarantee on first orders.</p>",
             "open": false
           }
         },
