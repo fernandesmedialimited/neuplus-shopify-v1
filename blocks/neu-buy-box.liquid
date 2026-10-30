@@ -10,7 +10,12 @@
     <input type="hidden" name="selling_plan" value="" data-plan-input disabled>
 
     {%- if block.settings.show_options and p.has_only_default_variant == false -%}
+      {%- assign hidden_option = block.settings.plan_option | strip | downcase -%}
       {%- for option in p.options_with_values -%}
+        {%- assign option_name = option.name | downcase -%}
+        {%- if hidden_option != blank and option_name == hidden_option -%}
+          {%- continue -%}
+        {%- endif -%}
         {%- liquid
           assign option_index = forloop.index0
           assign has_images = false
@@ -165,6 +170,13 @@
       "label": "Show flavour picker",
       "info": "Uses each option value's swatch image, or the variant image",
       "default": true
+    },
+    {
+      "type": "text",
+      "id": "plan_option",
+      "label": "Option chosen by the plan cards",
+      "info": "This option is hidden from the picker. Each plan card sets its value with its Pack type setting.",
+      "default": "Pack Types"
     },
     {
       "type": "text",

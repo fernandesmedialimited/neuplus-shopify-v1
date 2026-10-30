@@ -131,6 +131,7 @@ class NeuBuyBox extends HTMLElement {
       input.addEventListener('change', () => this.onOptionChange())
     );
     this.plans.forEach((plan) => plan.querySelector('input')?.addEventListener('change', () => this.update()));
+    this.shownVariantId = '';
     this.querySelector('[data-qty-minus]')?.addEventListener('click', () => this.stepQuantity(-1));
     this.querySelector('[data-qty-plus]')?.addEventListener('click', () => this.stepQuantity(1));
     this.qtyInput?.addEventListener('change', () => this.update());
@@ -163,7 +164,8 @@ class NeuBuyBox extends HTMLElement {
   }
 
   onOptionChange() {
-    const selected = [];
+    // Options without a picker (the one the plan cards control) keep their current value
+    const selected = [...this.variant.options];
     this.querySelectorAll('[data-option-index]:checked').forEach((input) => {
       selected[Number(input.dataset.optionIndex)] = input.value;
     });
@@ -176,12 +178,42 @@ class NeuBuyBox extends HTMLElement {
       if (label) label.textContent = value;
     });
 
+    this.update();
+  }
+
+  /**
+   * The variant a plan card buys: its pack value combined with the currently picked flavour.
+   * @param {HTMLElement} plan
+   */
+  variantFor(plan) {
+    const pack = plan.dataset.pack;
+    if (!pack) return this.variant;
+
+    const packIndex = this.variant.options.findIndex((_, i) =>
+      this.data.variants.some((variant) => variant.options[i] === pack)
+    );
+    if (packIndex < 0) return this.variant;
+
+    return (
+      this.data.variants.find((variant) =>
+        variant.options.every((value, i) => (i === packIndex ? value === pack : value === this.variant.options[i]))
+      ) || this.variant
+    );
+  }
+
+  /** Keeps the URL and gallery in step with the variant that will be added to the cart. */
+  showVariant(variant) {
+    const id = String(variant.id);
+    if (id === this.shownVariantId) return;
+    const firstRun = !this.shownVariantId;
+    this.shownVariantId = id;
+    if (firstRun) return;
+
     const url = new URL(window.location.href);
-    url.searchParams.set('variant', String(match.id));
+    url.searchParams.set('variant', id);
     window.history.replaceState({}, '', url.toString());
 
-    document.dispatchEvent(new CustomEvent(VARIANT_EVENT, { detail: { variant: match } }));
-    this.update();
+    document.dispatchEvent(new CustomEvent(VARIANT_EVENT, { detail: { variant } }));
   }
 
   /**
@@ -190,22 +222,29 @@ class NeuBuyBox extends HTMLElement {
    */
   priceFor(plan) {
     const type = plan.dataset.planType;
-    const variant = this.variant;
 
     if (type === 'product') {
-      return { price: Number(plan.dataset.fixedPrice), planId: '', variantId: plan.dataset.variantId, available: true };
+      return {
+        price: Number(plan.dataset.fixedPrice),
+        planId: '',
+        variantId: plan.dataset.variantId,
+        available: true,
+        variant: this.variant,
+      };
     }
+
+    const variant = this.variantFor(plan);
 
     if (type === 'subscription') {
       const wanted = plan.dataset.wantedPlanId;
       const position = Number(plan.dataset.planPosition) || 1;
       const planId = wanted && variant.plans[wanted] !== undefined ? wanted : wanted ? '' : variant.planOrder[position - 1];
       if (planId && variant.plans[planId] !== undefined) {
-        return { price: variant.plans[planId], planId, variantId: String(variant.id), available: variant.available };
+        return { price: variant.plans[planId], planId, variantId: String(variant.id), available: variant.available, variant };
       }
     }
 
-    return { price: variant.price, planId: '', variantId: String(variant.id), available: variant.available };
+    return { price: variant.price, planId: '', variantId: String(variant.id), available: variant.available, variant };
   }
 
   update() {
@@ -213,7 +252,7 @@ class NeuBuyBox extends HTMLElement {
     const variant = this.variant;
 
     this.plans.forEach((plan) => {
-      const { price } = this.priceFor(plan);
+      const { price, variant: planVariant } = this.priceFor(plan);
       const months = Number(plan.dataset.months) || 1;
       const servings = Number(plan.dataset.servings) || 1;
       const perMonth = plan.dataset.perMonth === 'true';
@@ -228,7 +267,7 @@ class NeuBuyBox extends HTMLElement {
 
       const save = plan.querySelector('[data-plan-save]');
       if (save) {
-        const percent = this.savePercent(price, months);
+        const percent = this.savePercent(price, months, planVariant);
         save.hidden = percent <= 0;
         save.textContent = `Save ${percent}%`;
       }
@@ -239,11 +278,14 @@ class NeuBuyBox extends HTMLElement {
     const plan = this.selectedPlan;
     const resolved = plan
       ? this.priceFor(plan)
-      : { price: variant.price, planId: '', variantId: String(variant.id), available: variant.available };
+      : { price: variant.price, planId: '', variantId: String(variant.id), available: variant.available, variant };
     const months = plan && plan.dataset.planType === 'subscription' ? Number(plan.dataset.months) || 1 : 1;
-    const percent = plan && plan.dataset.planType === 'subscription' ? this.savePercent(resolved.price, months) : 0;
+    const percent =
+      plan && plan.dataset.planType === 'subscription' ? this.savePercent(resolved.price, months, resolved.variant) : 0;
     const total = resolved.price * this.quantity;
-    const compare = variant.price * months * this.quantity;
+    const compare = resolved.variant.price * months * this.quantity;
+
+    this.showVariant(resolved.variant);
 
     this.variantInput.value = resolved.variantId;
     this.planInput.value = resolved.planId;
@@ -261,7 +303,7 @@ class NeuBuyBox extends HTMLElement {
     document.dispatchEvent(
       new CustomEvent(STATE_EVENT, {
         detail: {
-          variant,
+          variant: resolved.variant,
           price: money(total),
           compare: percent > 0 ? money(compare) : '',
           save: percent > 0 ? `Save ${percent}%` : '',
@@ -271,8 +313,8 @@ class NeuBuyBox extends HTMLElement {
     );
   }
 
-  savePercent(price, months) {
-    const baseline = this.variant.price * months;
+  savePercent(price, months, variant = this.variant) {
+    const baseline = variant.price * months;
     return baseline > price ? Math.round(((baseline - price) / baseline) * 100) : 0;
   }
 

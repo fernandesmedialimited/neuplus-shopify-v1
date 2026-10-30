@@ -461,10 +461,20 @@
 
 /* Buy box */
 
-.neu-buy {
+.neu-buy,
+.neu-buy > form {
   display: flex;
   flex-direction: column;
   gap: 16px;
+}
+
+/* Vessel 4 turns every label wrapping a radio into an inline-flex row; keep the NEU+ cards and swatches as designed */
+.neu-buy .neu-plan {
+  display: block;
+}
+
+.neu-buy .neu-swatch {
+  display: flex;
 }
 
 .neu-option {

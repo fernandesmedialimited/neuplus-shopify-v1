@@ -7,11 +7,42 @@
   assign servings = s.servings | default: 1 | at_least: 1
   assign plan_id = ''
   assign target_variant = v
-  assign plan_price = v.price
+  assign pack = s.pack | strip
+
+  # The pack value (e.g. "24 Shots") picks the variant: same flavour as the current selection, this card's pack
+  if pack != blank and type != 'product'
+    assign pack_index = -1
+    for option in p.options_with_values
+      for value in option.values
+        if value.name == pack
+          assign pack_index = forloop.parentloop.index0
+        endif
+      endfor
+    endfor
+    if pack_index >= 0
+      for candidate in p.variants
+        assign matches = true
+        for value in candidate.options
+          if forloop.index0 == pack_index
+            if value != pack
+              assign matches = false
+            endif
+          elsif value != v.options[forloop.index0]
+            assign matches = false
+          endif
+        endfor
+        if matches
+          assign target_variant = candidate
+          break
+        endif
+      endfor
+    endif
+  endif
+  assign plan_price = target_variant.price
 
   if type == 'subscription'
     assign wanted_id = s.selling_plan_id | strip
-    for allocation in v.selling_plan_allocations
+    for allocation in target_variant.selling_plan_allocations
       assign this_id = allocation.selling_plan.id | append: ''
       if wanted_id != blank and this_id == wanted_id
         assign plan_id = this_id
@@ -35,7 +66,7 @@
   endif
   assign per_day = plan_price | divided_by: servings
 
-  assign baseline = v.price | times: months
+  assign baseline = target_variant.price | times: months
   assign save_percent = 0
   if type == 'subscription' and baseline > plan_price
     assign save_percent = baseline | minus: plan_price | times: 100.0 | divided_by: baseline | round
@@ -52,6 +83,7 @@
   data-plan-id="{{ plan_id }}"
   data-wanted-plan-id="{{ s.selling_plan_id | strip }}"
   data-plan-position="{{ s.plan_position }}"
+  data-pack="{{ pack | escape }}"
   data-variant-id="{% if type == 'product' %}{{ target_variant.id }}{% endif %}"
   data-fixed-price="{% if type == 'product' %}{{ plan_price }}{% endif %}"
   data-months="{{ months }}"
@@ -168,6 +200,12 @@
         { "value": "product", "label": "Different product (e.g. discovery pack)" }
       ],
       "default": "subscription"
+    },
+    {
+      "type": "text",
+      "id": "pack",
+      "label": "Pack type",
+      "info": "The product option value this card buys, e.g. 24 Shots. The flavour comes from the flavour picker."
     },
     {
       "type": "text",
