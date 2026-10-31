@@ -6,6 +6,10 @@
   assign rating_float = rating | times: 1.0
   assign review_blocks = section.blocks | where: 'type', 'review'
   assign app_block_count = section.blocks.size | minus: review_blocks.size
+  assign use_judgeme = false
+  if section.settings.source == 'judgeme' and product
+    assign use_judgeme = true
+  endif
 -%}
 
 {%- capture cards -%}
@@ -47,8 +51,8 @@
           <p class="neu-eyebrow">{{ section.settings.eyebrow | escape }}</p>
         {%- endif -%}
         <div class="neu-reviews__summary">
-          <span class="neu-reviews__score">{{ rating_float | round: 1 }} / 5</span>
-          <span class="neu-stars" aria-hidden="true">
+          <span class="neu-reviews__score" data-neu-reviews-score>{{ rating_float | round: 1 }} / 5</span>
+          <span class="neu-stars" aria-hidden="true" data-neu-reviews-stars>
             {%- for i in (1..5) -%}
               {%- assign star_threshold = i | minus: 0.25 -%}
               {%- if rating_float >= star_threshold -%}
@@ -58,7 +62,7 @@
               {%- endif -%}
             {%- endfor -%}
           </span>
-          <span class="neu-reviews__count">{{ rating_count }} verified reviews</span>
+          <span class="neu-reviews__count" data-neu-reviews-count>{{ rating_count }} {% if use_judgeme %}reviews{% else %}verified reviews{% endif %}</span>
         </div>
       </div>
       {%- if section.settings.button_label != blank -%}
@@ -69,7 +73,48 @@
     </div>
   </div>
 
-  {%- if review_blocks.size > 0 -%}
+  {%- if use_judgeme -%}
+    {%- comment -%}
+      Real reviews from Judge.me, fetched on the client from Judge.me's public
+      widget endpoint (the same one its own widget pages through). The cards are
+      built from the template below so they match the block cards exactly; the
+      loop copies are worked out once the first set has been measured.
+    {%- endcomment -%}
+    <script src="{{ 'neu-reviews.js' | asset_url }}" type="module"></script>
+    <neu-reviews-feed
+      class="neu-reviews__viewport"
+      aria-label="Customer reviews"
+      hidden
+      data-shop-domain="{{ shop.permanent_domain }}"
+      data-product-id="{{ product.id }}"
+      data-limit="{{ section.settings.judgeme_limit }}"
+      data-count-label="reviews"
+    >
+      <div class="neu-reviews__track" data-track></div>
+      <template data-card>
+        <article class="neu-review">
+          <div class="neu-review__main">
+            <div class="neu-review__top">
+              <span class="neu-review__avatar" aria-hidden="true" data-initial></span>
+              <span class="neu-stars" role="img" data-stars></span>
+            </div>
+            <h3 data-title></h3>
+            <p data-body></p>
+            <div class="neu-review__by">
+              <span data-name></span>
+              <span class="neu-review__verified" data-verified>{% render 'neu-icon', icon: 'check' %}Verified buyer</span>
+            </div>
+          </div>
+          <div class="neu-review__photo" data-photo>
+            <img src="" alt="" loading="lazy" width="120" height="120">
+            <span class="neu-review__photo-more" data-photo-more></span>
+          </div>
+        </article>
+      </template>
+      <template data-star>{% render 'neu-icon', icon: 'star-filled' %}</template>
+      <template data-star-empty>{% render 'neu-icon', icon: 'star-filled', class: 'neu-icon--empty' %}</template>
+    </neu-reviews-feed>
+  {%- elsif review_blocks.size > 0 -%}
     <div class="neu-reviews__viewport" aria-label="Customer reviews">
     {%- liquid
       # One set is review count x (320px card + 16px gap). Repeat it enough times
@@ -107,7 +152,26 @@
   "settings": [
     {
       "type": "paragraph",
-      "content": "The score and count come from Judge.me on product pages. Add the Judge.me widget as an app block to show the full review list under the cards."
+      "content": "On product pages the scrolling cards, score and count come straight from Judge.me. Review blocks are only shown when the source is set to Review blocks. Add the Judge.me widget as an app block to show the full review list under the cards."
+    },
+    {
+      "type": "select",
+      "id": "source",
+      "label": "Review cards",
+      "options": [
+        { "value": "judgeme", "label": "Judge.me reviews" },
+        { "value": "blocks", "label": "Review blocks" }
+      ],
+      "default": "judgeme"
+    },
+    {
+      "type": "range",
+      "id": "judgeme_limit",
+      "label": "Most Judge.me reviews to show",
+      "min": 4,
+      "max": 30,
+      "step": 1,
+      "default": 20
     },
     {
       "type": "text",
