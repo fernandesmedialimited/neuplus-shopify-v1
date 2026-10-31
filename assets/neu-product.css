@@ -1694,7 +1694,7 @@ neu-reviews-feed .neu-review p {
 }
 
 /* Cards with customer photos keep the same text column width and add the
-   first photo on the right, filling the card's height. */
+   first photo on the right, cropped to a fixed 3:4 portrait. */
 .neu-review--photo {
   display: grid;
   grid-template-columns: 278px 120px;
@@ -1713,7 +1713,8 @@ neu-reviews-feed .neu-review p {
 
 .neu-review__photo {
   position: relative;
-  min-height: 120px;
+  align-self: start;
+  aspect-ratio: 3 / 4;
   overflow: hidden;
   border-radius: calc(var(--neu-radius) * 0.75);
   background: var(--neu-sand);
