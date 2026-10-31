@@ -1694,27 +1694,27 @@ neu-reviews-feed .neu-review p {
 }
 
 /* Cards with customer photos keep the same text column width and add the
-   first photo on the right, cropped to a fixed 3:4 portrait. */
+   first photo on the right at the card's full height. neu-reviews.js sets
+   --neu-review-photo-w to three quarters of that height, so the photo stays
+   3:4 and the card widens to fit it. */
 .neu-review--photo {
   display: grid;
-  grid-template-columns: 278px 120px;
+  grid-template-columns: 278px var(--neu-review-photo-w, 120px);
   gap: 16px;
   width: auto;
 }
 
-/* On phones the photo card stays close to the plain card width so it fits
-   the screen: a narrower text column and a smaller photo. */
+/* On phones the text column is narrower so the photo card stays close to the
+   plain card width. */
 @media (max-width: 599px) {
   .neu-review--photo {
-    grid-template-columns: 196px 88px;
+    grid-template-columns: 196px var(--neu-review-photo-w, 88px);
     gap: 12px;
   }
 }
 
 .neu-review__photo {
   position: relative;
-  align-self: start;
-  aspect-ratio: 3 / 4;
   overflow: hidden;
   border-radius: calc(var(--neu-radius) * 0.75);
   background: var(--neu-sand);
@@ -1742,6 +1742,18 @@ neu-reviews-feed .neu-review p {
 
 .neu-reviews__apps {
   margin-top: 40px;
+}
+
+/* Kept in the DOM (not display: none) so Judge.me still renders the widget
+   and its write-review form can be opened from our button. */
+.neu-reviews__apps--hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
 }
 
 @media (prefers-reduced-motion: reduce) {

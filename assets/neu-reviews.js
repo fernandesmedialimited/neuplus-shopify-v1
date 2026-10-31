@@ -154,13 +154,47 @@ class NeuReviewsFeed extends HTMLElement {
     }
     if (!set.children.length) return;
 
+    this.track = track;
+    this.set = set;
     track.replaceChildren(set);
     this.hidden = false;
+    this.layout();
+
+    // Card text reflows at the phone breakpoint, which changes the card
+    // height and so the photo width and set width. Re-run on width changes.
+    let lastWidth = window.innerWidth;
+    let frame = 0;
+    window.addEventListener('resize', () => {
+      if (window.innerWidth === lastWidth) return;
+      lastWidth = window.innerWidth;
+      cancelAnimationFrame(frame);
+      frame = requestAnimationFrame(() => this.layout());
+    });
+  }
+
+  layout() {
+    const { track, set } = this;
+    if (!track || !set) return;
+
+    // Drop the old loop copies so only the first set is measured.
+    while (track.lastElementChild && track.lastElementChild !== set) track.lastElementChild.remove();
+
+    // Photos fill the full card height at 3:4, so their width follows the
+    // height. The photo column has no content height of its own, so the
+    // height comes from the text: measure it with the photo column at zero,
+    // then widen the column to three quarters of that height.
+    track.style.setProperty('--neu-review-photo-w', '0px');
+    const photo = set.querySelector('.neu-review__photo');
+    if (photo) {
+      const height = photo.getBoundingClientRect().height;
+      if (height > 0) track.style.setProperty('--neu-review-photo-w', `${Math.round(height * 0.75)}px`);
+      else track.style.removeProperty('--neu-review-photo-w');
+    }
 
     // Same rule as the Liquid marquee: repeat the set until a full copy always
     // sits past the right edge of a 3840px screen, so the loop reset (one set
     // width) happens off-screen and the tail never shows blank space.
-    const setWidth = set.getBoundingClientRect().width || reviews.length * 336;
+    const setWidth = set.getBoundingClientRect().width || set.children.length * 336;
     const copies = Math.min(MAX_COPIES, Math.floor(MAX_SCREEN_PX / setWidth) + 2);
 
     for (let i = 2; i <= copies; i += 1) {
@@ -173,6 +207,27 @@ class NeuReviewsFeed extends HTMLElement {
     track.style.setProperty('--neu-reviews-copies', String(copies));
   }
 }
+
+/**
+ * "Write a review" opens Judge.me's own review form. Judge.me attaches that
+ * form to its widget's button, so we click it; the form opens as a modal on
+ * <body>, so this works with the widget visually hidden. If the widget isn't
+ * there (app block removed or still loading), the link falls back to its href.
+ */
+document.addEventListener('click', (event) => {
+  const trigger = event.target instanceof Element ? event.target.closest('[data-neu-write-review]') : null;
+  if (!trigger) return;
+
+  const section = trigger.closest('.neu-reviews') || document;
+  const judgeMeButton =
+    section.querySelector('[data-testid="write-review-button"]') ||
+    document.querySelector('[data-testid="write-review-button"]') ||
+    document.querySelector('.jdgm-write-rev-link');
+  if (!(judgeMeButton instanceof HTMLElement)) return;
+
+  event.preventDefault();
+  judgeMeButton.click();
+});
 
 if (!customElements.get('neu-reviews-feed')) {
   customElements.define('neu-reviews-feed', NeuReviewsFeed);

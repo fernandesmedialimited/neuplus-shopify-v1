@@ -39,6 +39,8 @@
   {%- endfor -%}
 {%- endcapture -%}
 
+<script src="{{ 'neu-reviews.js' | asset_url }}" type="module"></script>
+
 <div
   id="neu-reviews"
   class="neu neu-section neu-reviews"
@@ -66,7 +68,7 @@
         </div>
       </div>
       {%- if section.settings.button_label != blank -%}
-        <a class="neu-btn neu-btn--outline" href="{{ section.settings.button_url | default: '#judgeme_product_reviews' }}">
+        <a class="neu-btn neu-btn--outline" href="{{ section.settings.button_url | default: '#judgeme_product_reviews' }}" data-neu-write-review>
           {{- section.settings.button_label | escape -}}
         </a>
       {%- endif -%}
@@ -80,7 +82,6 @@
       built from the template below so they match the block cards exactly; the
       loop copies are worked out once the first set has been measured.
     {%- endcomment -%}
-    <script src="{{ 'neu-reviews.js' | asset_url }}" type="module"></script>
     <neu-reviews-feed
       class="neu-reviews__viewport"
       aria-label="Customer reviews"
@@ -136,7 +137,14 @@
   {%- endif -%}
 
   {%- if app_block_count > 0 -%}
-    <div class="neu-page neu-reviews__apps">
+    {%- comment -%}
+      The Judge.me widget stays on the page even when hidden: the Write a review
+      button opens its review form, which needs the widget to be loaded.
+    {%- endcomment -%}
+    <div
+      class="neu-page neu-reviews__apps{% if section.settings.hide_app_widget %} neu-reviews__apps--hidden{% endif %}"
+      {% if section.settings.hide_app_widget %}aria-hidden="true"{% endif %}
+    >
       {%- for block in section.blocks -%}
         {%- unless block.type == 'review' -%}
           {% render block %}
@@ -163,6 +171,13 @@
         { "value": "blocks", "label": "Review blocks" }
       ],
       "default": "judgeme"
+    },
+    {
+      "type": "checkbox",
+      "id": "hide_app_widget",
+      "label": "Hide the Judge.me review list",
+      "info": "The widget still loads so the Write a review button can open its review form.",
+      "default": true
     },
     {
       "type": "range",
