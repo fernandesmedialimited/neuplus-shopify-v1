@@ -256,14 +256,18 @@ export class CartItemsComponent extends createViewEventElement(Component) {
           return;
         }
 
-        const newSectionHTML = new DOMParser().parseFromString(
-          parsedResponseText.sections[this.sectionId],
-          'text/html'
-        );
+        // Shopify returns sections: null when it can't render them for sections_url
+        // (e.g. a product URL that no longer resolves). Fall back to fetching the section
+        // so the cart never shows removed items until a reload.
+        const sectionHTML = parsedResponseText.sections?.[this.sectionId];
+
+        const newSectionHTML = new DOMParser().parseFromString(sectionHTML ?? '', 'text/html');
 
         // Grab the new cart item count from a hidden element
         const newCartHiddenItemCount = newSectionHTML.querySelector('[ref="cartItemCount"]')?.textContent;
-        const newCartItemCount = newCartHiddenItemCount ? parseInt(newCartHiddenItemCount, 10) : 0;
+        const newCartItemCount = newCartHiddenItemCount
+          ? parseInt(newCartHiddenItemCount, 10)
+          : (parsedResponseText.item_count ?? 0);
 
         // Update data-cart-quantity for all matching variants
         this.#updateQuantitySelectors(parsedResponseText);
@@ -279,9 +283,16 @@ export class CartItemsComponent extends createViewEventElement(Component) {
           },
         });
 
-        morphSection(this.sectionId, parsedResponseText.sections[this.sectionId], {
-          mode: this.isDrawer ? 'hydration' : 'full',
-        });
+        if (sectionHTML) {
+          morphSection(this.sectionId, sectionHTML, {
+            mode: this.isDrawer ? 'hydration' : 'full',
+          });
+        } else {
+          sectionRenderer.renderSection(this.sectionId, {
+            cache: false,
+            mode: this.isDrawer ? 'hydration' : 'full',
+          });
+        }
 
         this.#updateCartQuantitySelectorButtonStates();
       })

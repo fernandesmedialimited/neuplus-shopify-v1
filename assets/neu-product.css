@@ -1160,6 +1160,90 @@ body:has(.neu-sticky.is-visible) {
   letter-spacing: 0.2em;
 }
 
+.neu-sticky__actions {
+  display: flex;
+  flex: none;
+  align-items: center;
+}
+
+/*
+  View cart + Checkout. Collapsed to zero width until the cart has items, then
+  slides in from the right. visibility keeps the hidden buttons out of the tab
+  order and away from screen readers.
+*/
+.neu-sticky__cart {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  max-width: 0;
+  overflow: hidden;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateX(24px);
+  transition:
+    max-width 0.35s ease,
+    margin 0.35s ease,
+    opacity 0.25s ease,
+    transform 0.35s ease,
+    visibility 0s linear 0.35s;
+}
+
+.neu-sticky.has-cart .neu-sticky__cart {
+  max-width: 420px;
+  margin-left: 8px;
+  opacity: 1;
+  visibility: visible;
+  transform: none;
+  transition:
+    max-width 0.35s ease,
+    margin 0.35s ease,
+    opacity 0.25s ease 0.1s,
+    transform 0.35s ease,
+    visibility 0s;
+}
+
+.neu-sticky__cart form {
+  display: contents;
+}
+
+.neu-sticky .neu-sticky__cart .neu-btn {
+  padding-inline: 24px;
+  white-space: nowrap;
+}
+
+.neu-sticky .neu-sticky__cart .neu-btn--outline {
+  color: var(--neu-ink);
+}
+
+.neu-sticky__count {
+  display: inline-grid;
+  place-items: center;
+  min-width: 20px;
+  height: 20px;
+  padding: 0 6px;
+  border-radius: 999px;
+  background: var(--neu-ink);
+  color: #fff;
+  font-size: 11px;
+  letter-spacing: 0;
+}
+
+/* With the cart buttons in, the add button shrinks to its icon to make room */
+.neu-sticky.has-cart .neu-sticky__add {
+  padding-inline: 20px;
+}
+
+@media (max-width: 989px) {
+  .neu-sticky.has-cart .neu-sticky__add-label {
+    display: none;
+  }
+
+  .neu-sticky.has-cart .neu-sticky__add {
+    width: 44px;
+    padding: 0;
+  }
+}
+
 @media (max-width: 749px) {
   .neu-sticky__image {
     display: none;
@@ -1168,10 +1252,31 @@ body:has(.neu-sticky.is-visible) {
   .neu-sticky .neu-btn {
     padding-inline: 20px;
   }
+
+  /* Phones: the cart buttons take the whole bar, so product info steps aside */
+  .neu-sticky.has-cart .neu-sticky__info {
+    display: none;
+  }
+
+  .neu-sticky.has-cart .neu-sticky__actions {
+    flex: 1;
+  }
+
+  .neu-sticky.has-cart .neu-sticky__cart {
+    flex: 1;
+  }
+
+  .neu-sticky.has-cart .neu-sticky__cart .neu-btn {
+    flex: 1;
+    padding-inline: 12px;
+    letter-spacing: 0.12em;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .neu-sticky {
+  .neu-sticky,
+  .neu-sticky__cart,
+  .neu-sticky.has-cart .neu-sticky__cart {
     transition: none;
   }
 }
