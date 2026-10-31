@@ -1,0 +1,245 @@
+{%- comment -%}
+  Nutrition & ingredients drawer. Hidden until opened by any link to #neu-ingredients
+  or any element with [data-neu-ingredients-open]. Slides in from the right on desktop
+  and up from the bottom (swipe down to close) on mobile.
+  The flavour ingredient list follows the flavour picked in the buy box.
+{%- endcomment -%}
+{{ 'neu-product.css' | asset_url | stylesheet_tag }}
+{{ 'neu-ingredients.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'neu-ingredients.js' | asset_url }}" type="module"></script>
+
+{%- liquid
+  assign p = closest.product | default: product
+  assign current_variant = p.selected_or_first_available_variant
+  assign current_options = current_variant.options | join: '|' | downcase
+-%}
+
+<neu-ingredients-drawer
+  id="neu-ingredients"
+  class="neu neu-drawer"
+  hidden
+  {% if request.design_mode %}data-design-mode{% endif %}
+>
+  <div class="neu-drawer__overlay" data-neu-drawer-close></div>
+  <div
+    class="neu-drawer__panel"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="neu-ingredients-title-{{ section.id }}"
+    tabindex="-1"
+  >
+    <div class="neu-drawer__grabber" data-neu-drawer-handle aria-hidden="true"><span></span></div>
+    <header class="neu-drawer__head" data-neu-drawer-handle>
+      <div>
+        {%- if section.settings.eyebrow != blank -%}
+          <p class="neu-eyebrow">{{ section.settings.eyebrow | escape }}</p>
+        {%- endif -%}
+        <h2 class="neu-drawer__title" id="neu-ingredients-title-{{ section.id }}">
+          {{- section.settings.heading | escape -}}
+        </h2>
+      </div>
+      <button type="button" class="neu-drawer__close" data-neu-drawer-close aria-label="Close">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
+      </button>
+    </header>
+
+    <div class="neu-drawer__body">
+      {%- if section.settings.intro != blank -%}
+        <div class="neu-drawer__intro">{{ section.settings.intro }}</div>
+      {%- endif -%}
+
+      <ul class="neu-ingredients" role="list">
+        {%- for block in section.blocks -%}
+          {%- if block.type == 'ingredient' -%}
+            <li class="neu-ingredient" {{ block.shopify_attributes }}>
+              <div class="neu-ingredient__media" style="--neu-ingredient-tint: {{ block.settings.tint }}">
+                {%- if block.settings.image -%}
+                  {{
+                    block.settings.image
+                    | image_url: width: 200
+                    | image_tag: width: 72, height: 72, loading: 'lazy', alt: ''
+                  }}
+                {%- else -%}
+                  <span aria-hidden="true">{{ block.settings.name | slice: 0 }}</span>
+                {%- endif -%}
+              </div>
+              <div class="neu-ingredient__content">
+                <div class="neu-ingredient__top">
+                  <h3 class="neu-ingredient__name">{{ block.settings.name | escape }}</h3>
+                  {%- if block.settings.dose != blank -%}
+                    <span class="neu-ingredient__dose">{{ block.settings.dose | escape }}</span>
+                  {%- endif -%}
+                </div>
+                {%- if block.settings.text != blank -%}
+                  <p class="neu-ingredient__text">{{ block.settings.text }}</p>
+                {%- endif -%}
+              </div>
+            </li>
+          {%- endif -%}
+        {%- endfor -%}
+      </ul>
+
+      {%- liquid
+        assign has_match = false
+        for block in section.blocks
+          if block.type == 'flavour'
+            assign key = block.settings.flavour | strip | downcase
+            if key != blank and current_options contains key
+              assign has_match = true
+            endif
+          endif
+        endfor
+      -%}
+      {%- for block in section.blocks -%}
+        {%- if block.type == 'flavour' -%}
+          {%- liquid
+            assign key = block.settings.flavour | strip | downcase
+            assign show = false
+            if key != blank and current_options contains key
+              assign show = true
+            elsif has_match == false
+              assign first_flavour = first_flavour | default: block.id
+              if first_flavour == block.id
+                assign show = true
+              endif
+            endif
+          -%}
+          <div
+            class="neu-drawer__list"
+            data-flavour="{{ key | escape }}"
+            {% unless show %}hidden{% endunless %}
+            {{ block.shopify_attributes }}
+          >
+            <h3 class="neu-drawer__list-title">
+              {{- block.settings.title | default: 'Ingredients' | escape }}
+              {%- if block.settings.flavour != blank %} ({{ block.settings.flavour | escape }} flavour){% endif -%}
+            </h3>
+            {%- if block.settings.ingredients != blank -%}
+              <div class="neu-drawer__list-text">{{ block.settings.ingredients }}</div>
+            {%- else -%}
+              <p class="neu-drawer__list-text">Full ingredient list coming soon.</p>
+            {%- endif -%}
+            {%- if block.settings.nutrition != blank -%}
+              <div class="neu-drawer__nutrition">{{ block.settings.nutrition }}</div>
+            {%- endif -%}
+          </div>
+        {%- endif -%}
+      {%- endfor -%}
+
+      {%- if section.settings.footnote != blank -%}
+        <div class="neu-drawer__footnote">{{ section.settings.footnote }}</div>
+      {%- endif -%}
+    </div>
+  </div>
+</neu-ingredients-drawer>
+
+{% schema %}
+{
+  "name": "NEU+ ingredients drawer",
+  "class": "neu-drawer-section",
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "Opens from any button or link pointing to #neu-ingredients, like the Nutrition & Ingredients buttons."
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "Per 60ml shot"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Ingredients"
+    },
+    {
+      "type": "richtext",
+      "id": "intro",
+      "label": "Intro",
+      "default": "<p>Three clinically-dosed actives in a 60ml shot. Vegan, sugar-free and made in the UK.</p>"
+    },
+    {
+      "type": "richtext",
+      "id": "footnote",
+      "label": "Footnote",
+      "info": "Storage, warnings or allergen notes shown under the ingredient list"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "ingredient",
+      "name": "Active ingredient",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image",
+          "info": "Square, shown in a circle"
+        },
+        {
+          "type": "color",
+          "id": "tint",
+          "label": "Circle colour without an image",
+          "default": "#f2efe8"
+        },
+        {
+          "type": "text",
+          "id": "name",
+          "label": "Name",
+          "default": "Nicotinamide Riboside (NR)"
+        },
+        {
+          "type": "text",
+          "id": "dose",
+          "label": "Dose",
+          "default": "300mg"
+        },
+        {
+          "type": "inline_richtext",
+          "id": "text",
+          "label": "Description",
+          "default": "NAD+ precursor that supports cellular energy, focus and recovery."
+        }
+      ]
+    },
+    {
+      "type": "flavour",
+      "name": "Flavour ingredient list",
+      "settings": [
+        {
+          "type": "text",
+          "id": "flavour",
+          "label": "Flavour",
+          "info": "Must match the flavour option value, e.g. Lemon & Ginger. Shown when that flavour is picked.",
+          "default": "Lemon & Ginger"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "default": "Ingredients"
+        },
+        {
+          "type": "richtext",
+          "id": "ingredients",
+          "label": "Ingredient list"
+        },
+        {
+          "type": "richtext",
+          "id": "nutrition",
+          "label": "Nutrition information",
+          "info": "Optional. Paste a table or lines like Energy: 2kcal"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "NEU+ ingredients drawer",
+      "category": "Product"
+    }
+  ]
+}
+{% endschema %}

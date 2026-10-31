@@ -30,7 +30,7 @@
             "pill_2": "12, 24 or 36 shots",
             "text": "<p><strong>Cleaner energy. Sharper focus. Zero crash.</strong> Each 60ml shot delivers 300mg of Nicotinamide Riboside plus a full stack of cellular cofactors. No caffeine, no sugar, no shortcuts — just the molecule your cells need to make energy.</p>",
             "link_label": "Nutrition & Ingredients",
-            "link_url": "#neu-stats"
+            "link_url": "#neu-ingredients"
           }
         },
         "buy": {
@@ -543,6 +543,63 @@
         "padding_bottom": 80
       }
     },
+    "ingredients": {
+      "type": "neu-ingredients-drawer",
+      "blocks": {
+        "nr": {
+          "type": "ingredient",
+          "settings": {
+            "tint": "#f6ecd2",
+            "name": "Nicotinamide Riboside (NR)",
+            "dose": "300mg",
+            "text": "NAD+ precursor that supports cellular energy, focus and recovery."
+          }
+        },
+        "tmg": {
+          "type": "ingredient",
+          "settings": {
+            "tint": "#f5d9e0",
+            "name": "Betaine (TMG)",
+            "dose": "250mg",
+            "text": "Supports methylation and optimal cellular function."
+          }
+        },
+        "vitc": {
+          "type": "ingredient",
+          "settings": {
+            "tint": "#f4f0cf",
+            "name": "Vitamin C",
+            "dose": "80mg",
+            "text": "Antioxidant support for immunity and collagen synthesis."
+          }
+        },
+        "lemon_ginger": {
+          "type": "flavour",
+          "settings": {
+            "flavour": "Lemon & Ginger",
+            "title": "Ingredients",
+            "ingredients": "<p>Water, Nicotinamide Riboside Chloride, Betaine Anhydrous, Acids (Malic Acid, Citric Acid), Sodium Ascorbate (Vitamin C), Natural Flavourings (including Lemon & Ginger), Acidity Regulator (Sodium Citrate), Sweetener (Sucralose), DL-Alpha-Tocopheryl Acetate (Vitamin E)</p>",
+            "nutrition": ""
+          }
+        },
+        "mixed_berry": {
+          "type": "flavour",
+          "settings": {
+            "flavour": "Mixed Berry",
+            "title": "Ingredients",
+            "ingredients": "<p>Water, Nicotinamide Riboside Chloride, Betaine Anhydrous, Acids (Malic Acid, Citric Acid), Sodium Ascorbate (Vitamin C), Natural Flavouring (including Mixed Berry), Colouring Food (Black Carrot Extract), Acidity Regulator (Sodium Citrate), Sweetener (Sucralose), DL-Alpha-Tocopheryl Acetate (Vitamin E)</p>",
+            "nutrition": ""
+          }
+        }
+      },
+      "block_order": ["nr", "tmg", "vitc", "lemon_ginger", "mixed_berry"],
+      "settings": {
+        "eyebrow": "Per 60ml shot",
+        "heading": "Ingredients",
+        "intro": "<p>Three clinically-dosed actives in a 60ml shot. Vegan, sugar-free and made in the UK.</p>",
+        "footnote": ""
+      }
+    },
     "faq": {
       "type": "neu-faq",
       "blocks": {
@@ -646,6 +703,7 @@
     "certifications",
     "reviews",
     "stats",
-    "faq"
+    "faq",
+    "ingredients"
   ]
 }
