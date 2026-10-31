@@ -235,19 +235,29 @@
   filter: none !important;
 }
 
-/* Klaviyo slides the teaser up from below, which reads as a jump on a side tab */
+/*
+  Klaviyo slides the teaser up from below, which reads as a jump on a side tab.
+  Its own animation has to keep running, though: Klaviyo only lets the tab
+  reopen the popup once that animation has ended, so replacing it leaves the
+  tab dead. Run it near-instantly instead, and slide the tab in from the left
+  with the separate translate property, which leaves Klaviyo's untouched.
+*/
 [class*='kl-teaser-'] [data-testid='animated-teaser'] {
   height: auto !important;
   width: auto !important;
-  animation: neu-k-tab-in 0.3s ease both !important;
+  animation-duration: 0.01s !important;
+}
+
+[class*='kl-teaser-'] [role='button'] {
+  animation: neu-k-tab-in 0.3s ease both;
 }
 
 @keyframes neu-k-tab-in {
   from {
-    transform: translateX(-100%);
+    translate: -100% 0;
   }
   to {
-    transform: none;
+    translate: 0 0;
   }
 }
 
