@@ -30,8 +30,14 @@
   font-family: var(--neu-k-font) !important;
 }
 
+/*
+  Columns are matched by content, not position: on phones Klaviyo leaves the
+  image column out (the form's side image is set to desktop only), so the
+  content column comes first there.
+*/
+
 /* Image column */
-[aria-label='POPUP Form'] form.klaviyo-form > div:first-child {
+[aria-label='POPUP Form'] form.klaviyo-form > div:not(:has([data-testid='form-row'])) {
   width: 46% !important;
   min-width: 0 !important;
   min-height: 520px !important;
@@ -39,7 +45,7 @@
 }
 
 /* Content column */
-[aria-label='POPUP Form'] form.klaviyo-form > div:nth-child(2) {
+[aria-label='POPUP Form'] form.klaviyo-form > div:has([data-testid='form-row']) {
   flex: 1 1 0% !important;
   padding: 56px 48px 48px !important;
   justify-content: center !important;
@@ -194,13 +200,27 @@
     flex-direction: column !important;
   }
 
-  [aria-label='POPUP Form'] form.klaviyo-form > div:first-child {
+  [aria-label='POPUP Form'] form.klaviyo-form > div:not(:has([data-testid='form-row'])) {
     width: 100% !important;
     min-height: 0 !important;
     height: 200px !important;
   }
 
-  [aria-label='POPUP Form'] form.klaviyo-form > div:nth-child(2) {
+  /*
+    No image column from Klaviyo (phones): show the same photo above the
+    content. Update this URL if the popup's side image changes in Klaviyo,
+    or set the side image to show on mobile there and this steps aside.
+  */
+  [aria-label='POPUP Form'] form.klaviyo-form:has(> div:first-child [data-testid='form-row'])::before {
+    content: '' !important;
+    display: block !important;
+    flex: none !important;
+    width: 100% !important;
+    height: 200px !important;
+    background: #f2f2f2 url('https://d3k81ch9hvuctc.cloudfront.net/company/YwrCwR/images/d021d25e-e68b-4420-8960-09f53a9bd510.jpeg') center / cover no-repeat !important;
+  }
+
+  [aria-label='POPUP Form'] form.klaviyo-form > div:has([data-testid='form-row']) {
     min-height: 0 !important;
     padding: 28px 24px 24px !important;
   }
