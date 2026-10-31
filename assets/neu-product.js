@@ -1,4 +1,4 @@
-import { CartLinesUpdateEvent, CartErrorEvent } from '@shopify/events';
+import { CartLinesUpdateEvent, CartErrorEvent, StandardEvents } from '@shopify/events';
 
 const VARIANT_EVENT = 'neu:variant-change';
 const STATE_EVENT = 'neu:buy-state';
@@ -500,10 +500,55 @@ class NeuStickyBar extends HTMLElement {
       }
     };
     document.addEventListener(STATE_EVENT, this.onState);
+
+    // View cart opens the cart drawer when the theme has one; the link to /cart is the fallback
+    this.querySelector('[data-sticky-view-cart]')?.addEventListener('click', (event) => {
+      const drawer = /** @type {any} */ (document.querySelector('theme-drawer#cart-drawer'));
+      if (typeof drawer?.open !== 'function') return;
+      event.preventDefault();
+      drawer.open();
+    });
+
+    // Follows every cart change: adds here, removals in the drawer, other apps
+    this.onCartUpdate = (event) => {
+      event.promise
+        ?.then(({ cart, detail }) => {
+          const count = cart?.totalQuantity ?? (detail?.source === 'cart-items-component' ? detail.itemCount : null);
+          if (typeof count === 'number') this.setCartCount(count);
+          else this.refreshCartCount();
+        })
+        .catch(() => this.refreshCartCount());
+    };
+    document.addEventListener(StandardEvents.cartLinesUpdate, this.onCartUpdate);
+
+    // A page restored from the back/forward cache can show a stale cart
+    this.onPageShow = (event) => {
+      if (event.persisted) this.refreshCartCount();
+    };
+    window.addEventListener('pageshow', this.onPageShow);
   }
 
   disconnectedCallback() {
     document.removeEventListener(STATE_EVENT, this.onState);
+    document.removeEventListener(StandardEvents.cartLinesUpdate, this.onCartUpdate);
+    window.removeEventListener('pageshow', this.onPageShow);
+  }
+
+  /** @param {number} count */
+  setCartCount(count) {
+    this.setText('[data-sticky-count]', String(count));
+    this.classList.toggle('has-cart', count > 0);
+  }
+
+  async refreshCartCount() {
+    try {
+      const response = await fetch(`${window.Theme?.routes?.cart_url || '/cart'}.js`, {
+        headers: { Accept: 'application/json' },
+      });
+      if (response.ok) this.setCartCount((await response.json()).item_count);
+    } catch {
+      // Keep the current state if the cart can't be read
+    }
   }
 
   setText(selector, text) {

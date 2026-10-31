@@ -124,7 +124,7 @@
   </div>
 
   {%- if section.settings.show_sticky_bar -%}
-    <neu-sticky-bar class="neu-sticky">
+    <neu-sticky-bar class="neu-sticky{% if cart.item_count > 0 %} has-cart{% endif %}">
       <div class="neu-sticky__info">
         {%- assign sticky_image = current_variant.featured_image | default: product.featured_image -%}
         {%- if sticky_image -%}
@@ -142,10 +142,32 @@
           </div>
         </div>
       </div>
-      <button class="neu-btn" type="button" data-sticky-add>
-        {% render 'neu-icon', icon: 'cart' %}
-        {{ section.settings.sticky_button_label | escape }}
-      </button>
+      <div class="neu-sticky__actions">
+        <button
+          class="neu-btn neu-sticky__add"
+          type="button"
+          aria-label="{{ section.settings.sticky_button_label | escape }}"
+          data-sticky-add
+        >
+          {% render 'neu-icon', icon: 'cart' %}
+          <span class="neu-sticky__add-label">{{ section.settings.sticky_button_label | escape }}</span>
+        </button>
+        {%- comment -%}
+          Slides in once the cart has something in it. Works without JavaScript:
+          View cart is a plain link and Checkout is the standard cart form post.
+        {%- endcomment -%}
+        <div class="neu-sticky__cart" data-sticky-cart>
+          <a class="neu-btn neu-btn--outline" href="{{ routes.cart_url }}" data-sticky-view-cart>
+            {{ section.settings.sticky_view_cart_label | escape }}
+            <span class="neu-sticky__count" data-sticky-count>{{ cart.item_count }}</span>
+          </a>
+          <form action="{{ routes.cart_url }}" method="post">
+            <button class="neu-btn" type="submit" name="checkout">
+              {{ section.settings.sticky_checkout_label | escape }}
+            </button>
+          </form>
+        </div>
+      </div>
     </neu-sticky-bar>
   {%- endif -%}
 </div>
@@ -275,6 +297,19 @@
       "id": "sticky_button_label",
       "label": "Button label",
       "default": "Add to cart"
+    },
+    {
+      "type": "text",
+      "id": "sticky_view_cart_label",
+      "label": "View cart label",
+      "info": "Shown with Checkout once the cart has items",
+      "default": "View cart"
+    },
+    {
+      "type": "text",
+      "id": "sticky_checkout_label",
+      "label": "Checkout label",
+      "default": "Checkout"
     }
   ],
   "presets": [
