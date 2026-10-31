@@ -1744,6 +1744,18 @@ neu-reviews-feed .neu-review p {
   margin-top: 40px;
 }
 
+/* Kept in the DOM (not display: none) so Judge.me still renders the widget
+   and its write-review form can be opened from our button. */
+.neu-reviews__apps--hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .neu-reviews__track {
     animation: none;

@@ -208,6 +208,27 @@ class NeuReviewsFeed extends HTMLElement {
   }
 }
 
+/**
+ * "Write a review" opens Judge.me's own review form. Judge.me attaches that
+ * form to its widget's button, so we click it; the form opens as a modal on
+ * <body>, so this works with the widget visually hidden. If the widget isn't
+ * there (app block removed or still loading), the link falls back to its href.
+ */
+document.addEventListener('click', (event) => {
+  const trigger = event.target instanceof Element ? event.target.closest('[data-neu-write-review]') : null;
+  if (!trigger) return;
+
+  const section = trigger.closest('.neu-reviews') || document;
+  const judgeMeButton =
+    section.querySelector('[data-testid="write-review-button"]') ||
+    document.querySelector('[data-testid="write-review-button"]') ||
+    document.querySelector('.jdgm-write-rev-link');
+  if (!(judgeMeButton instanceof HTMLElement)) return;
+
+  event.preventDefault();
+  judgeMeButton.click();
+});
+
 if (!customElements.get('neu-reviews-feed')) {
   customElements.define('neu-reviews-feed', NeuReviewsFeed);
 }

@@ -468,7 +468,7 @@
         },
         "judge_me_reviews_review_widget_WAC6ji": {
           "type": "shopify://apps/judge-me-reviews/blocks/review_widget/61ccd3b1-a9f2-4160-9fe9-4fec8413e5d8",
-          "disabled": true,
+          "disabled": false,
           "settings": {
             "review_data": "sample_data",
             "max_width": 1200,
