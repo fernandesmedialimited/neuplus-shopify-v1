@@ -235,6 +235,7 @@
 }
 
 .neu-gallery__slide {
+  position: relative;
   flex: 0 0 100%;
   aspect-ratio: 1;
   scroll-snap-align: start;
@@ -288,6 +289,95 @@
 
 .neu-gallery__arrow--next {
   right: 12px;
+}
+
+.neu-gallery__dots {
+  display: none;
+}
+
+/* Mobile: full-bleed peek carousel. The next photo shows at the right edge,
+   dots replace the thumbnail column and arrows. */
+@media (max-width: 749px) {
+  .neu-gallery {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0;
+  }
+
+  .neu-gallery__thumbs,
+  .neu-gallery__arrow {
+    display: none;
+  }
+
+  .neu-gallery__stage {
+    margin-inline: calc(var(--neu-gutter) * -1);
+  }
+
+  .neu-gallery__track {
+    gap: 8px;
+    padding-inline: var(--neu-gutter);
+    scroll-padding-inline: var(--neu-gutter);
+    overscroll-behavior-x: contain;
+  }
+
+  .neu-gallery__slide {
+    flex-basis: calc(100% - 24px);
+    border-radius: var(--neu-radius);
+    overflow: hidden;
+    background: var(--neu-cream);
+  }
+
+  .neu-gallery__slide img {
+    object-fit: cover;
+  }
+
+  .neu-gallery__badge {
+    top: 12px;
+    left: 12px;
+  }
+
+  .neu-gallery__dots {
+    display: flex;
+    justify-content: center;
+    gap: 6px;
+    padding-top: 14px;
+  }
+
+  .neu-gallery__dot {
+    position: relative;
+    width: 6px;
+    height: 6px;
+    padding: 0;
+    border: 0;
+    border-radius: 999px;
+    background: var(--neu-line);
+    cursor: pointer;
+    transition:
+      width 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+      background-color 0.3s ease;
+  }
+
+  /* 26px tall tap target without growing the dot */
+  .neu-gallery__dot::after {
+    content: '';
+    position: absolute;
+    inset: -10px -4px;
+  }
+
+  .neu-gallery__dot[aria-current='true'] {
+    width: 18px;
+    background: var(--neu-ink);
+  }
+
+  .neu-gallery__dot:focus-visible {
+    outline: 2px solid var(--neu-ink);
+    outline-offset: 3px;
+  }
+}
+
+@media (max-width: 749px) and (prefers-reduced-motion: reduce) {
+  .neu-gallery__dot {
+    transition: none;
+  }
 }
 
 /* Tabs under the gallery */
