@@ -1228,19 +1228,37 @@ body:has(.neu-sticky.is-visible) {
   letter-spacing: 0;
 }
 
-/* With the cart buttons in, the add button shrinks to its icon to make room */
+/* Short labels are swapped in on smaller screens; the full label stays for screen readers */
+.neu-sticky__short {
+  display: none;
+}
+
+.neu-sticky .neu-sticky__cart .neu-icon {
+  flex: none;
+}
+
+/* With the cart buttons in, the add button tightens up to make room */
 .neu-sticky.has-cart .neu-sticky__add {
   padding-inline: 20px;
 }
 
 @media (max-width: 989px) {
-  .neu-sticky.has-cart .neu-sticky__add-label {
-    display: none;
+  .neu-sticky.has-cart .neu-sticky__add .neu-sticky__full {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+
+  .neu-sticky.has-cart .neu-sticky__add .neu-sticky__short {
+    display: inline;
   }
 
   .neu-sticky.has-cart .neu-sticky__add {
-    width: 44px;
-    padding: 0;
+    gap: 8px;
+    padding-inline: 16px;
   }
 }
 
@@ -1251,6 +1269,25 @@ body:has(.neu-sticky.is-visible) {
 
   .neu-sticky .neu-btn {
     padding-inline: 20px;
+  }
+
+  .neu-sticky.has-cart .neu-sticky__cart .neu-sticky__full {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+
+  .neu-sticky.has-cart .neu-sticky__cart .neu-sticky__short {
+    display: inline;
+  }
+
+  .neu-sticky.has-cart .neu-btn {
+    gap: 8px;
+    padding-inline: 12px;
+    letter-spacing: 0.12em;
   }
 
   /* Phones: the cart buttons take the whole bar, so product info steps aside */
@@ -1268,8 +1305,6 @@ body:has(.neu-sticky.is-visible) {
 
   .neu-sticky.has-cart .neu-sticky__cart .neu-btn {
     flex: 1;
-    padding-inline: 12px;
-    letter-spacing: 0.12em;
   }
 }
 
