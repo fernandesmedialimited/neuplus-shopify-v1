@@ -37,11 +37,14 @@ class NeuGallery extends HTMLElement {
     this.track = this.querySelector('[data-track]');
     this.slides = [...this.querySelectorAll('.neu-gallery__slide')];
     this.thumbs = [...this.querySelectorAll('.neu-gallery__thumb')];
+    this.dots = [...this.querySelectorAll('.neu-gallery__dot')];
     if (!this.track || this.slides.length === 0) return;
 
     this.querySelector('[data-prev]')?.addEventListener('click', () => this.go(this.index - 1));
     this.querySelector('[data-next]')?.addEventListener('click', () => this.go(this.index + 1));
-    this.thumbs.forEach((thumb) => thumb.addEventListener('click', () => this.go(Number(thumb.dataset.index))));
+    [...this.thumbs, ...this.dots].forEach((control) =>
+      control.addEventListener('click', () => this.go(Number(control.dataset.index)))
+    );
 
     this.track.addEventListener('scroll', () => {
       window.cancelAnimationFrame(this.frame);
@@ -68,12 +71,14 @@ class NeuGallery extends HTMLElement {
   go(index, behavior = 'smooth') {
     const count = this.slides.length;
     this.index = (index + count) % count;
-    this.track.scrollTo({ left: this.slides[this.index].offsetLeft - this.track.offsetLeft, behavior });
+    // Measured from the first slide so the mobile peek layout (padded track) lines up too
+    this.track.scrollTo({ left: this.slides[this.index].offsetLeft - this.slides[0].offsetLeft, behavior });
     this.markThumb();
   }
 
   syncFromScroll() {
-    const index = Math.round(this.track.scrollLeft / this.track.clientWidth);
+    const step = this.slides.length > 1 ? this.slides[1].offsetLeft - this.slides[0].offsetLeft : this.track.clientWidth;
+    const index = Math.min(this.slides.length - 1, Math.round(this.track.scrollLeft / step));
     if (index !== this.index) {
       this.index = index;
       this.markThumb();
@@ -82,6 +87,7 @@ class NeuGallery extends HTMLElement {
 
   markThumb() {
     this.thumbs.forEach((thumb, i) => thumb.setAttribute('aria-current', String(i === this.index)));
+    this.dots.forEach((dot, i) => dot.setAttribute('aria-current', String(i === this.index)));
   }
 }
 
