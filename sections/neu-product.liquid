@@ -143,14 +143,16 @@
         </div>
       </div>
       <div class="neu-sticky__actions">
-        <button
-          class="neu-btn neu-sticky__add"
-          type="button"
-          aria-label="{{ section.settings.sticky_button_label | escape }}"
-          data-sticky-add
-        >
-          {% render 'neu-icon', icon: 'cart' %}
-          <span class="neu-sticky__add-label">{{ section.settings.sticky_button_label | escape }}</span>
+        {%- comment -%}
+          Short labels take over on smaller screens once the cart buttons are in. The full
+          label stays for screen readers, so each button keeps one clear accessible name.
+        {%- endcomment -%}
+        <button class="neu-btn neu-sticky__add" type="button" data-sticky-add>
+          {% render 'neu-icon', icon: 'plus' %}
+          <span class="neu-sticky__full">{{ section.settings.sticky_button_label | escape }}</span>
+          <span class="neu-sticky__short" aria-hidden="true">
+            {{- section.settings.sticky_button_short_label | escape -}}
+          </span>
         </button>
         {%- comment -%}
           Slides in once the cart has something in it. Works without JavaScript:
@@ -158,7 +160,11 @@
         {%- endcomment -%}
         <div class="neu-sticky__cart" data-sticky-cart>
           <a class="neu-btn neu-btn--outline" href="{{ routes.cart_url }}" data-sticky-view-cart>
-            {{ section.settings.sticky_view_cart_label | escape }}
+            {% render 'neu-icon', icon: 'cart' %}
+            <span class="neu-sticky__full">{{ section.settings.sticky_view_cart_label | escape }}</span>
+            <span class="neu-sticky__short" aria-hidden="true">
+              {{- section.settings.sticky_view_cart_short_label | escape -}}
+            </span>
             <span class="neu-sticky__count" data-sticky-count>{{ cart.item_count }}</span>
           </a>
           <form action="{{ routes.cart_url }}" method="post">
@@ -300,10 +306,24 @@
     },
     {
       "type": "text",
+      "id": "sticky_button_short_label",
+      "label": "Button short label",
+      "info": "Used on smaller screens once View cart and Checkout are showing",
+      "default": "Add"
+    },
+    {
+      "type": "text",
       "id": "sticky_view_cart_label",
       "label": "View cart label",
       "info": "Shown with Checkout once the cart has items",
       "default": "View cart"
+    },
+    {
+      "type": "text",
+      "id": "sticky_view_cart_short_label",
+      "label": "View cart short label",
+      "info": "Used on phones",
+      "default": "View"
     },
     {
       "type": "text",
