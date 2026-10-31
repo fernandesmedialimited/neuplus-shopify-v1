@@ -36,9 +36,15 @@
         </div>
 
         {%- if section.settings.button_label != blank -%}
-          <a class="neu-btn" href="{{ section.settings.button_url | default: '#' }}">
-            {{- section.settings.button_label | escape -}}
-          </a>
+          {%- if section.settings.button_url != blank -%}
+            <a class="neu-btn" href="{{ section.settings.button_url }}">
+              {{- section.settings.button_label | escape -}}
+            </a>
+          {%- else -%}
+            <button type="button" class="neu-btn" data-neu-ingredients-open aria-haspopup="dialog">
+              {{- section.settings.button_label | escape -}}
+            </button>
+          {%- endif -%}
         {%- endif -%}
       </div>
     </div>
@@ -70,7 +76,8 @@
     {
       "type": "url",
       "id": "button_url",
-      "label": "Button link"
+      "label": "Button link",
+      "info": "Leave blank to open the ingredients drawer"
     },
     {
       "type": "color",
