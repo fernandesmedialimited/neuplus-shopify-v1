@@ -333,3 +333,19 @@
     letter-spacing: 0.14em !important;
   }
 }
+
+/*
+  Phones and other touch screens: no motion on the tab at all, it is simply
+  there. Klaviyo's own animation still has to end for the tab to work, so it
+  is started already finished (negative delay) rather than removed.
+*/
+@media (max-width: 749px), (hover: none), (prefers-reduced-motion: reduce) {
+  [class*='kl-teaser-'] [data-testid='animated-teaser'] {
+    animation-delay: -1s !important;
+  }
+
+  [class*='kl-teaser-'] [role='button'] {
+    animation: none !important;
+    transition: none !important;
+  }
+}
