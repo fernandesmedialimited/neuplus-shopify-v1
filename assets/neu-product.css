@@ -1666,6 +1666,79 @@ body:has(.neu-sticky.is-visible) {
   color: var(--neu-green);
 }
 
+neu-reviews-feed {
+  display: block;
+}
+
+neu-reviews-feed[hidden] {
+  display: none;
+}
+
+/* Judge.me cards: the reviewer's initial sits in the avatar circle, long
+   reviews are clipped so one essay doesn't stretch every card in the row. */
+neu-reviews-feed .neu-review__avatar {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--neu-muted);
+}
+
+neu-reviews-feed .neu-review p {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 7;
+  overflow: hidden;
+}
+
+/* Cards with customer photos keep the same text column width and add the
+   first photo on the right, filling the card's height. */
+.neu-review--photo {
+  display: grid;
+  grid-template-columns: 278px 120px;
+  gap: 16px;
+  width: auto;
+}
+
+/* On phones the photo card stays close to the plain card width so it fits
+   the screen: a narrower text column and a smaller photo. */
+@media (max-width: 599px) {
+  .neu-review--photo {
+    grid-template-columns: 196px 88px;
+    gap: 12px;
+  }
+}
+
+.neu-review__photo {
+  position: relative;
+  min-height: 120px;
+  overflow: hidden;
+  border-radius: calc(var(--neu-radius) * 0.75);
+  background: var(--neu-sand);
+}
+
+.neu-review__photo img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.neu-review__photo-more {
+  position: absolute;
+  right: 6px;
+  bottom: 6px;
+  padding: 2px 7px;
+  border-radius: 999px;
+  background: rgb(0 0 0 / 0.6);
+  color: #fff;
+  font-size: 11px;
+  font-weight: 600;
+}
+
 .neu-reviews__apps {
   margin-top: 40px;
 }
