@@ -578,7 +578,7 @@
           "settings": {
             "flavour": "Lemon & Ginger",
             "title": "Ingredients",
-            "ingredients": "<p>Water, Nicotinamide Riboside Chloride, Betaine Hydrochloride, Vitamin C (Ascorbic Acid), Acids (DL-Malic Acid, Citric Acid), Natural Flavourings (including Sicilian Lemon and Ginger), Sweetener (Sucralose).</p>",
+            "ingredients": "<p>Water, Nicotinamide Riboside Chloride, Betaine Anhydrous, Acids (Malic Acid, Citric Acid), Sodium Ascorbate (Vitamin C), Natural Flavourings (including Lemon & Ginger), Acidity Regulator (Sodium Citrate), Sweetener (Sucralose), DL-Alpha-Tocopheryl Acetate (Vitamin E)</p>",
             "nutrition": ""
           }
         },
@@ -587,7 +587,7 @@
           "settings": {
             "flavour": "Mixed Berry",
             "title": "Ingredients",
-            "ingredients": "",
+            "ingredients": "<p>Water, Nicotinamide Riboside Chloride, Betaine Anhydrous, Acids (Malic Acid, Citric Acid), Sodium Ascorbate (Vitamin C), Natural Flavouring (including Mixed Berry), Colouring Food (Black Carrot Extract), Acidity Regulator (Sodium Citrate), Sweetener (Sucralose), DL-Alpha-Tocopheryl Acetate (Vitamin E)</p>",
             "nutrition": ""
           }
         }
