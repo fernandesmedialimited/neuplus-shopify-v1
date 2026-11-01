@@ -274,29 +274,16 @@
 }
 
 /*
-  Klaviyo slides the teaser up from below, which reads as a jump on a side tab.
-  Its own animation has to keep running, though: Klaviyo only lets the tab
-  reopen the popup once that animation has ended, so replacing it leaves the
-  tab dead. Run it near-instantly instead, and slide the tab in from the left
-  with the separate translate property, which leaves Klaviyo's untouched.
+  No motion on the tab: it is simply there, on every screen. Klaviyo slides
+  the teaser up from below, but its own animation has to keep running, because
+  Klaviyo only lets the tab reopen the popup once that animation has ended.
+  So it is started already finished (negative delay) rather than removed.
 */
 [class*='kl-teaser-'] [data-testid='animated-teaser'] {
   height: auto !important;
   width: auto !important;
   animation-duration: 0.01s !important;
-}
-
-[class*='kl-teaser-'] [role='button'] {
-  animation: neu-k-tab-in 0.3s ease both;
-}
-
-@keyframes neu-k-tab-in {
-  from {
-    translate: -100% 0;
-  }
-  to {
-    translate: 0 0;
-  }
+  animation-delay: -1s !important;
 }
 
 [class*='kl-teaser-'] [role='button'] {
@@ -349,21 +336,5 @@
   [class*='kl-teaser-'] [role='button'] :is(p, span, strong) {
     font-size: 10px !important;
     letter-spacing: 0.14em !important;
-  }
-}
-
-/*
-  Phones and other touch screens: no motion on the tab at all, it is simply
-  there. Klaviyo's own animation still has to end for the tab to work, so it
-  is started already finished (negative delay) rather than removed.
-*/
-@media (max-width: 749px), (hover: none), (prefers-reduced-motion: reduce) {
-  [class*='kl-teaser-'] [data-testid='animated-teaser'] {
-    animation-delay: -1s !important;
-  }
-
-  [class*='kl-teaser-'] [role='button'] {
-    animation: none !important;
-    transition: none !important;
   }
 }
