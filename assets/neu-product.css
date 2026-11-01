@@ -1887,6 +1887,7 @@ neu-reviews-feed .neu-review p {
   max-height: 420px;
   width: auto;
   margin-inline: auto;
+  border-radius: var(--neu-radius);
 }
 
 .neu-stats__heading {
