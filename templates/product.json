@@ -174,6 +174,7 @@
         },
         "rewards": {
           "type": "neu-perk-card",
+          "disabled": true,
           "settings": {
             "style": "outline",
             "icon": "gift",
@@ -229,6 +230,7 @@
         },
         "harrods": {
           "type": "neu-perk-card",
+          "disabled": true,
           "settings": {
             "style": "outline",
             "icon": "star",
@@ -334,7 +336,7 @@
           "settings": {
             "icon": "star",
             "title": "Subscriber perks",
-            "text": "Early access to new flavours, free socks on first order, member-only drops."
+            "text": "Early access to new flavours and member-only drops."
           }
         },
         "w4": {
@@ -671,7 +673,7 @@
           "type": "question",
           "settings": {
             "question": "Where can I buy NEU+?",
-            "answer": "<p>Here on neu-plus.com, and in store at <a href=\"https://www.harrods.com/en-gb\" target=\"_blank\" rel=\"noopener\">Harrods, London</a>, our exclusive retail partner.</p>",
+            "answer": "<p>Right here on neu-plus.com.</p>",
             "open": false
           }
         }
