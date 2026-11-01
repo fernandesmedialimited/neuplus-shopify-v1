@@ -299,6 +299,23 @@
     }
   }
 
+  /* Neu+: a standalone arrow button follows the input's corner radius, so a pill input gets a round button. */
+  .email-signup__input-group:not(.email-signup__input-group--integrated):not(.email-signup__input-group--underline)
+    > .email-signup__button--arrow {
+    border-radius: var(--border-radius);
+    flex-shrink: 0;
+    transition: transform var(--animation-speed) var(--animation-easing);
+
+    &:hover {
+      transform: translateX(2px);
+    }
+  }
+
+  .email-signup__input-group--arrow:not(.email-signup__input-group--integrated):not(.email-signup__input-group--underline)
+    > .email-signup__input {
+    min-height: var(--arrow-button-size);
+  }
+
   .email-signup__button--integrated {
     --button-offset: var(--margin-xs);
     align-self: stretch;
