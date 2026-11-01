@@ -78,6 +78,8 @@ class NeuReviewsFeed extends HTMLElement {
    * that modal to the cards of its Reviews Carousel block, so the product
    * page carries a hidden carousel and we click its card for the same review.
    * The modal is mounted on <body>, so it shows with the carousel hidden.
+   * The carousel uses the same settings as the home page one (newest 4–5★
+   * product reviews), so a review missing from it simply doesn't open.
    * @param {string} uuid
    */
   openReview(uuid) {

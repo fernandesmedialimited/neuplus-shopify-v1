@@ -483,9 +483,7 @@
           "settings": {
             "show_sample_reviews": false,
             "reviews_selection": "product_reviews",
-            "products": [
-              "neu-berry-flavour-60ml"
-            ],
+            "products": [],
             "filter_pinned": false,
             "filter_featured": false,
             "filter_custom_tags": "",

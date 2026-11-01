@@ -1764,6 +1764,7 @@ neu-reviews-feed[hidden] {
   display: none;
 }
 
+/* Each card opens Judge.me's full-review modal (neu-reviews.js openReview). */
 neu-reviews-feed .neu-review[data-review-id] {
   cursor: pointer;
   transition: border-color 0.2s ease;
