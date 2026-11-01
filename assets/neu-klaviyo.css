@@ -102,6 +102,11 @@
   line-height: 1.15 !important;
 }
 
+/* A little breathing room between the email field and the button under it */
+[aria-label='POPUP Form'] [data-testid='form-row']:has(input:not([type='hidden'])) + [data-testid='form-row']:has(.klaviyo-form-button) {
+  margin-top: 10px !important;
+}
+
 /* Text under a button (the consent line under Sign Me Up) is small print */
 [aria-label='POPUP Form'] [data-testid='form-row']:has(.klaviyo-form-button) ~ [data-testid='form-row'] .klaviyo-form-richtext {
   margin: 14px 0 0 !important;
