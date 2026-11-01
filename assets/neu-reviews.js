@@ -33,6 +33,18 @@ class NeuReviewsFeed extends HTMLElement {
   connectedCallback() {
     if (this.started) return;
     this.started = true;
+
+    this.addEventListener('click', (event) => {
+      const card = event.target instanceof Element ? event.target.closest('.neu-review[data-review-id]') : null;
+      if (card instanceof HTMLElement) this.openReview(card.dataset.reviewId || '');
+    });
+    this.addEventListener('keydown', (event) => {
+      if (event.key !== 'Enter' && event.key !== ' ') return;
+      const card = event.target instanceof Element ? event.target.closest('.neu-review[data-review-id]') : null;
+      if (!(card instanceof HTMLElement) || card !== event.target) return;
+      event.preventDefault();
+      this.openReview(card.dataset.reviewId || '');
+    });
     this.load().catch(() => {
       // Leave the marquee hidden: no placeholder reviews on the live page.
     });
@@ -59,6 +71,21 @@ class NeuReviewsFeed extends HTMLElement {
 
     this.updateSummary(data);
     this.render(reviews);
+  }
+
+  /**
+   * Opens Judge.me's own full-review modal for a review. Judge.me only wires
+   * that modal to the cards of its Reviews Carousel block, so the product
+   * page carries a hidden carousel and we click its card for the same review.
+   * The modal is mounted on <body>, so it shows with the carousel hidden.
+   * @param {string} uuid
+   */
+  openReview(uuid) {
+    const cards = [...document.querySelectorAll('.jdgm-card[data-review-id]')].filter(
+      (card) => card instanceof HTMLElement && card.dataset.reviewId === uuid
+    );
+    const target = cards.find((card) => !/clone/.test(card.className)) || cards[0];
+    if (target instanceof HTMLElement) target.click();
   }
 
   /** @param {{ number_of_reviews?: number, average_rating?: string }} data */
@@ -101,6 +128,13 @@ class NeuReviewsFeed extends HTMLElement {
     const card = fragment.querySelector('.neu-review');
     if (!card) return null;
     const find = (selector) => card.querySelector(selector);
+
+    // Clicking the card opens Judge.me's full-review modal (see openReview).
+    if (review.uuid) {
+      card.dataset.reviewId = review.uuid;
+      card.setAttribute('role', 'button');
+      card.tabIndex = 0;
+    }
 
     const rating = Math.max(1, Math.min(5, Math.round(Number(review.rating) || 5)));
     const starsEl = find('[data-stars]');
@@ -199,8 +233,10 @@ class NeuReviewsFeed extends HTMLElement {
 
     for (let i = 2; i <= copies; i += 1) {
       const copy = /** @type {HTMLElement} */ (set.cloneNode(true));
+      // Not inert: the copies scroll into view and must stay clickable. They
+      // are hidden from assistive tech and dropped from the tab order instead.
       copy.setAttribute('aria-hidden', 'true');
-      copy.inert = true;
+      for (const card of copy.querySelectorAll('[data-review-id]')) card.tabIndex = -1;
       for (const img of copy.querySelectorAll('img')) img.alt = '';
       track.append(copy);
     }

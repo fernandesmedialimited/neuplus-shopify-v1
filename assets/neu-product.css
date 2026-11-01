@@ -1764,6 +1764,20 @@ neu-reviews-feed[hidden] {
   display: none;
 }
 
+neu-reviews-feed .neu-review[data-review-id] {
+  cursor: pointer;
+  transition: border-color 0.2s ease;
+}
+
+neu-reviews-feed .neu-review[data-review-id]:hover {
+  border-color: var(--neu-muted);
+}
+
+neu-reviews-feed .neu-review[data-review-id]:focus-visible {
+  outline: 2px solid var(--neu-green);
+  outline-offset: 2px;
+}
+
 /* Judge.me cards: the reviewer's initial sits in the avatar circle, long
    reviews are clipped so one essay doesn't stretch every card in the row. */
 neu-reviews-feed .neu-review__avatar {
