@@ -397,22 +397,13 @@
             "title": "Made in Britain",
             "text": "Manufactured in the UK"
           }
-        },
-        "c5": {
-          "type": "cert",
-          "settings": {
-            "logo": "",
-            "title": "B Corp Certified",
-            "text": "Verified social & environmental standards"
-          }
         }
       },
       "block_order": [
         "c1",
         "c2",
         "c3",
-        "c4",
-        "c5"
+        "c4"
       ],
       "settings": {
         "eyebrow": "Made right. Tested independently.",
