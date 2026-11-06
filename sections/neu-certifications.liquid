@@ -11,7 +11,14 @@
       {%- endif -%}
       <h2 class="neu-h2">{{ section.settings.heading }}</h2>
 
-      <div class="neu-certs__grid" style="--neu-cert-cols: {{ section.blocks.size | at_least: 1 | at_most: 6 }}">
+      {%- liquid
+        assign cert_count = section.blocks.size | at_least: 1 | at_most: 6
+        assign cert_cols_md = 3
+        if cert_count == 4 or cert_count < 3
+          assign cert_cols_md = cert_count | at_most: 2
+        endif
+      -%}
+      <div class="neu-certs__grid" style="--neu-cert-cols: {{ cert_count }}; --neu-cert-cols-md: {{ cert_cols_md }}">
         {%- for block in section.blocks -%}
           <div class="neu-certs__card" {{ block.shopify_attributes }}>
             <div class="neu-certs__logo">
@@ -109,8 +116,7 @@
         { "type": "cert" },
         { "type": "cert", "settings": { "title": "Vegan", "text": "Plant-based formula" } },
         { "type": "cert", "settings": { "title": "GMO-free", "text": "No modified ingredients" } },
-        { "type": "cert", "settings": { "title": "Made in Britain", "text": "Manufactured in the UK" } },
-        { "type": "cert", "settings": { "title": "B Corp Certified", "text": "Verified social & environmental standards" } }
+        { "type": "cert", "settings": { "title": "Made in Britain", "text": "Manufactured in the UK" } }
       ]
     }
   ]
