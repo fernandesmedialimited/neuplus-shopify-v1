@@ -18,18 +18,20 @@
             "fallback_rating": "4.8",
             "fallback_count": "2,418",
             "reviews_link": "#neu-reviews",
-            "proof_text": "<strong>312 orders</strong> placed this week · Trusted by 12,400+ people"
+            "proof_text": "Trusted by 12,400+ people",
+            "show_count": false,
+            "rating_label": "Rated"
           }
         },
         "intro": {
           "type": "neu-intro",
           "settings": {
-            "title": "",
-            "subtitle": "NAD+ liquid shot · Energy, focus & healthy ageing",
-            "pill_1": "From <strong>£2.33</strong> per shot",
-            "pill_2": "12, 24 or 36 shots",
-            "text": "<p><strong>Cleaner energy. Sharper focus. Zero crash.</strong> Each 60ml shot delivers 300mg of Nicotinamide Riboside plus a full stack of cellular cofactors. No caffeine, no sugar, no shortcuts — just the molecule your cells need to make energy.</p>",
-            "link_label": "Nutrition & Ingredients",
+            "title": "NEU+ Daily NAD+ Shots",
+            "subtitle": "Healthy Aging & Skin Longevity",
+            "pill_1": "12, 24 or 36 shots",
+            "pill_2": "See prices by pack",
+            "text": "<p><strong>Ageing well goes deeper than the surface.</strong></p><p>One daily shot with 300 mg of clinically studied NR, a form of vitamin B3 your body uses to make NAD+. Plus 250 mg TMG and 80 mg vitamin C to support collagen formation. Your daily ritual for beauty from within.</p>",
+            "link_label": "See what's in each shot",
             "link_url": "#neu-ingredients"
           }
         },
@@ -256,15 +258,15 @@
         "breadcrumb_label": "",
         "breadcrumb_url": "",
         "badge": "Bestseller",
-        "tab_1_label": "Description",
+        "tab_1_label": "Overview",
         "tab_1_source": "description",
         "tab_1_content": "",
         "tab_2_label": "The Science",
         "tab_2_source": "custom",
-        "tab_2_content": "<p>NAD+ is the molecule every cell needs to produce energy. Levels fall by around half between the ages of 40 and 60.</p><p>NEU+ delivers 300mg of Nicotinamide Riboside (NR), a clinically studied NAD+ precursor, supported by TMG for methylation and Vitamin C for immune support. Together they restore the cofactors your body needs daily.</p>",
-        "tab_3_label": "Ingredients",
+        "tab_2_content": "<p>NAD+ is a molecule your cells use to turn food into energy.</p><p>Each shot contains 300 mg of nicotinamide riboside (NR), a form of vitamin B3 your body uses to make NAD+. The formula also contains 250 mg of TMG and 80 mg of vitamin C. Vitamin C contributes to normal energy-yielding metabolism.</p>",
+        "tab_3_label": "Benefits",
         "tab_3_source": "custom",
-        "tab_3_content": "<h3>What's in every shot</h3><p><strong>Nicotinamide Riboside (300mg)</strong> — NAD+ precursor. Supports cellular energy, focus and recovery.</p><p><strong>Betaine / TMG (250mg)</strong> — Supports methylation and optimal cellular function.</p><p><strong>Vitamin C (80mg)</strong> — Supports immunity, reduces tiredness and supports collagen.</p><h3>Usage & instructions</h3><p>Recommended daily dose: 1 x 60ml shot per day. Best time to take: AM.</p><h3>Storage</h3><p>Store in a cool, dry place away from sunlight, refrigerate after opening and consume within two days. Shelf life (unopened): per date on bottle lid.</p><h3>Warnings / disclaimers</h3><p>Not recommend for individuals under 18 years of age, or those who are pregnant, breast feeding, or trying to conceive. If you’re taking any medication or have a medical condition, please consult a healthcare professional before use. Keep out of sight and reach of children. Food supplements should not be used as a substitute for a varied and balanced diet and a healthy lifestyle.</p>",
+        "tab_3_content": "<h3>Ageing well goes deeper than the surface.</h3><p><strong>Small bottle. Powerful NAD+ formula.</strong></p><p>300 mg NR, 250 mg TMG and 80 mg vitamin C. Your daily shot for beauty from within.</p><ul><li>Boosts NAD+ levels*</li><li>Supports normal energy production†</li><li>Helps reduce tiredness and fatigue†</li><li>Supports collagen formation for healthy skin†</li><li>Antioxidant protection for your cells†</li></ul><p>†Benefits supported by vitamin C</p><h3>How to take it</h3><p>Take one 60 ml shot daily. Make it part of your morning routine.</p><h3>How to store it</h3><p>Keep unopened bottles in a cool, dry place out of direct sunlight. Drink immediately after opening. Check the lid for the best-before date.</p><h3>Warnings / disclaimers</h3><p>Not recommend for individuals under 18 years of age, or those who are pregnant, breast feeding, or trying to conceive. If you’re taking any medication or have a medical condition, please consult a healthcare professional before use. Keep out of sight and reach of children. Food supplements should not be used as a substitute for a varied and balanced diet and a healthy lifestyle.</p>",
         "show_sticky_bar": true,
         "sticky_button_label": "Add to cart"
       }
@@ -579,9 +581,9 @@
           "type": "ingredient",
           "settings": {
             "tint": "#f6ecd2",
-            "name": "Nicotinamide Riboside (NR)",
-            "dose": "300mg",
-            "text": "NAD+ precursor that supports cellular energy, focus and recovery."
+            "name": "Nicotinamide riboside (NR)",
+            "dose": "300 mg",
+            "text": "A form of vitamin B3 that your body uses to make NAD+. NR is NAD+ precursor that supports cellular energy, focus and recovery."
           }
         },
         "tmg": {
@@ -589,8 +591,8 @@
           "settings": {
             "tint": "#f5d9e0",
             "name": "Betaine (TMG)",
-            "dose": "250mg",
-            "text": "Supports methylation and optimal cellular function."
+            "dose": "250 mg",
+            "text": "TMG stands for trimethylglycine, also known as betaine, supports cellular function."
           }
         },
         "vitc": {
@@ -598,8 +600,8 @@
           "settings": {
             "tint": "#f4f0cf",
             "name": "Vitamin C",
-            "dose": "80mg",
-            "text": "Antioxidant support for immunity and collagen synthesis."
+            "dose": "80 mg",
+            "text": "Helps reduce tiredness and fatigue and contributes to skin's collagen formation."
           }
         },
         "lemon_ginger": {
@@ -621,11 +623,17 @@
           }
         }
       },
-      "block_order": ["nr", "tmg", "vitc", "lemon_ginger", "mixed_berry"],
+      "block_order": [
+        "nr",
+        "tmg",
+        "vitc",
+        "lemon_ginger",
+        "mixed_berry"
+      ],
       "settings": {
-        "eyebrow": "Per 60ml shot",
-        "heading": "Ingredients",
-        "intro": "<p>Three clinically-dosed actives in a 60ml shot. Vegan, sugar-free and made in the UK.</p>",
+        "eyebrow": "In every NEU+ NAD shot",
+        "heading": "What's in each shot",
+        "intro": "<p>Three key ingredients, in one ready-to-drink shot. Made in the UK.</p>",
         "footnote": ""
       }
     },

@@ -20,7 +20,10 @@
       </span>
       <strong>{{ rating_float | round: 1 }}</strong>
       <span class="visually-hidden">out of 5</span>
-      {%- if rating_count != blank -%}
+      {%- if block.settings.rating_label != blank -%}
+        <span class="neu-rating__label">{{ block.settings.rating_label | escape }}</span>
+      {%- endif -%}
+      {%- if block.settings.show_count and rating_count != blank -%}
         <a href="{{ block.settings.reviews_link | default: '#neu-reviews' }}">({{ rating_count }} reviews)</a>
       {%- endif -%}
     </div>
@@ -54,6 +57,18 @@
       "id": "fallback_count",
       "label": "Fallback review count",
       "default": "2,418"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_count",
+      "label": "Show review count",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "rating_label",
+      "label": "Text after the rating",
+      "info": "For example: Rated"
     },
     {
       "type": "text",
