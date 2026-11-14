@@ -17,10 +17,10 @@
           "settings": {
             "fallback_rating": "4.8",
             "fallback_count": "2,418",
-            "reviews_link": "#neu-reviews",
-            "proof_text": "Trusted by 12,400+ people",
             "show_count": false,
-            "rating_label": "Rated"
+            "rating_label": "Rated",
+            "reviews_link": "#neu-reviews",
+            "proof_text": "Trusted by 12,400+ people"
           }
         },
         "intro": {
@@ -467,7 +467,6 @@
         },
         "judge_me_reviews_review_widget_WAC6ji": {
           "type": "shopify://apps/judge-me-reviews/blocks/review_widget/61ccd3b1-a9f2-4160-9fe9-4fec8413e5d8",
-          "disabled": false,
           "settings": {
             "review_data": "sample_data",
             "max_width": 1200,

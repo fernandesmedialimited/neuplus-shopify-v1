@@ -133,26 +133,6 @@
         "padding-block-end": 0
       }
     },
-    "neu_hero_split": {
-      "type": "neu-hero",
-      "settings": {
-        "word_1": "Get",
-        "word_2": "your",
-        "word_3": "spark",
-        "word_4": "back.",
-        "accent_word": "0",
-        "subline": "One daily shot. 300mg NR. Your daily NAD+ ritual.",
-        "caption": "<strong>Lemon & Ginger</strong> or <strong>Mixed Berry</strong><br>60ml shot, one a day",
-        "button_1_label": "Shop NEU+",
-        "button_1_link": "https://www.neu-plus.com/products/neu-plus-nad-shots?variant=57421942980934&selling_plan=691167494470",
-        "button_2_label": "Subscribe & save 21%",
-        "button_2_link": "https://www.neu-plus.com/products/neu-plus-nad-shots?variant=57421943046470&selling_plan=694121562438",
-        "background": "#e8e2d5",
-        "text_color": "#0b0b0b",
-        "accent_color": "#b6c44a",
-        "animate": true
-      }
-    },
     "hero_irjTFL": {
       "type": "hero",
       "blocks": {
@@ -322,8 +302,7 @@
         "reflection_opacity": 75,
         "padding-block-start": 100,
         "padding-block-end": 25
-      },
-      "disabled": true
+      }
     },
     "section_ACeCiF": {
       "type": "section",
@@ -1572,7 +1551,7 @@
             "background_color": "{{ settings.color_palette.color1 }}",
             "video": "shopify://files/videos/The_camera_zooms_in_on_a_white_product_bottle_with_a_silver_cap__The_bottle_spins_on_its_axis_and_ti.mp4",
             "video_position": "cover",
-            "background_image": "shopify://shop_images/WhatsApp_Image_2026-08-03_at_11.51.03.jpg",
+            "background_image": "shopify://shop_images/neu-plus-stats-band-two-bottles.jpg",
             "background_image_position": "cover",
             "toggle_overlay": false,
             "overlay_color": "#00000026",
@@ -3321,7 +3300,7 @@
             "ingredient_description_color": "#666666",
             "dosage_size": 14,
             "dosage_color": "#6b7a3e",
-            "product_image": "shopify://shop_images/bottle-lemon-new-DnlUX40l.jpg",
+            "product_image": "shopify://shop_images/06-neu-plus-bottles-on-ice.jpg",
             "product_image_radius": 12,
             "ingredient_1_image": "shopify://shop_images/NR_2916ee62-8f0d-4a6f-9a7a-578acb18aeb8.png",
             "ingredient_1_name": "Nicotinamide Riboside (NR)",
@@ -4165,7 +4144,6 @@
   "order": [
     "trust_bar_XTg6eD",
     "section_xHGiAn",
-    "neu_hero_split",
     "hero_irjTFL",
     "section_ACeCiF",
     "marquee_GGRxdc",
