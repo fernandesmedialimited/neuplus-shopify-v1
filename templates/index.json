@@ -272,7 +272,7 @@
       "name": "Hero",
       "settings": {
         "media_type_1": "image",
-        "image_1": "shopify://shop_images/hero-upscaled.jpg",
+        "image_1": "shopify://shop_images/DSCF6089-comp.png",
         "video_1": "shopify://files/videos/NeuPlusHero_2.mp4",
         "media_type_2": "video",
         "stack_media_on_mobile": true,
