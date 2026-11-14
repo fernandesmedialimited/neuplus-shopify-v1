@@ -19,6 +19,39 @@
   style="--neu-hero-bg: {{ s.background }}; --neu-hero-ink: {{ s.text_color }}; --neu-hero-accent: {{ s.accent_color }};"
   aria-label="{{ tagline | escape }}"
 >
+  {%- if s.bg_image or s.bg_image_mobile -%}
+    {%- assign bg_desktop = s.bg_image | default: s.bg_image_mobile -%}
+    <div class="neu-hero__bg neu-hero__bg--{{ s.bg_position }}" aria-hidden="true">
+      <picture>
+        {%- if s.bg_image_mobile -%}
+          <source
+            media="(max-width: 749px)"
+            srcset="{{ s.bg_image_mobile | image_url: width: 750 }} 750w, {{ s.bg_image_mobile | image_url: width: 1100 }} 1100w, {{ s.bg_image_mobile | image_url: width: 1500 }} 1500w"
+            sizes="100vw"
+          >
+        {%- endif -%}
+        {%- if s.bg_image -%}
+          <source
+            media="(min-width: 750px)"
+            srcset="{{ s.bg_image | image_url: width: 1200 }} 1200w, {{ s.bg_image | image_url: width: 1800 }} 1800w, {{ s.bg_image | image_url: width: 2400 }} 2400w, {{ s.bg_image | image_url: width: 3000 }} 3000w"
+            sizes="100vw"
+          >
+        {%- endif -%}
+        {{
+          bg_desktop
+          | image_url: width: 1800
+          | image_tag: sizes: '100vw', loading: 'eager', alt: '', class: 'neu-hero__bg-img'
+        }}
+      </picture>
+      {%- if s.bg_overlay_opacity > 0 -%}
+        <span
+          class="neu-hero__bg-overlay"
+          style="background: {{ s.bg_overlay_color }}; opacity: {{ s.bg_overlay_opacity | divided_by: 100.0 }};"
+        ></span>
+      {%- endif -%}
+    </div>
+  {%- endif -%}
+
   <div class="neu-hero__grid">
     <h1 class="neu-hero__title">
       {%- for i in (1..4) -%}
@@ -170,6 +203,50 @@
       "content": "Style"
     },
     { "type": "color", "id": "background", "label": "Background", "default": "#e8e2d5" },
+    {
+      "type": "header",
+      "content": "Background image"
+    },
+    {
+      "type": "image_picker",
+      "id": "bg_image",
+      "label": "Desktop image",
+      "info": "Sits behind the words, bottle, copy and buttons. Covers the whole hero."
+    },
+    {
+      "type": "image_picker",
+      "id": "bg_image_mobile",
+      "label": "Mobile image",
+      "info": "Used on phones. Falls back to the desktop image if empty."
+    },
+    {
+      "type": "select",
+      "id": "bg_position",
+      "label": "Image focus",
+      "options": [
+        { "value": "center", "label": "Center" },
+        { "value": "top", "label": "Top" },
+        { "value": "bottom", "label": "Bottom" },
+        { "value": "left", "label": "Left" },
+        { "value": "right", "label": "Right" }
+      ],
+      "default": "center"
+    },
+    { "type": "color", "id": "bg_overlay_color", "label": "Overlay colour", "default": "#000000" },
+    {
+      "type": "range",
+      "id": "bg_overlay_opacity",
+      "label": "Overlay opacity",
+      "min": 0,
+      "max": 90,
+      "step": 5,
+      "unit": "%",
+      "default": 0
+    },
+    {
+      "type": "header",
+      "content": "Text and motion"
+    },
     { "type": "color", "id": "text_color", "label": "Text", "default": "#0b0b0b" },
     { "type": "color", "id": "accent_color", "label": "Accent word", "default": "#b6c44a" },
     { "type": "checkbox", "id": "animate", "label": "Animate words on load", "default": true },

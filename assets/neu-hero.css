@@ -14,7 +14,40 @@
   font-family: var(--font-body--family, Figtree, sans-serif);
 }
 
+/* Optional background image layer, behind everything else in the hero */
+.neu-hero__bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.neu-hero__bg picture,
+.neu-hero__bg-img {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.neu-hero__bg-img {
+  object-fit: cover;
+  object-position: center;
+}
+
+.neu-hero__bg--top .neu-hero__bg-img { object-position: center top; }
+.neu-hero__bg--bottom .neu-hero__bg-img { object-position: center bottom; }
+.neu-hero__bg--left .neu-hero__bg-img { object-position: left center; }
+.neu-hero__bg--right .neu-hero__bg-img { object-position: right center; }
+
+.neu-hero__bg-overlay {
+  position: absolute;
+  inset: 0;
+}
+
 .neu-hero__grid {
+  position: relative;
+  z-index: 1;
   display: grid;
   grid-template-columns: repeat(12, minmax(0, 1fr));
   grid-template-rows: auto auto auto auto;
@@ -185,6 +218,10 @@
   translate: 0 calc(var(--neu-hero-p) * var(--neu-hero-drift));
   rotate: calc(var(--neu-hero-p) * 9deg);
   scale: calc(1 + var(--neu-hero-p) * 0.08);
+}
+.neu-hero--parallax .neu-hero__bg picture {
+  translate: 0 calc(var(--neu-hero-p) * var(--neu-hero-drift) * 0.5);
+  scale: calc(1.06 + var(--neu-hero-p) * 0.06);
 }
 .neu-hero--parallax .neu-hero__subline,
 .neu-hero--parallax .neu-hero__caption {
