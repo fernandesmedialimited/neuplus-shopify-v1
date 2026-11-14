@@ -24,8 +24,8 @@
             <div class="neu-certs__logo">
               {%- if block.settings.logo -%}
                 {{ block.settings.logo | image_url: height: 128 | image_tag: loading: 'lazy', alt: block.settings.logo.alt | default: block.settings.title }}
-              {%- else -%}
-                {{ 'image' | placeholder_svg_tag: 'neu-certs__placeholder' }}
+              {%- elsif block.settings.icon != 'none' -%}
+                <span class="neu-certs__icon">{% render 'neu-icon', icon: block.settings.icon %}</span>
               {%- endif -%}
             </div>
             <h3>{{ block.settings.title | escape }}</h3>
@@ -38,11 +38,16 @@
 </div>
 
 {% stylesheet %}
-  .neu-certs__placeholder {
+  .neu-certs__icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
     width: 64px;
     height: 64px;
     border-radius: 50%;
-    background: #f2efe8;
+    background: var(--neu-cream-2, #f2efe8);
+    color: var(--neu-ink, #0b0b0b);
+    font-size: 32px;
   }
 {% endstylesheet %}
 
@@ -91,7 +96,26 @@
         {
           "type": "image_picker",
           "id": "logo",
-          "label": "Logo"
+          "label": "Logo",
+          "info": "Optional. When no logo is set, the icon below is shown."
+        },
+        {
+          "type": "select",
+          "id": "icon",
+          "label": "Icon",
+          "options": [
+            { "value": "shield", "label": "Shield" },
+            { "value": "flask", "label": "Lab tested" },
+            { "value": "medal", "label": "Medal" },
+            { "value": "check", "label": "Check" },
+            { "value": "leaf", "label": "Leaf" },
+            { "value": "sprout", "label": "Sprout" },
+            { "value": "no-gmo", "label": "No GMO" },
+            { "value": "factory", "label": "Factory" },
+            { "value": "heart", "label": "Heart" },
+            { "value": "none", "label": "None" }
+          ],
+          "default": "shield"
         },
         {
           "type": "text",
@@ -114,9 +138,9 @@
       "name": "NEU+ certifications",
       "blocks": [
         { "type": "cert" },
-        { "type": "cert", "settings": { "title": "Vegan", "text": "Plant-based formula" } },
-        { "type": "cert", "settings": { "title": "GMO-free", "text": "No modified ingredients" } },
-        { "type": "cert", "settings": { "title": "Made in Britain", "text": "Manufactured in the UK" } }
+        { "type": "cert", "settings": { "icon": "leaf", "title": "Vegan", "text": "Plant-based formula" } },
+        { "type": "cert", "settings": { "icon": "no-gmo", "title": "GMO-free", "text": "No modified ingredients" } },
+        { "type": "cert", "settings": { "icon": "factory", "title": "Made in Britain", "text": "Manufactured in the UK" } }
       ]
     }
   ]

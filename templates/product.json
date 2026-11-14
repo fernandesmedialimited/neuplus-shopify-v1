@@ -372,6 +372,7 @@
           "type": "cert",
           "settings": {
             "logo": "",
+            "icon": "shield",
             "title": "Informed Sport",
             "text": "Batch tested"
           }
@@ -380,6 +381,7 @@
           "type": "cert",
           "settings": {
             "logo": "",
+            "icon": "leaf",
             "title": "Vegan",
             "text": "Plant-based formula"
           }
@@ -388,6 +390,7 @@
           "type": "cert",
           "settings": {
             "logo": "",
+            "icon": "no-gmo",
             "title": "GMO-free",
             "text": "No modified ingredients"
           }
@@ -396,6 +399,7 @@
           "type": "cert",
           "settings": {
             "logo": "",
+            "icon": "factory",
             "title": "Made in Britain",
             "text": "Manufactured in the UK"
           }
