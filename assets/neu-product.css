@@ -715,6 +715,54 @@
   color: var(--neu-star);
 }
 
+/* Secondary card (discovery box): sits above the subscriptions without competing with them */
+.neu-plan--secondary,
+.neu-plan--secondary:has(.neu-plan__badge) {
+  border-color: var(--neu-line);
+}
+
+.neu-plan--secondary.is-selected {
+  border: 2px solid var(--neu-ink);
+}
+
+.neu-plan--secondary .neu-plan__badge {
+  justify-content: flex-start;
+  padding: 6px 16px;
+  background: var(--neu-lime-soft);
+  color: var(--neu-ink);
+  font-size: 10px;
+}
+
+.neu-plan--placeholder {
+  border-style: dashed;
+  cursor: default;
+}
+
+/* Card image beside the perks, e.g. both flavour bottles */
+.neu-plan__feature {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding-top: 16px;
+  border-top: 1px solid var(--neu-line);
+}
+
+.neu-plan__image {
+  flex: none;
+  width: 96px;
+  height: 96px;
+  object-fit: contain;
+  border-radius: calc(var(--neu-radius) / 2);
+  background: var(--neu-cream, #f6f4ef);
+}
+
+.neu-buy .neu-plan__feature .neu-plan__perks {
+  flex: 1;
+  grid-template-columns: minmax(0, 1fr);
+  padding-top: 0;
+  border-top: 0;
+}
+
 .neu-plan__body {
   display: flex;
   flex-direction: column;
@@ -1040,6 +1088,25 @@
 
 .neu-atc .neu-icon {
   font-size: 16px;
+}
+
+.neu-buy__shipping {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin: 0;
+  padding: 10px 12px;
+  border-radius: 6px;
+  background: var(--neu-lime-soft);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.neu-buy__shipping .neu-icon {
+  color: var(--neu-green);
 }
 
 .neu-buy__dispatch {
@@ -2150,7 +2217,7 @@ neu-reviews-feed .neu-review p {
 
 /* The store's custom CSS forces text-align: left !important on every element.
    These elements are centred (or right-aligned) in the design, so they opt back out. */
-.neu :is(.neu-certs, .neu-certs *, .neu-trust, .neu-trust *, .neu-swatch, .neu-swatch *, .neu-buy__dispatch, .neu-plan__badge, .neu-btn) {
+.neu :is(.neu-certs, .neu-certs *, .neu-trust, .neu-trust *, .neu-swatch, .neu-swatch *, .neu-buy__dispatch, .neu-buy__shipping, .neu-plan__badge, .neu-btn) {
   text-align: center !important;
 }
 

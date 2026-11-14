@@ -52,8 +52,8 @@
           "settings": {
             "icon": "shopify://shop_images/004-security_2399e9ee-4dd6-47dc-bca7-ed37f9e19843.png",
             "icon_svg": "",
-            "line_1": "FREE UK DELIVERY",
-            "line_2": "FOR SUBSCRIBERS"
+            "line_1": "FREE UK SHIPPING",
+            "line_2": "ON ALL ORDERS"
           }
         }
       },
@@ -245,7 +245,7 @@
             "is_subscribe_button": false,
             "subscription_product": "neu-plus-nad-shots",
             "selling_plan_id": "57421943046470",
-            "label": "Subscribe & save 21%",
+            "label": "Subscribe & save up to 15%",
             "link": "https://www.neu-plus.com/products/neu-plus-nad-shots?variant=57421943046470&selling_plan=694121562438",
             "open_in_new_tab": false,
             "style_class": "button-custom",
@@ -319,7 +319,7 @@
         "caption_2": "60ml shot, one a day",
         "button_1_label": "Shop NEU+",
         "button_1_link": "https://www.neu-plus.com/products/neu-plus-nad-shots?variant=57421942980934&selling_plan=691167494470",
-        "button_2_label": "Subscribe & save 21%",
+        "button_2_label": "Subscribe & save up to 15%",
         "button_2_link": "https://www.neu-plus.com/products/neu-plus-nad-shots?variant=57421943046470&selling_plan=694121562438",
         "background": "#e8e2d5",
         "text_color": "#0b0b0b",

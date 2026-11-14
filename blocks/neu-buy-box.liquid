@@ -63,6 +63,13 @@
       {%- endfor -%}
     {%- endif -%}
 
+    {%- if block.settings.shipping_text != blank -%}
+      <p class="neu-buy__shipping">
+        {% render 'neu-icon', icon: 'truck' %}
+        {{ block.settings.shipping_text | escape }}
+      </p>
+    {%- endif -%}
+
     <div class="neu-plans" role="radiogroup" aria-label="{{ block.settings.plans_label | escape }}">
       {% content_for 'blocks' %}
     </div>
@@ -198,6 +205,13 @@
     },
     {
       "type": "text",
+      "id": "shipping_text",
+      "label": "Shipping banner",
+      "info": "Shown above the plan cards. Leave blank to hide.",
+      "default": "Free UK shipping on all orders"
+    },
+    {
+      "type": "text",
       "id": "dispatch_text",
       "label": "Dispatch note",
       "default": "Dispatched within 1–2 business days"
@@ -245,7 +259,7 @@
             "subtitle": "Choose your favourite flavour",
             "servings": 28,
             "show_per_month": false,
-            "price_note": "+ Postage"
+            "price_note": ""
           }
         }
       ]

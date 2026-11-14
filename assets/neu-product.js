@@ -245,13 +245,19 @@ class NeuBuyBox extends HTMLElement {
   priceFor(plan) {
     const type = plan.dataset.planType;
 
+    // A different product (the discovery box) is always a one-time purchase: it never carries a selling plan
     if (type === 'product') {
       return {
         price: Number(plan.dataset.fixedPrice),
         planId: '',
         variantId: plan.dataset.variantId,
-        available: true,
+        available: plan.dataset.available !== 'false',
         variant: this.variant,
+        display: {
+          ...this.variant,
+          title: plan.dataset.title || this.variant.title,
+          image: plan.dataset.image || this.variant.image,
+        },
       };
     }
 
@@ -290,7 +296,7 @@ class NeuBuyBox extends HTMLElement {
       const months = Number(plan.dataset.months) || 1;
       const servings = Number(plan.dataset.servings) || 1;
       const perMonth = plan.dataset.perMonth === 'true';
-      const perLabel = plan.dataset.perLabel || '/day';
+      const perLabel = plan.dataset.perLabel || ' per shot';
 
       const amount = plan.querySelector('[data-plan-amount]');
       if (amount) amount.textContent = money(perMonth ? Math.round(price / months) : price);
@@ -353,7 +359,7 @@ class NeuBuyBox extends HTMLElement {
     document.dispatchEvent(
       new CustomEvent(STATE_EVENT, {
         detail: {
-          variant: resolved.variant,
+          variant: resolved.display || resolved.variant,
           price: money(total),
           compare: percent > 0 ? money(compare) : '',
           save: percent > 0 ? `Save ${percent}%` : '',

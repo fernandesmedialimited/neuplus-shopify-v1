@@ -43,12 +43,35 @@
             "plans_label": "Choose a plan",
             "show_quantity": true,
             "button_label": "Add to cart",
+            "shipping_text": "Free UK shipping on all orders",
             "dispatch_text": "Dispatched within 1–2 business days",
             "show_dynamic_checkout": true,
             "instalments_text": "<p>Choose <strong>Pay in Instalments</strong> at checkout to split orders over £50 into <strong>3 interest-free payments with Google Shop</strong>.</p>",
             "show_payment_icons": true
           },
           "blocks": {
+            "discovery": {
+              "type": "_neu-plan",
+              "settings": {
+                "plan_type": "product",
+                "pack": "",
+                "selling_plan_id": "",
+                "plan_position": 1,
+                "secondary": true,
+                "selected": false,
+                "badge": "New · Discovery box",
+                "title": "Find Your Flavour",
+                "subtitle": "12 Shot Mixed Discovery Box",
+                "subtitle_accent": false,
+                "perks": "6 Mixed Berry + 6 Lemon & Ginger\nTry both flavours before you commit\nDiscover your favourite flavour\nNo subscription or commitment",
+                "perks_inline": false,
+                "chips": "Free UK shipping",
+                "servings": 12,
+                "billing_months": 1,
+                "show_per_month": false,
+                "price_note": "One-time purchase"
+              }
+            },
             "sub_24": {
               "type": "_neu-plan",
               "settings": {
@@ -63,7 +86,7 @@
                 "subtitle_accent": false,
                 "perks": "24 shots delivered every 3 weeks\nReschedule, skip or cancel any time\nNo commitment",
                 "perks_inline": false,
-                "chips": "Free delivery",
+                "chips": "Free UK shipping",
                 "servings": 24,
                 "billing_months": 1,
                 "show_per_month": false,
@@ -84,7 +107,7 @@
                 "subtitle_accent": false,
                 "perks": "36 shots delivered every 4 weeks\nReschedule, skip or cancel any time\nNo commitment",
                 "perks_inline": false,
-                "chips": "Free delivery",
+                "chips": "Free UK shipping",
                 "servings": 36,
                 "billing_months": 1,
                 "show_per_month": false,
@@ -105,11 +128,11 @@
                 "subtitle_accent": false,
                 "perks": "",
                 "perks_inline": false,
-                "chips": "",
+                "chips": "Free UK shipping",
                 "servings": 12,
                 "billing_months": 1,
                 "show_per_month": false,
-                "price_note": "+ £3.50 delivery"
+                "price_note": ""
               }
             },
             "once_24": {
@@ -126,11 +149,11 @@
                 "subtitle_accent": false,
                 "perks": "",
                 "perks_inline": false,
-                "chips": "",
+                "chips": "Free UK shipping",
                 "servings": 24,
                 "billing_months": 1,
                 "show_per_month": false,
-                "price_note": "+ £3.50 delivery"
+                "price_note": ""
               }
             },
             "once_36": {
@@ -147,7 +170,7 @@
                 "subtitle_accent": false,
                 "perks": "",
                 "perks_inline": false,
-                "chips": "Free delivery",
+                "chips": "Free UK shipping",
                 "servings": 36,
                 "billing_months": 1,
                 "show_per_month": false,
@@ -156,6 +179,7 @@
             }
           },
           "block_order": [
+            "discovery",
             "sub_24",
             "sub_36",
             "once_12",
@@ -168,7 +192,7 @@
           "settings": {
             "style": "tint",
             "icon": "truck",
-            "title": "Free delivery for subscribers, dispatched within 1–2 working days",
+            "title": "Free UK shipping on all orders, dispatched within 1–2 working days",
             "link_label": "Delivery information",
             "link_url": "/policies/shipping-policy",
             "image": "shopify://shop_images/neu-plus-perk-coffee-tray.jpg"
@@ -330,7 +354,7 @@
           "settings": {
             "icon": "percent",
             "title": "Lower price",
-            "text": "Subscribers pay £3.32/day vs £3.57 one-off. Save more on quarterly."
+            "text": "Subscribers pay £2.48 per shot on 24 shots (save 10%) or £2.13 per shot on 36 (save 15%)."
           }
         },
         "w3": {
@@ -679,7 +703,7 @@
           "type": "question",
           "settings": {
             "question": "How does delivery work?",
-            "answer": "<p>Free UK delivery for subscribers. Orders typically dispatched within 1–2 business days.</p>",
+            "answer": "<p>Free UK shipping on all orders, including one-time purchases and the Discovery Box. Orders typically dispatched within 1–2 business days.</p>",
             "open": false
           }
         },
