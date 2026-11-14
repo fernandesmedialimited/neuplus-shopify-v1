@@ -2839,6 +2839,7 @@
         "group_QgBD6y",
         "group_mTTMdK"
       ],
+      "disabled": true,
       "name": "Benefits You Can Feel",
       "settings": {
         "content_direction": "row",
