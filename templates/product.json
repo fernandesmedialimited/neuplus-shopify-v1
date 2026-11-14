@@ -21,7 +21,8 @@
             "rating_label": "Rated",
             "reviews_link": "#neu-reviews",
             "proof_text": "Trusted by 12,400+ people"
-          }
+          },
+          "blocks": {}
         },
         "intro": {
           "type": "neu-intro",
@@ -33,7 +34,8 @@
             "text": "<p><strong>Aging well goes deeper than the surface.</strong></p><p>One daily shot with 300 mg of clinically studied NR, a form of vitamin B3 your body uses to make NAD. Plus 250 mg TMG and 80 mg vitamin C to support collagen formation. Your daily ritual for beauty from within.</p>",
             "link_label": "See what's in each shot",
             "link_url": "#neu-ingredients"
-          }
+          },
+          "blocks": {}
         },
         "buy": {
           "type": "neu-buy-box",
@@ -54,10 +56,10 @@
               "type": "_neu-plan",
               "settings": {
                 "plan_type": "product",
-                "product": "neu-daily-nad-shots-12-shot-mixed-discovery-box",
                 "pack": "",
                 "selling_plan_id": "",
                 "plan_position": 1,
+                "product": "neu-daily-nad-shots-12-shot-mixed-discovery-box",
                 "secondary": true,
                 "selected": false,
                 "badge": "New · Discovery box",
@@ -71,7 +73,8 @@
                 "billing_months": 1,
                 "show_per_month": false,
                 "price_note": "One-time purchase"
-              }
+              },
+              "blocks": {}
             },
             "sub_24": {
               "type": "_neu-plan",
@@ -80,6 +83,8 @@
                 "pack": "24 Shots",
                 "selling_plan_id": "691167494470",
                 "plan_position": 1,
+                "product": "",
+                "secondary": false,
                 "selected": true,
                 "badge": "Most popular",
                 "title": "24 Shots Subscription",
@@ -92,7 +97,8 @@
                 "billing_months": 1,
                 "show_per_month": false,
                 "price_note": ""
-              }
+              },
+              "blocks": {}
             },
             "sub_36": {
               "type": "_neu-plan",
@@ -101,6 +107,8 @@
                 "pack": "36 Shots",
                 "selling_plan_id": "694121562438",
                 "plan_position": 1,
+                "product": "",
+                "secondary": false,
                 "selected": false,
                 "badge": "Best value",
                 "title": "36 Shots Subscription",
@@ -113,7 +121,8 @@
                 "billing_months": 1,
                 "show_per_month": false,
                 "price_note": ""
-              }
+              },
+              "blocks": {}
             },
             "once_12": {
               "type": "_neu-plan",
@@ -122,6 +131,8 @@
                 "pack": "12 Shots",
                 "selling_plan_id": "",
                 "plan_position": 1,
+                "product": "",
+                "secondary": false,
                 "selected": false,
                 "badge": "",
                 "title": "12 Shots",
@@ -134,7 +145,8 @@
                 "billing_months": 1,
                 "show_per_month": false,
                 "price_note": ""
-              }
+              },
+              "blocks": {}
             },
             "once_24": {
               "type": "_neu-plan",
@@ -143,6 +155,8 @@
                 "pack": "24 Shots",
                 "selling_plan_id": "",
                 "plan_position": 1,
+                "product": "",
+                "secondary": false,
                 "selected": false,
                 "badge": "",
                 "title": "24 Shots",
@@ -155,7 +169,8 @@
                 "billing_months": 1,
                 "show_per_month": false,
                 "price_note": ""
-              }
+              },
+              "blocks": {}
             },
             "once_36": {
               "type": "_neu-plan",
@@ -164,6 +179,8 @@
                 "pack": "36 Shots",
                 "selling_plan_id": "",
                 "plan_position": 1,
+                "product": "",
+                "secondary": false,
                 "selected": false,
                 "badge": "",
                 "title": "36 Shots",
@@ -176,7 +193,8 @@
                 "billing_months": 1,
                 "show_per_month": false,
                 "price_note": ""
-              }
+              },
+              "blocks": {}
             }
           },
           "block_order": [
@@ -197,7 +215,8 @@
             "link_label": "Delivery information",
             "link_url": "/policies/shipping-policy",
             "image": "shopify://shop_images/neu-plus-perk-coffee-tray.jpg"
-          }
+          },
+          "blocks": {}
         },
         "rewards": {
           "type": "neu-perk-card",
@@ -209,51 +228,8 @@
             "link_label": "Learn more about NEU+ rewards",
             "link_url": "",
             "image": "shopify://shop_images/neu-plus-perk-bath-tap.jpg"
-          }
-        },
-        "trust": {
-          "type": "neu-trust-icons",
-          "settings": {},
-          "blocks": {
-            "t1": {
-              "type": "_neu-trust-item",
-              "settings": {
-                "icon": "shield",
-                "label": "UK-Made",
-                "link": ""
-              }
-            },
-            "t2": {
-              "type": "_neu-trust-item",
-              "settings": {
-                "icon": "medal",
-                "label": "Informed Sport",
-                "link": ""
-              }
-            },
-            "t3": {
-              "type": "_neu-trust-item",
-              "settings": {
-                "icon": "refresh",
-                "label": "Cancel anytime",
-                "link": ""
-              }
-            },
-            "t4": {
-              "type": "_neu-trust-item",
-              "settings": {
-                "icon": "box",
-                "label": "Returns policy",
-                "link": "/policies/refund-policy"
-              }
-            }
           },
-          "block_order": [
-            "t1",
-            "t2",
-            "t3",
-            "t4"
-          ]
+          "blocks": {}
         },
         "harrods": {
           "type": "neu-perk-card",
@@ -265,7 +241,56 @@
             "link_label": "Find NEU+ at Harrods",
             "link_url": "https://www.harrods.com/en-gb",
             "image": "shopify://shop_images/neu-plus-perk-warm-lamp.jpg"
-          }
+          },
+          "blocks": {}
+        },
+        "trust": {
+          "type": "neu-trust-icons",
+          "settings": {},
+          "blocks": {
+            "t1": {
+              "type": "_neu-trust-item",
+              "settings": {
+                "icon": "shield",
+                "label": "UK-Made",
+                "link": ""
+              },
+              "blocks": {}
+            },
+            "t2": {
+              "type": "_neu-trust-item",
+              "settings": {
+                "icon": "medal",
+                "label": "Informed Sport",
+                "link": ""
+              },
+              "blocks": {}
+            },
+            "t3": {
+              "type": "_neu-trust-item",
+              "settings": {
+                "icon": "refresh",
+                "label": "Cancel anytime",
+                "link": ""
+              },
+              "blocks": {}
+            },
+            "t4": {
+              "type": "_neu-trust-item",
+              "settings": {
+                "icon": "box",
+                "label": "Returns policy",
+                "link": "/policies/refund-policy"
+              },
+              "blocks": {}
+            }
+          },
+          "block_order": [
+            "t1",
+            "t2",
+            "t3",
+            "t4"
+          ]
         }
       },
       "block_order": [
@@ -293,7 +318,11 @@
         "tab_3_source": "custom",
         "tab_3_content": "<h3>Aging well goes deeper than the surface.</h3><p><strong>Small bottle. Powerful NAD+ formula.</strong></p><p>300 mg NR, 250 mg TMG and 80 mg vitamin C. Your daily shot for beauty from within.</p><ul><li>Boosts NAD levels</li><li>Supports normal energy production†</li><li>Helps reduce tiredness and fatigue†</li><li>Supports collagen formation for healthy skin†</li><li>Antioxidant protection for your cells†</li></ul><p>†Benefits supported by vitamin C</p><h3>How to take it</h3><p>Take one 60 ml shot daily. Make it part of your morning routine.</p><h3>How to store it</h3><p>Keep unopened bottles in a cool, dry place out of direct sunlight. Drink immediately after opening. Check the lid for the best-before date.</p><h3>Warnings / disclaimers</h3><p>Not recommend for individuals under 18 years of age, or those who are pregnant, breast feeding, or trying to conceive. If you’re taking any medication or have a medical condition, please consult a healthcare professional before use. Keep out of sight and reach of children. Food supplements should not be used as a substitute for a varied and balanced diet and a healthy lifestyle.</p>",
         "show_sticky_bar": true,
-        "sticky_button_label": "Add to cart"
+        "sticky_button_label": "Add to cart",
+        "sticky_button_short_label": "Add",
+        "sticky_view_cart_label": "View cart",
+        "sticky_view_cart_short_label": "View",
+        "sticky_checkout_label": "Checkout"
       }
     },
     "featured_in": {
@@ -336,7 +365,8 @@
       ],
       "settings": {
         "speed": 40,
-        "padding": 24
+        "padding": 24,
+        "background": "#0b0b0b"
       }
     },
     "why_subscribe": {
@@ -396,7 +426,6 @@
         "c1": {
           "type": "cert",
           "settings": {
-            "logo": "",
             "icon": "shield",
             "title": "Informed Sport",
             "text": "Batch tested"
@@ -405,7 +434,6 @@
         "c2": {
           "type": "cert",
           "settings": {
-            "logo": "",
             "icon": "leaf",
             "title": "Vegan",
             "text": "Plant-based formula"
@@ -414,7 +442,6 @@
         "c3": {
           "type": "cert",
           "settings": {
-            "logo": "",
             "icon": "no-gmo",
             "title": "GMO-free",
             "text": "No modified ingredients"
@@ -423,7 +450,6 @@
         "c4": {
           "type": "cert",
           "settings": {
-            "logo": "",
             "icon": "factory",
             "title": "Made in Britain",
             "text": "Manufactured in the UK"
@@ -449,7 +475,6 @@
         "r1": {
           "type": "review",
           "settings": {
-            "avatar": "",
             "stars": 5,
             "title": "Genuine difference",
             "body": "Real energy difference after 3 weeks. No jitters, no crash. Will keep ordering.",
@@ -460,7 +485,6 @@
         "r2": {
           "type": "review",
           "settings": {
-            "avatar": "",
             "stars": 5,
             "title": "Clean focus",
             "body": "I take it before training. Cleaner energy than coffee and I sleep better.",
@@ -471,7 +495,6 @@
         "r3": {
           "type": "review",
           "settings": {
-            "avatar": "",
             "stars": 5,
             "title": "I feel like myself again",
             "body": "Brain fog has lifted. Genuinely the first supplement I've felt in two weeks.",
@@ -482,7 +505,6 @@
         "r4": {
           "type": "review",
           "settings": {
-            "avatar": "",
             "stars": 4,
             "title": "Tastes great",
             "body": "Lemon & Ginger is lovely. Looking forward to trying the new flavours.",
@@ -544,6 +566,9 @@
         "judge_me_reviews_cards_carousel_neu"
       ],
       "settings": {
+        "source": "judgeme",
+        "hide_app_widget": true,
+        "judgeme_limit": 20,
         "eyebrow": "Customer reviews",
         "fallback_rating": "4.8",
         "fallback_count": "2,418",
@@ -598,6 +623,101 @@
         "button_label": "See what's in each shot",
         "button_url": "",
         "background": "#e8e2d5",
+        "padding_top": 80,
+        "padding_bottom": 80
+      }
+    },
+    "faq": {
+      "type": "neu-faq",
+      "blocks": {
+        "q1": {
+          "type": "question",
+          "settings": {
+            "question": "When will I notice a difference?",
+            "answer": "<p>In clinical studies, daily NR raised blood NAD+ levels within 2 weeks, and they stayed raised with continued use (Conze et al., 2019). How that feels differs from person to person, so we suggest taking one shot every day for at least 8 weeks before you judge it.</p>",
+            "open": true
+          }
+        },
+        "q3": {
+          "type": "question",
+          "settings": {
+            "question": "What is Nicotinamide Riboside (NR)?",
+            "answer": "<p>NR is a form of vitamin B3 and a direct precursor to NAD+, the molecule every cell needs to produce energy. NAD+ levels fall by around half between the ages of 40 and 60, and NR is one of the most studied ways to raise them.</p>",
+            "open": false
+          }
+        },
+        "nmn": {
+          "type": "question",
+          "settings": {
+            "question": "NR or NMN: what's the difference?",
+            "answer": "<p>Both are NAD+ precursors. NR has the larger body of completed human clinical trials, showing it is absorbed (Trammell et al., 2016) and, in a randomised, placebo-controlled trial, that it raises blood NAD+ (Martens et al., 2018). NMN is a larger molecule with far fewer human trials so far. That's why NEU+ uses NR.</p>",
+            "open": false
+          }
+        },
+        "format": {
+          "type": "question",
+          "settings": {
+            "question": "Why a shot rather than capsules or an IV drip?",
+            "answer": "<p>One 60ml shot gives you 300mg NR with TMG and vitamin C, so there are no pills to swallow and it fits into your morning. NR taken by mouth is absorbed and raises NAD+ levels (Trammell et al., 2016). IV NAD+ drips need a clinic visit; NEU+ is made for steady daily use, which is how NR has been studied.</p>",
+            "open": false
+          }
+        },
+        "safety": {
+          "type": "question",
+          "settings": {
+            "question": "Is NR safe to take long term?",
+            "answer": "<p>NR has been well tolerated in human trials. In a randomised, placebo-controlled study, healthy adults took up to 1,000mg daily for 8 weeks with no serious side effects (Conze et al., 2019). Each NEU+ shot contains 300mg, and unlike niacin, NR doesn't cause flushing. If you're pregnant, breastfeeding, under 18, taking medication or have a medical condition, check with a healthcare professional first.</p>",
+            "open": false
+          }
+        },
+        "q4": {
+          "type": "question",
+          "settings": {
+            "question": "Is NEU+ vegan and gluten-free?",
+            "answer": "<p>Yes. NEU+ is vegan, gluten-free, sugar-free and made in the UK. Each batch is third-party tested and Informed Sport certified for safe use by athletes.</p>",
+            "open": false
+          }
+        },
+        "q2": {
+          "type": "question",
+          "settings": {
+            "question": "How does the subscription work?",
+            "answer": "<p>Your first order ships immediately. 24-shot subscriptions renew every 3 weeks and 36-shot subscriptions every 4 weeks. You can skip, pause or cancel any time from your account — no fees, no questions.</p>",
+            "open": false
+          }
+        },
+        "harrods": {
+          "type": "question",
+          "settings": {
+            "question": "Where can I buy NEU+?",
+            "answer": "<p>Right here on neu-plus.com.</p>",
+            "open": false
+          }
+        },
+        "q5": {
+          "type": "question",
+          "settings": {
+            "question": "How does delivery work?",
+            "answer": "<p>Free UK shipping on all orders, including one-time purchases and the Discovery Box. Orders typically dispatched within 1–2 business days.</p>",
+            "open": false
+          }
+        }
+      },
+      "block_order": [
+        "q1",
+        "q3",
+        "nmn",
+        "format",
+        "safety",
+        "q4",
+        "q2",
+        "harrods",
+        "q5"
+      ],
+      "settings": {
+        "eyebrow": "FAQ",
+        "heading": "Ask us anything?",
+        "faq_schema": true,
         "padding_top": 80,
         "padding_bottom": 80
       }
@@ -663,101 +783,6 @@
         "heading": "What's in each shot",
         "intro": "<p>Three key ingredients, in one ready-to-drink shot. Made in the UK.</p>",
         "footnote": ""
-      }
-    },
-    "faq": {
-      "type": "neu-faq",
-      "blocks": {
-        "q1": {
-          "type": "question",
-          "settings": {
-            "question": "When will I notice a difference?",
-            "answer": "<p>In clinical studies, daily NR raised blood NAD+ levels within 2 weeks, and they stayed raised with continued use (Conze et al., 2019). How that feels differs from person to person, so we suggest taking one shot every day for at least 8 weeks before you judge it.</p>",
-            "open": true
-          }
-        },
-        "q2": {
-          "type": "question",
-          "settings": {
-            "question": "How does the subscription work?",
-            "answer": "<p>Your first order ships immediately. 24-shot subscriptions renew every 3 weeks and 36-shot subscriptions every 4 weeks. You can skip, pause or cancel any time from your account — no fees, no questions.</p>",
-            "open": false
-          }
-        },
-        "q3": {
-          "type": "question",
-          "settings": {
-            "question": "What is Nicotinamide Riboside (NR)?",
-            "answer": "<p>NR is a form of vitamin B3 and a direct precursor to NAD+, the molecule every cell needs to produce energy. NAD+ levels fall by around half between the ages of 40 and 60, and NR is one of the most studied ways to raise them.</p>",
-            "open": false
-          }
-        },
-        "q4": {
-          "type": "question",
-          "settings": {
-            "question": "Is NEU+ vegan and gluten-free?",
-            "answer": "<p>Yes. NEU+ is vegan, gluten-free, sugar-free and made in the UK. Each batch is third-party tested and Informed Sport certified for safe use by athletes.</p>",
-            "open": false
-          }
-        },
-        "q5": {
-          "type": "question",
-          "settings": {
-            "question": "How does delivery work?",
-            "answer": "<p>Free UK shipping on all orders, including one-time purchases and the Discovery Box. Orders typically dispatched within 1–2 business days.</p>",
-            "open": false
-          }
-        },
-        "nmn": {
-          "type": "question",
-          "settings": {
-            "question": "NR or NMN: what's the difference?",
-            "answer": "<p>Both are NAD+ precursors. NR has the larger body of completed human clinical trials, showing it is absorbed (Trammell et al., 2016) and, in a randomised, placebo-controlled trial, that it raises blood NAD+ (Martens et al., 2018). NMN is a larger molecule with far fewer human trials so far. That's why NEU+ uses NR.</p>",
-            "open": false
-          }
-        },
-        "format": {
-          "type": "question",
-          "settings": {
-            "question": "Why a shot rather than capsules or an IV drip?",
-            "answer": "<p>One 60ml shot gives you 300mg NR with TMG and vitamin C, so there are no pills to swallow and it fits into your morning. NR taken by mouth is absorbed and raises NAD+ levels (Trammell et al., 2016). IV NAD+ drips need a clinic visit; NEU+ is made for steady daily use, which is how NR has been studied.</p>",
-            "open": false
-          }
-        },
-        "safety": {
-          "type": "question",
-          "settings": {
-            "question": "Is NR safe to take long term?",
-            "answer": "<p>NR has been well tolerated in human trials. In a randomised, placebo-controlled study, healthy adults took up to 1,000mg daily for 8 weeks with no serious side effects (Conze et al., 2019). Each NEU+ shot contains 300mg, and unlike niacin, NR doesn't cause flushing. If you're pregnant, breastfeeding, under 18, taking medication or have a medical condition, check with a healthcare professional first.</p>",
-            "open": false
-          }
-        },
-        "harrods": {
-          "type": "question",
-          "settings": {
-            "question": "Where can I buy NEU+?",
-            "answer": "<p>Right here on neu-plus.com.</p>",
-            "open": false
-          }
-        }
-      },
-      "block_order": [
-        "q1",
-        "q3",
-        "nmn",
-        "format",
-        "safety",
-        "q4",
-        "q2",
-        "harrods",
-        "q5"
-      ],
-      "settings": {
-        "eyebrow": "FAQ",
-        "heading": "Ask us anything?",
-        "faq_schema": true,
-        "padding_top": 80,
-        "padding_bottom": 80
       }
     }
   },
