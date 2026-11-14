@@ -68,8 +68,12 @@
       <p class="neu-hero__subline">{{ s.subline }}</p>
     {%- endif -%}
 
-    {%- if s.caption != blank -%}
-      <p class="neu-hero__caption">{{ s.caption }}</p>
+    {%- if s.caption != blank or s.caption_2 != blank -%}
+      <p class="neu-hero__caption">
+        {{- s.caption -}}
+        {%- if s.caption != blank and s.caption_2 != blank %}<br>{% endif -%}
+        {{- s.caption_2 | escape -}}
+      </p>
     {%- endif -%}
 
     <div class="neu-hero__ctas">
@@ -127,7 +131,13 @@
       "type": "inline_richtext",
       "id": "caption",
       "label": "Caption (left)",
-      "default": "<strong>Lemon & Ginger</strong> or <strong>Mixed Berry</strong><br>60ml shot, one a day"
+      "default": "<strong>Lemon & Ginger</strong> or <strong>Mixed Berry</strong>"
+    },
+    {
+      "type": "text",
+      "id": "caption_2",
+      "label": "Caption second line",
+      "default": "60ml shot, one a day"
     },
     {
       "type": "header",
