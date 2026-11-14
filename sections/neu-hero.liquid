@@ -1,4 +1,5 @@
 {{ 'neu-hero.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'neu-hero.js' | asset_url }}" defer></script>
 
 {%- liquid
   assign s = section.settings
@@ -14,6 +15,7 @@
 
 <section
   class="neu-hero{% if s.animate %} neu-hero--animate{% endif %}"
+  {% if s.parallax %}data-neu-parallax{% endif %}
   style="--neu-hero-bg: {{ s.background }}; --neu-hero-ink: {{ s.text_color }}; --neu-hero-accent: {{ s.accent_color }};"
   aria-label="{{ tagline | escape }}"
 >
@@ -170,7 +172,14 @@
     { "type": "color", "id": "background", "label": "Background", "default": "#e8e2d5" },
     { "type": "color", "id": "text_color", "label": "Text", "default": "#0b0b0b" },
     { "type": "color", "id": "accent_color", "label": "Accent word", "default": "#b6c44a" },
-    { "type": "checkbox", "id": "animate", "label": "Animate words on load", "default": true }
+    { "type": "checkbox", "id": "animate", "label": "Animate words on load", "default": true },
+    {
+      "type": "checkbox",
+      "id": "parallax",
+      "label": "Parallax on scroll",
+      "info": "Words slide apart and the bottle drifts and tilts as the hero scrolls away",
+      "default": true
+    }
   ],
   "presets": [
     {
