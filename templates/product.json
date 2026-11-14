@@ -169,7 +169,7 @@
             "title": "Free delivery for subscribers, dispatched within 1–2 working days",
             "link_label": "Delivery information",
             "link_url": "/policies/shipping-policy",
-            "image": ""
+            "image": "shopify://shop_images/neu-plus-perk-coffee-tray.jpg"
           }
         },
         "rewards": {
@@ -181,7 +181,7 @@
             "title": "Earn NEU+ points — free socks for new subscribers",
             "link_label": "Learn more about NEU+ rewards",
             "link_url": "",
-            "image": ""
+            "image": "shopify://shop_images/neu-plus-perk-bath-tap.jpg"
           }
         },
         "trust": {
@@ -237,7 +237,7 @@
             "title": "Available at Harrods, London",
             "link_label": "Find NEU+ at Harrods",
             "link_url": "https://www.harrods.com/en-gb",
-            "image": ""
+            "image": "shopify://shop_images/neu-plus-perk-warm-lamp.jpg"
           }
         }
       },
@@ -563,7 +563,7 @@
         "s4"
       ],
       "settings": {
-        "image": "shopify://shop_images/TT100796_copy.jpg",
+        "image": "shopify://shop_images/neu-plus-stats-band-two-bottles.jpg",
         "heading": "The daily <em>shot</em> with heavyweight credentials",
         "button_label": "Nutrition & Ingredients",
         "button_url": "",
