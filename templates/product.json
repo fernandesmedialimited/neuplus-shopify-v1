@@ -567,7 +567,7 @@
       "settings": {
         "image": "shopify://shop_images/TT100796_copy.jpg",
         "heading": "The daily <em>shot</em> with heavyweight credentials",
-        "button_label": "Nutrition & Ingredients",
+        "button_label": "See what's in each shot",
         "button_url": "",
         "background": "#e8e2d5",
         "padding_top": 80,
@@ -592,7 +592,7 @@
             "tint": "#f5d9e0",
             "name": "Betaine (TMG)",
             "dose": "250 mg",
-            "text": "TMG stands for trimethylglycine, also known as betaine, supports cellular function."
+            "text": "TMG (trimethylglycine), also known as betaine, supports normal cellular function."
           }
         },
         "vitc": {
