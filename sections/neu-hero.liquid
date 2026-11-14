@@ -1,0 +1,171 @@
+{{ 'neu-hero.css' | asset_url | stylesheet_tag }}
+
+{%- liquid
+  assign s = section.settings
+  assign tagline = ''
+  for i in (1..4)
+    assign key = 'word_' | append: i
+    if s[key] != blank
+      assign tagline = tagline | append: s[key] | append: ' '
+    endif
+  endfor
+  assign tagline = tagline | strip
+-%}
+
+<section
+  class="neu-hero{% if s.animate %} neu-hero--animate{% endif %}"
+  style="--neu-hero-bg: {{ s.background }}; --neu-hero-ink: {{ s.text_color }}; --neu-hero-accent: {{ s.accent_color }};"
+  aria-label="{{ tagline | escape }}"
+>
+  <div class="neu-hero__grid">
+    <h1 class="neu-hero__title">
+      {%- for i in (1..4) -%}
+        {%- assign key = 'word_' | append: i -%}
+        {%- assign i_str = i | append: '' -%}
+        {%- if s[key] != blank -%}
+          <span class="neu-hero__word neu-hero__word--{{ i }}{% if s.accent_word == i_str %} neu-hero__word--accent{% endif %}">
+            {{- s[key] | escape -}}
+          </span>
+          {{ ' ' }}
+        {%- endif -%}
+      {%- endfor -%}
+    </h1>
+
+    <div class="neu-hero__product">
+      {%- if s.product_image -%}
+        {%- assign mobile_image = s.product_image_mobile | default: s.product_image -%}
+        <picture>
+          {%- if s.product_image_mobile -%}
+            <source
+              media="(max-width: 749px)"
+              srcset="{{ mobile_image | image_url: width: 400 }} 400w, {{ mobile_image | image_url: width: 800 }} 800w"
+              sizes="45vw"
+            >
+          {%- endif -%}
+          {{
+            s.product_image
+            | image_url: width: 1200
+            | image_tag:
+              widths: '300, 400, 600, 800, 1000, 1200',
+              sizes: '(min-width: 750px) 30vw, 45vw',
+              fetchpriority: 'high',
+              loading: 'eager',
+              alt: s.product_image.alt
+          }}
+        </picture>
+      {%- else -%}
+        <img
+          src="{{ 'neu-hero-bottle.webp' | asset_url }}"
+          width="485"
+          height="1194"
+          alt="NEU+ Lemon & Ginger daily shot"
+          fetchpriority="high"
+        >
+      {%- endif -%}
+    </div>
+
+    {%- if s.subline != blank -%}
+      <p class="neu-hero__subline">{{ s.subline }}</p>
+    {%- endif -%}
+
+    {%- if s.caption != blank -%}
+      <p class="neu-hero__caption">{{ s.caption }}</p>
+    {%- endif -%}
+
+    <div class="neu-hero__ctas">
+      {%- if s.button_1_label != blank -%}
+        <a class="neu-hero__btn" href="{{ s.button_1_link | default: routes.all_products_collection_url }}">
+          {{- s.button_1_label | escape -}}
+        </a>
+      {%- endif -%}
+      {%- if s.button_2_label != blank -%}
+        <a class="neu-hero__btn neu-hero__btn--outline" href="{{ s.button_2_link | default: routes.all_products_collection_url }}">
+          {{- s.button_2_label | escape -}}
+        </a>
+      {%- endif -%}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "NEU+ hero",
+  "class": "neu-hero-section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Tagline"
+    },
+    {
+      "type": "paragraph",
+      "content": "Each word is set huge and placed around the product: 1 top left, 2 right, 3 left, 4 bottom right. Leave a word blank to hide it."
+    },
+    { "type": "text", "id": "word_1", "label": "Word 1", "default": "Get" },
+    { "type": "text", "id": "word_2", "label": "Word 2", "default": "your" },
+    { "type": "text", "id": "word_3", "label": "Word 3", "default": "spark" },
+    { "type": "text", "id": "word_4", "label": "Word 4", "default": "back." },
+    {
+      "type": "select",
+      "id": "accent_word",
+      "label": "Accent word",
+      "options": [
+        { "value": "0", "label": "None" },
+        { "value": "1", "label": "Word 1" },
+        { "value": "2", "label": "Word 2" },
+        { "value": "3", "label": "Word 3" },
+        { "value": "4", "label": "Word 4" }
+      ],
+      "default": "0"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "subline",
+      "label": "Copy (top right)",
+      "default": "One daily shot. 300mg NR. Your daily NAD+ ritual."
+    },
+    {
+      "type": "inline_richtext",
+      "id": "caption",
+      "label": "Caption (left)",
+      "default": "<strong>Lemon & Ginger</strong> or <strong>Mixed Berry</strong><br>60ml shot, one a day"
+    },
+    {
+      "type": "header",
+      "content": "Product image"
+    },
+    {
+      "type": "image_picker",
+      "id": "product_image",
+      "label": "Product cutout",
+      "info": "Transparent PNG or WebP works best. Leave empty to use the built-in Lemon & Ginger bottle."
+    },
+    {
+      "type": "image_picker",
+      "id": "product_image_mobile",
+      "label": "Product cutout on mobile",
+      "info": "Optional"
+    },
+    {
+      "type": "header",
+      "content": "Buttons"
+    },
+    { "type": "text", "id": "button_1_label", "label": "Button 1 label", "default": "Shop NEU+" },
+    { "type": "url", "id": "button_1_link", "label": "Button 1 link" },
+    { "type": "text", "id": "button_2_label", "label": "Button 2 label", "default": "Subscribe & save 21%" },
+    { "type": "url", "id": "button_2_link", "label": "Button 2 link" },
+    {
+      "type": "header",
+      "content": "Style"
+    },
+    { "type": "color", "id": "background", "label": "Background", "default": "#e8e2d5" },
+    { "type": "color", "id": "text_color", "label": "Text", "default": "#0b0b0b" },
+    { "type": "color", "id": "accent_color", "label": "Accent word", "default": "#b6c44a" },
+    { "type": "checkbox", "id": "animate", "label": "Animate words on load", "default": true }
+  ],
+  "presets": [
+    {
+      "name": "NEU+ hero"
+    }
+  ]
+}
+{% endschema %}
