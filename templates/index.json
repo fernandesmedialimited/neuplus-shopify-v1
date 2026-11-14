@@ -133,6 +133,26 @@
         "padding-block-end": 0
       }
     },
+    "neu_hero_split": {
+      "type": "neu-hero",
+      "settings": {
+        "word_1": "Get",
+        "word_2": "your",
+        "word_3": "spark",
+        "word_4": "back.",
+        "accent_word": "0",
+        "subline": "One daily shot. 300mg NR. Your daily NAD+ ritual.",
+        "caption": "<strong>Lemon & Ginger</strong> or <strong>Mixed Berry</strong><br>60ml shot, one a day",
+        "button_1_label": "Shop NEU+",
+        "button_1_link": "https://www.neu-plus.com/products/neu-plus-nad-shots?variant=57421942980934&selling_plan=691167494470",
+        "button_2_label": "Subscribe & save 21%",
+        "button_2_link": "https://www.neu-plus.com/products/neu-plus-nad-shots?variant=57421943046470&selling_plan=694121562438",
+        "background": "#e8e2d5",
+        "text_color": "#0b0b0b",
+        "accent_color": "#b6c44a",
+        "animate": true
+      }
+    },
     "hero_irjTFL": {
       "type": "hero",
       "blocks": {
@@ -302,7 +322,8 @@
         "reflection_opacity": 75,
         "padding-block-start": 100,
         "padding-block-end": 25
-      }
+      },
+      "disabled": true
     },
     "section_ACeCiF": {
       "type": "section",
@@ -4144,6 +4165,7 @@
   "order": [
     "trust_bar_XTg6eD",
     "section_xHGiAn",
+    "neu_hero_split",
     "hero_irjTFL",
     "section_ACeCiF",
     "marquee_GGRxdc",
