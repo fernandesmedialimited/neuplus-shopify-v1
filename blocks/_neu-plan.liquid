@@ -64,7 +64,17 @@
   else
     assign display_price = plan_price
   endif
-  assign per_day = plan_price | divided_by: servings
+  # Rounded to the nearest penny (£59.40 / 24 = £2.48), not floored
+  assign per_shot = plan_price | times: 1.0 | divided_by: servings | round
+
+  assign missing_product = false
+  if type == 'product' and s.product == blank
+    assign missing_product = true
+  endif
+  assign card_image = s.image
+  if type == 'product' and card_image == blank and s.product != blank
+    assign card_image = s.product.featured_image
+  endif
 
   assign baseline = target_variant.price | times: months
   assign save_percent = 0
@@ -75,8 +85,22 @@
   assign radio_id = 'NeuPlan-' | append: block.id
 -%}
 
+{%- comment -%}
+  A 'Different product' card with no product chosen would otherwise add the page's own product,
+  so it stays off the storefront until a product is picked.
+{%- endcomment -%}
+{%- if missing_product -%}
+  {%- if request.design_mode -%}
+    <div class="neu-plan neu-plan--placeholder" {{ block.shopify_attributes }}>
+      <span class="neu-plan__body">
+        <span class="neu-plan__title">{{ s.title | escape }}</span>
+        <span class="neu-plan__subtitle">Choose the product in this card's settings. Hidden on the live store until then.</span>
+      </span>
+    </div>
+  {%- endif -%}
+{%- else -%}
 <label
-  class="neu-plan{% if s.selected %} is-selected{% endif %}"
+  class="neu-plan{% if s.selected %} is-selected{% endif %}{% if s.secondary %} neu-plan--secondary{% endif %}"
   for="{{ radio_id }}"
   data-plan
   data-plan-type="{{ type }}"
@@ -86,6 +110,9 @@
   data-pack="{{ pack | escape }}"
   data-variant-id="{% if type == 'product' %}{{ target_variant.id }}{% endif %}"
   data-fixed-price="{% if type == 'product' %}{{ plan_price }}{% endif %}"
+  data-available="{% if type == 'product' %}{{ target_variant.available }}{% endif %}"
+  data-title="{% if type == 'product' %}{{ s.product.title | escape }}{% endif %}"
+  data-image="{% if type == 'product' and card_image %}{{ card_image | image_url: width: 120 }}{% endif %}"
   data-months="{{ months }}"
   data-servings="{{ servings }}"
   data-per-month="{{ s.show_per_month }}"
@@ -93,7 +120,7 @@
 >
   {%- if s.badge != blank -%}
     <span class="neu-plan__badge">
-      {% render 'neu-icon', icon: 'star-filled' %}
+      {% unless s.secondary %}{% render 'neu-icon', icon: 'star-filled' %}{% endunless %}
       {{ s.badge | escape }}
     </span>
   {%- endif -%}
@@ -126,7 +153,7 @@
           {%- if s.show_per_month -%}/mo{%- endif -%}
         </span>
         <span class="neu-plan__per" data-plan-per>
-          {{- per_day | money }}/day
+          {{- per_shot | money }} per shot
           {%- if months > 1 %} · {{ months }}mo = {{ plan_price | money }}{% endif -%}
         </span>
         {%- if s.price_note != blank -%}
@@ -135,6 +162,10 @@
       </span>
     </span>
 
+    {%- if card_image != blank -%}
+      <span class="neu-plan__feature">
+        {{ card_image | image_url: width: 240 | image_tag: loading: 'lazy', class: 'neu-plan__image', alt: card_image.alt, sizes: '96px' }}
+    {%- endif -%}
     {%- if s.perks != blank -%}
       {%- assign perks = s.perks | newline_to_br | split: '<br />' -%}
       <ul class="neu-plan__perks{% if s.perks_inline %} neu-plan__perks--inline{% endif %}">
@@ -158,6 +189,10 @@
           {%- endif -%}
         {%- endfor -%}
       </ul>
+    {%- endif -%}
+
+    {%- if card_image != blank -%}
+      </span>
     {%- endif -%}
 
     {%- if s.chips != blank -%}
@@ -184,6 +219,7 @@
     {%- endif -%}
   </span>
 </label>
+{%- endif -%}
 
 {% schema %}
 {
@@ -224,7 +260,20 @@
       "type": "product",
       "id": "product",
       "label": "Product",
-      "info": "Only for the 'Different product' plan type"
+      "info": "Only for the 'Different product' plan type. Always a one-time purchase: no selling plan is sent. The card stays hidden until a product is chosen."
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Card image",
+      "info": "Optional, e.g. both flavour bottles for the discovery box. A 'Different product' card falls back to that product's main image."
+    },
+    {
+      "type": "checkbox",
+      "id": "secondary",
+      "label": "Secondary style",
+      "info": "Lighter badge and border, for a card that should sit behind the main offers",
+      "default": false
     },
     {
       "type": "checkbox",
@@ -275,7 +324,7 @@
       "type": "textarea",
       "id": "chips",
       "label": "Chips",
-      "info": "One per line, e.g. Free postage. Icon is picked from the words postage, socks or bottle."
+      "info": "One per line, e.g. Free UK shipping. Icon is picked from the words shipping, delivery, socks or bottle."
     },
     {
       "type": "header",
@@ -285,7 +334,7 @@
       "type": "number",
       "id": "servings",
       "label": "Shots per delivery",
-      "info": "Used for the per-day price",
+      "info": "Used for the per-shot price",
       "default": 28
     },
     {
@@ -305,7 +354,7 @@
       "type": "text",
       "id": "price_note",
       "label": "Note under price",
-      "info": "e.g. + Postage"
+      "info": "Small line under the price"
     }
   ],
   "presets": [

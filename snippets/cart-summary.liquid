@@ -226,6 +226,10 @@
     endif
   -%}
 
+  {%- if settings.cart_shipping_note != blank -%}
+    <p class="cart-totals__shipping-note cart-primary-typography">{{ settings.cart_shipping_note | escape }}</p>
+  {%- endif -%}
+
   <div class="cart-totals__container{% if settings.show_installments %} cart-totals__container--has-installments{% endif %}">
     <span
       class="cart-totals__item cart-totals__total"
@@ -308,6 +312,18 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
+  }
+
+  .cart-totals__shipping-note {
+    margin: 0;
+    padding: 10px 12px;
+    border-radius: 6px;
+    background: rgba(181, 196, 74, 0.22);
+    font-size: var(--font-size--2xs, 11px);
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-align: center;
+    text-transform: uppercase;
   }
 
   .cart-totals__tax-note {

@@ -1530,6 +1530,13 @@
         "content": "t:content.cart_features"
       },
       {
+        "type": "text",
+        "id": "cart_shipping_note",
+        "label": "Shipping note",
+        "info": "Shown above the cart total. Leave blank to hide.",
+        "default": "Free UK shipping on all orders"
+      },
+      {
         "type": "checkbox",
         "id": "show_cart_note",
         "label": "t:settings.seller_note",
