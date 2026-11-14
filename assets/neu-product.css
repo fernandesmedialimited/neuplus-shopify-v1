@@ -468,6 +468,10 @@
   font-weight: 600;
 }
 
+.neu-rating__label {
+  margin-left: -4px;
+}
+
 .neu-rating__score a {
   color: var(--neu-muted);
   text-underline-offset: 3px;
