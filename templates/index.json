@@ -2559,7 +2559,7 @@
             "background_media": "image",
             "background_color": "{{ settings.color_palette.foreground }}",
             "video_position": "cover",
-            "background_image": "shopify://shop_images/Kate_Davey.jpg",
+            "background_image": "shopify://shop_images/neu-plus-why-nr-smile.jpg",
             "background_image_position": "cover",
             "toggle_overlay": false,
             "overlay_color": "#000000",
@@ -2582,7 +2582,7 @@
             "text_aYm69p": {
               "type": "text",
               "settings": {
-                "text": "<p> </p><p> </p><p> </p><p> </p><p> </p><p> </p><p> </p><p> </p><p> </p><p> </p><p> </p><p>  </p><p> </p><p> </p><p> </p><p> </p><p> </p><p> </p><p> </p>",
+                "text": "<p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p>",
                 "width": "100%",
                 "max_width": "none",
                 "alignment": "center",
