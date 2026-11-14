@@ -153,6 +153,45 @@
   color: var(--neu-hero-bg);
 }
 
+/* Scroll-driven parallax. neu-hero.js sets --neu-hero-p from 0 to 1 as the hero
+   scrolls out. Uses the individual translate/rotate/scale properties so it
+   stacks with the load animation, which uses transform. */
+.neu-hero {
+  --neu-hero-p: 0;
+  --neu-hero-shift: 22vw;
+  --neu-hero-drift: 26vh;
+}
+
+.neu-hero--parallax .neu-hero__word,
+.neu-hero--parallax .neu-hero__product,
+.neu-hero--parallax .neu-hero__subline,
+.neu-hero--parallax .neu-hero__caption {
+  will-change: translate;
+}
+
+.neu-hero--parallax .neu-hero__word--1 {
+  translate: calc(var(--neu-hero-p) * var(--neu-hero-shift) * -1.1) calc(var(--neu-hero-p) * var(--neu-hero-drift) * -0.25);
+}
+.neu-hero--parallax .neu-hero__word--2 {
+  translate: calc(var(--neu-hero-p) * var(--neu-hero-shift) * 1.4) 0;
+}
+.neu-hero--parallax .neu-hero__word--3 {
+  translate: calc(var(--neu-hero-p) * var(--neu-hero-shift) * -0.8) 0;
+}
+.neu-hero--parallax .neu-hero__word--4 {
+  translate: calc(var(--neu-hero-p) * var(--neu-hero-shift) * 1.2) calc(var(--neu-hero-p) * var(--neu-hero-drift) * 0.15);
+}
+.neu-hero--parallax .neu-hero__product {
+  translate: 0 calc(var(--neu-hero-p) * var(--neu-hero-drift));
+  rotate: calc(var(--neu-hero-p) * 9deg);
+  scale: calc(1 + var(--neu-hero-p) * 0.08);
+}
+.neu-hero--parallax .neu-hero__subline,
+.neu-hero--parallax .neu-hero__caption {
+  translate: 0 calc(var(--neu-hero-p) * var(--neu-hero-drift) * -0.4);
+  opacity: calc(1 - var(--neu-hero-p) * 1.6);
+}
+
 /* Load animation */
 @media (prefers-reduced-motion: no-preference) {
   .neu-hero--animate .neu-hero__word {
@@ -180,6 +219,8 @@
 @media (max-width: 749px) {
   .neu-hero {
     --neu-hero-word: 23vw;
+    --neu-hero-shift: 30vw;
+    --neu-hero-drift: 14vh;
   }
 
   .neu-hero__grid {
@@ -210,6 +251,12 @@
 
   .neu-hero__caption {
     display: none;
+  }
+
+  /* Copy sits under the bottle on phones, so it stays put rather than sliding into it */
+  .neu-hero--parallax .neu-hero__subline {
+    translate: none;
+    opacity: 1;
   }
 
   .neu-hero__subline {
