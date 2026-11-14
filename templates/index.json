@@ -321,10 +321,15 @@
         "button_1_link": "https://www.neu-plus.com/products/neu-plus-nad-shots?variant=57421942980934&selling_plan=691167494470",
         "button_2_label": "Subscribe & save up to 15%",
         "button_2_link": "https://www.neu-plus.com/products/neu-plus-nad-shots?variant=57421943046470&selling_plan=694121562438",
-        "background": "#e8e2d5",
-        "text_color": "#0b0b0b",
-        "accent_color": "#b6c44a",
-        "animate": true
+        "background": "{{ settings.color_palette.foreground }}",
+        "bg_image": "shopify://shop_images/neu-plus-hero-matcha-croissant-nobottle.png",
+        "bg_position": "center",
+        "bg_overlay_color": "{{ settings.color_palette.foreground }}",
+        "bg_overlay_opacity": 35,
+        "text_color": "{{ settings.color_palette.background }}",
+        "accent_color": "{{ settings.color_palette.foreground }}",
+        "animate": true,
+        "parallax": true
       }
     },
     "marquee_GGRxdc": {
