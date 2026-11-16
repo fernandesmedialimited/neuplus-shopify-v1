@@ -1250,6 +1250,19 @@
               },
               "blocks": {}
             },
+            "spacer_BNFDpQ": {
+              "type": "spacer",
+              "settings": {
+                "size": "percent",
+                "percent_size": 100,
+                "pixel_size": 400,
+                "custom_mobile_size": false,
+                "size_mobile": "percent",
+                "percent_size_mobile": 100,
+                "pixel_size_mobile": 120
+              },
+              "blocks": {}
+            },
             "text_KnbbgB": {
               "type": "text",
               "settings": {
@@ -1300,6 +1313,7 @@
           },
           "block_order": [
             "spacer_4ebDH9",
+            "spacer_BNFDpQ",
             "text_KnbbgB",
             "button_zTGRwr"
           ]
