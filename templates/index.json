@@ -1022,7 +1022,7 @@
           "settings": {
             "source": "uploaded",
             "video": "shopify://files/videos/Amazon v3.mp4",
-            "video_autoplay": false,
+            "video_autoplay": true,
             "video_loop": true,
             "alt": "",
             "custom_width": 100,
@@ -3829,8 +3829,8 @@
     "section_axLDwU",
     "section_tKBnLe",
     "177074425110ec0d2c",
-    "section_zFf6X3",
     "section_7A68HQ",
+    "section_zFf6X3",
     "section_TYHcNz",
     "hero_product_images_DCaBG6",
     "section_FPiRhb",
