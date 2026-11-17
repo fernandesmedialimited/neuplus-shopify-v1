@@ -45,10 +45,10 @@
             "plans_label": "Choose a plan",
             "show_quantity": true,
             "button_label": "Add to cart",
-            "shipping_text": "Free UK shipping on all orders",
-            "dispatch_text": "Dispatched within 1–2 business days",
+            "shipping_text": "Free mainland UK delivery on all orders",
+            "dispatch_text": "Dispatched within 1–2 working days",
             "show_dynamic_checkout": true,
-            "instalments_text": "<p>Choose <strong>Pay in Instalments</strong> at checkout to split orders over £50 into <strong>3 interest-free payments with Google Shop</strong>.</p>",
+            "instalments_text": "<p>Choose <strong>Klarna</strong> at checkout to split orders over £50 into <strong>3 interest-free payments</strong>.</p>",
             "show_payment_icons": true
           },
           "blocks": {
@@ -68,7 +68,7 @@
                 "subtitle_accent": false,
                 "perks": "6 Mixed Berry + 6 Lemon & Ginger\nTry both flavours before you commit\nDiscover your favourite flavour\nNo subscription or commitment",
                 "perks_inline": false,
-                "chips": "Free UK shipping",
+                "chips": "Free mainland UK delivery",
                 "servings": 12,
                 "billing_months": 1,
                 "show_per_month": false,
@@ -92,7 +92,7 @@
                 "subtitle_accent": false,
                 "perks": "24 shots delivered every 3 weeks\nReschedule, skip or cancel any time\nNo commitment",
                 "perks_inline": false,
-                "chips": "Free UK shipping",
+                "chips": "Free mainland UK delivery",
                 "servings": 24,
                 "billing_months": 1,
                 "show_per_month": false,
@@ -116,7 +116,7 @@
                 "subtitle_accent": false,
                 "perks": "36 shots delivered every 4 weeks\nReschedule, skip or cancel any time\nNo commitment",
                 "perks_inline": false,
-                "chips": "Free UK shipping",
+                "chips": "Free mainland UK delivery",
                 "servings": 36,
                 "billing_months": 1,
                 "show_per_month": false,
@@ -140,7 +140,7 @@
                 "subtitle_accent": false,
                 "perks": "",
                 "perks_inline": false,
-                "chips": "Free UK shipping",
+                "chips": "Free mainland UK delivery",
                 "servings": 12,
                 "billing_months": 1,
                 "show_per_month": false,
@@ -164,7 +164,7 @@
                 "subtitle_accent": false,
                 "perks": "",
                 "perks_inline": false,
-                "chips": "Free UK shipping",
+                "chips": "Free mainland UK delivery",
                 "servings": 24,
                 "billing_months": 1,
                 "show_per_month": false,
@@ -188,7 +188,7 @@
                 "subtitle_accent": false,
                 "perks": "",
                 "perks_inline": false,
-                "chips": "Free UK shipping",
+                "chips": "Free mainland UK delivery",
                 "servings": 36,
                 "billing_months": 1,
                 "show_per_month": false,
@@ -211,7 +211,7 @@
           "settings": {
             "style": "tint",
             "icon": "truck",
-            "title": "Free UK shipping on all orders, dispatched within 2-3 working days",
+            "title": "Free mainland UK delivery on all orders, dispatched within 1–2 working days",
             "link_label": "Delivery information",
             "link_url": "/policies/shipping-policy",
             "image": "shopify://shop_images/neu-plus-perk-coffee-tray.jpg"
@@ -413,7 +413,7 @@
       ],
       "settings": {
         "eyebrow": "Why subscribe?",
-        "heading": "Build the daily habit. Save up to 12%",
+        "heading": "Build the daily habit. Save up to 15%",
         "link_label": "How subscriptions work",
         "link_url": "",
         "padding_top": 64,
@@ -551,7 +551,7 @@
             "stars_color": "",
             "arrows_color": "#000000",
             "transition_speed": 5,
-            "header_text": "Customers Reviews.",
+            "header_text": "Customer Reviews.",
             "show_average_rating": true,
             "rating_display": "default"
           }
@@ -698,7 +698,7 @@
           "type": "question",
           "settings": {
             "question": "How does delivery work?",
-            "answer": "<p>Free UK shipping on all orders, including one-time purchases and the Discovery Box. Orders typically dispatched within 1–2 business days.</p>",
+            "answer": "<p>Free mainland UK delivery on all orders, including one-time purchases and the Discovery Box. Delivery to Northern Ireland is £3.50. Orders are dispatched within 1–2 working days.</p>",
             "open": false
           }
         }

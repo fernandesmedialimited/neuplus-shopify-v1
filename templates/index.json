@@ -52,8 +52,8 @@
           "settings": {
             "icon": "shopify://shop_images/004-security_2399e9ee-4dd6-47dc-bca7-ed37f9e19843.png",
             "icon_svg": "",
-            "line_1": "FREE UK SHIPPING",
-            "line_2": "ON ALL ORDERS"
+            "line_1": "FREE DELIVERY",
+            "line_2": "MAINLAND UK"
           }
         }
       },
@@ -1087,7 +1087,7 @@
               "type": "text",
               "name": "t:names.text",
               "settings": {
-                "text": "<p>wHAT IS NEU+</p>",
+                "text": "<p>WHAT IS NEU+</p>",
                 "width": "100%",
                 "max_width": "none",
                 "alignment": "left",
@@ -3793,7 +3793,7 @@
             "stars_color": "",
             "arrows_color": "#000000",
             "transition_speed": 5,
-            "header_text": "Customers Reviews.",
+            "header_text": "Customer Reviews.",
             "show_average_rating": true,
             "rating_display": "default"
           }

@@ -17,7 +17,7 @@
   </div>
   {%- if block.settings.image -%}
     <div class="neu-perk__image">
-      {{ block.settings.image | image_url: width: 240 | image_tag: loading: 'lazy', alt: block.settings.image.alt }}
+      {{ block.settings.image | image_url: width: 240 | image_tag: loading: 'lazy', alt: block.settings.image.alt | default: '' }}
     </div>
   {%- endif -%}
 </div>
@@ -54,7 +54,7 @@
       "type": "inline_richtext",
       "id": "title",
       "label": "Text",
-      "default": "Free UK shipping on all orders, dispatched within 2 working days"
+      "default": "Free mainland UK delivery on all orders, dispatched within 1–2 working days"
     },
     {
       "type": "text",

@@ -15,7 +15,7 @@
 >
 <meta
   name="theme-color"
-  content=""
+  content="{{ settings.page_background_color }}"
 >
 
 {%- liquid
@@ -76,7 +76,7 @@
 {%- if request.page_type == 'product' -%}
   <meta
     property="og:price:amount"
-    content="{{ product.price | money_without_currency | strip_html }}"
+    content="{{ product.selected_or_first_available_variant.price | default: product.price | money_without_currency | strip_html }}"
   >
   <meta
     property="og:price:currency"

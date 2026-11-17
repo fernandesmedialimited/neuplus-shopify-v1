@@ -40,7 +40,7 @@
         {{
           bg_desktop
           | image_url: width: 1800
-          | image_tag: sizes: '100vw', loading: 'eager', alt: '', class: 'neu-hero__bg-img'
+          | image_tag: sizes: '100vw', loading: 'eager', alt: bg_desktop.alt | default: '', class: 'neu-hero__bg-img'
         }}
       </picture>
       {%- if s.bg_overlay_opacity > 0 -%}
