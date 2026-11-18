@@ -1534,7 +1534,7 @@
         "id": "cart_shipping_note",
         "label": "Shipping note",
         "info": "Shown above the cart total. Leave blank to hide.",
-        "default": "Free UK shipping on all orders"
+        "default": "Free mainland UK delivery on all orders"
       },
       {
         "type": "checkbox",
