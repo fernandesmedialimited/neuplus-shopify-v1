@@ -15,9 +15,10 @@
       </a>
     {%- endif -%}
   </div>
+  {%- assign perk_image_alt = block.settings.image.alt | default: '' -%}
   {%- if block.settings.image -%}
     <div class="neu-perk__image">
-      {{ block.settings.image | image_url: width: 240 | image_tag: loading: 'lazy', alt: block.settings.image.alt | default: '' }}
+      {{ block.settings.image | image_url: width: 240 | image_tag: loading: 'lazy', alt: perk_image_alt }}
     </div>
   {%- endif -%}
 </div>
