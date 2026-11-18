@@ -31,7 +31,7 @@
     "home_logo_alt": "{{ store_name }} - Home",
     "increase_quantity": "Increase quantity",
     "inventory_status": "Inventory status",
-    "localization_region_and_language": "Region and language selector",
+    "localization_region_and_language": "Country/region selector",
     "menu": "Menu",
     // This is the label for the header navigation menu when using screen readers, it will read "Primary navigation"
     "header_navigation_label": "Primary",
@@ -210,7 +210,7 @@
     },
     "item_count_cutoff": "More than {{ count }} items",
     "language": "Language",
-    "localization_region_and_language": "Region and language",
+    "localization_region_and_language": "Country/region",
     "no_products_found": "No products found.",
     "no_results_found": "No results found",
     "page_placeholder_title": "Page title",
