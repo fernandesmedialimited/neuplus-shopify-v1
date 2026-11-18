@@ -21,6 +21,7 @@
 >
   {%- if s.bg_image or s.bg_image_mobile -%}
     {%- assign bg_desktop = s.bg_image | default: s.bg_image_mobile -%}
+    {%- assign hero_bg_alt = bg_desktop.alt | default: '' -%}
     <div class="neu-hero__bg neu-hero__bg--{{ s.bg_position }}" aria-hidden="true">
       <picture>
         {%- if s.bg_image_mobile -%}
@@ -40,7 +41,7 @@
         {{
           bg_desktop
           | image_url: width: 1800
-          | image_tag: sizes: '100vw', loading: 'eager', alt: bg_desktop.alt | default: '', class: 'neu-hero__bg-img'
+          | image_tag: sizes: '100vw', loading: 'eager', alt: hero_bg_alt, class: 'neu-hero__bg-img'
         }}
       </picture>
       {%- if s.bg_overlay_opacity > 0 -%}

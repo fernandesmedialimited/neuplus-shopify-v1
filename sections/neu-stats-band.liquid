@@ -8,6 +8,7 @@
   <div class="neu-page">
     <div class="neu-stats neu-narrow" style="--neu-stats-bg: {{ section.settings.background }}">
       <div class="neu-stats__media">
+        {%- assign stats_image_alt = section.settings.image.alt | default: '' -%}
         {%- if section.settings.image -%}
           {{
             section.settings.image
@@ -16,7 +17,7 @@
               widths: '400, 600, 800, 1000',
               sizes: '(min-width: 990px) 480px, 90vw',
               loading: 'lazy',
-              alt: section.settings.image.alt | default: ''
+              alt: stats_image_alt
           }}
         {%- else -%}
           {{ 'product-2' | placeholder_svg_tag }}
