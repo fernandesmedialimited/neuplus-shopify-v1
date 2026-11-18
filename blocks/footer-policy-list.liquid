@@ -36,7 +36,11 @@
                 href="{{ policy.url }}"
                 class="footer-utilities__text"
               >
-                {{- policy.title | escape -}}
+                {%- if policy.url contains 'subscription-policy' -%}
+                  Subscription policy
+                {%- else -%}
+                  {{- policy.title | escape -}}
+                {%- endif -%}
               </a>
             </li>
           {%- endif -%}
